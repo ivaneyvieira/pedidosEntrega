@@ -3,7 +3,7 @@ package br.com.astrosoft.pedidoEntrega.model.beans
 import java.time.LocalDate
 import java.time.LocalTime
 
-class PedidoEntrega(
+data class PedidoEntrega(
   val loja: Int,
   val pedido: Int,
   val marca: String,
@@ -28,7 +28,7 @@ class PedidoEntrega(
   val codArea: Int,
   val userno: Int,
   val username: String
-                   ) {
+                        ) {
   val nfFat: String
     get() = "$nfnoFat/$nfseFat"
   val nfEnt: String

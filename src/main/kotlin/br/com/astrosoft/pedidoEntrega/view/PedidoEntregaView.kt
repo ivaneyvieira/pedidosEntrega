@@ -29,7 +29,7 @@ import com.vaadin.flow.router.Route
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
   private lateinit var lblGravado: Label
-  private var gridProduto: Grid<PedidoEntrega>
+  private var gridPedidosEntrega: Grid<PedidoEntrega>
   private lateinit var edtPedido: IntegerField
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   private val dataProviderProdutos = ListDataProvider<PedidoEntrega>(mutableListOf())
@@ -38,7 +38,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   init {
     form("Editar pedidos")
-    gridProduto = grid(dataProvider = dataProviderProdutos) {
+    gridPedidosEntrega = grid(dataProvider = dataProviderProdutos) {
       isExpand = true
       isMultiSort = true
       addThemeVariants(LUMO_COMPACT)
@@ -115,11 +115,20 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       button("Imprimir") {
         icon = PRINT.create()
         addClickListener {
-          if(gridProduto.editor.isOpen)
-            gridProduto.editor.save()
           viewModel.imprimir()
         }
       }
     }
+    viewModel.updateGrid()
+  }
+  
+  override fun updateGrid(itens: List<PedidoEntrega>) {
+    dataProviderProdutos.items.clear()
+    dataProviderProdutos.items.addAll(itens)
+    dataProviderProdutos.refreshAll()
+  }
+  
+  override fun itensSelecionado(): List<PedidoEntrega> {
+    return gridPedidosEntrega.selectedItems.toList()
   }
 }

@@ -9,7 +9,7 @@ class QuerySaci: QueryDB(driver, url, username, password) {
   fun findUser(login: String?): UserSaci? {
     login ?: return null
     val sql = "/sqlSaci/userSenha.sql"
-    return query<UserSaci>(sql) {
+    return query(sql, UserSaci::class) {
       addParameter("login", login)
     }.firstOrNull()
       ?.initVars()
@@ -17,7 +17,7 @@ class QuerySaci: QueryDB(driver, url, username, password) {
   
   fun findAllUser(): List<UserSaci> {
     val sql = "/sqlSaci/userSenha.sql"
-    return query<UserSaci>(sql) {
+    return query(sql, UserSaci::class) {
       addParameter("login", "TODOS")
     }.map {user ->
       user.initVars()
@@ -34,7 +34,7 @@ class QuerySaci: QueryDB(driver, url, username, password) {
   
   fun listaPedido(): List<PedidoEntrega> {
     val sql = "/sqlSaci/listaPedido.sql"
-    return query(sql)
+    return query(sql, PedidoEntrega::class)
   }
   
   companion object {

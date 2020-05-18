@@ -14,6 +14,7 @@ import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneOffset
+import kotlin.reflect.KClass
 
 typealias QueryHandle = Query.() -> Unit
 
@@ -61,33 +62,34 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
       }
   }
   */
-  protected inline fun <reified T> query(file: String, crossinline lambda: QueryHandle = {}): List<T> {
+  protected fun <T: Any> query(file: String, classes: KClass<T>, lambda: QueryHandle = {}): List<T> {
     val statements = toStratments(file)
     if(statements.isEmpty()) return emptyList()
     val lastIndex = statements.lastIndex
     val query = statements[lastIndex]
-    val updates = if(statements.size > 1) statements.subList(0, lastIndex - 1) else emptyList()
-    return this.sql2o.open()
+    val updates = if(statements.size > 1) statements.subList(0, lastIndex) else emptyList()
+    return this.sql2o.beginTransaction()
       .use {con ->
         scriptSQL(con, updates, lambda)
-        querySQL(con, query, lambda)
+        val ret: List<T> = querySQL(con, query, classes, lambda)
+        con.commit()
+        ret
       }
   }
   
-  protected inline fun <reified T> querySQL(con: Connection, sql: String?,
-                                            lambda: QueryHandle = {}): List<T> {
+  private fun <T: Any> querySQL(con: Connection, sql: String?, classes: KClass<T>,
+                                lambda: QueryHandle = {}): List<T> {
     val query = con.createQuery(sql)
     query.lambda()
-    val ret = query.executeAndFetch(T::class.java)
-    con.close()
-    return ret
+    return query.executeAndFetch(classes.java)
   }
   
   protected fun script(file: String, lambda: QueryHandle = {}) {
     val stratments = toStratments(file)
-    this.sql2o.open()
+    this.sql2o.beginTransaction()
       .use {con ->
         scriptSQL(con, stratments, lambda)
+        con.commit()
       }
   }
   
@@ -99,7 +101,7 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
     else listOf(file)
   }
   
-  inline fun scriptSQL(con: Connection, stratments: List<String>, lambda: QueryHandle = {}) {
+  private fun scriptSQL(con: Connection, stratments: List<String>, lambda: QueryHandle = {}) {
     stratments.forEach {sql ->
       val query = con.createQuery(sql)
       query.lambda()

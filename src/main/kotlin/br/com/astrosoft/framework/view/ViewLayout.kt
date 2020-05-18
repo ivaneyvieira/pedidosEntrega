@@ -42,8 +42,7 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
   abstract val viewModel: VM
   
   init {
-    width = "100%"
-    height = "100%"
+    isEnabled = true
   }
   
   abstract fun isAccept(user: UserSaci): Boolean

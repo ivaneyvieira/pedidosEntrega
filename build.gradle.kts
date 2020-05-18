@@ -70,6 +70,7 @@ dependencies {
   compile("com.github.appreciated:app-layout-addon:3.0.0.beta5")
   compile("org.vaadin.tatu:twincolselect:1.2.0")
   compile("org.vaadin.gatanaso:multiselect-combo-box-flow:1.1.0")
+  compile("org.vaadin.tabs:paged-tabs:2.0.1")
   //  compile("org.webjars.bowergithub.vaadin:vaadin-combo-box:4.2.7")
   //compile("com.github.appreciated:app-layout-addon:4.0.0.rc4")
   compile("org.vaadin.crudui:crudui:4.1.0")

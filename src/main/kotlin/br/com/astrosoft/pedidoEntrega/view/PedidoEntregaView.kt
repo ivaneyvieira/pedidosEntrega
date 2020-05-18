@@ -18,107 +18,195 @@ import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
-import com.vaadin.flow.component.html.Label
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
-import com.vaadin.flow.component.textfield.IntegerField
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.data.provider.ListDataProvider
+import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import org.vaadin.tabs.PagedTabs
 import kotlin.reflect.KProperty1
-import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
-  private lateinit var lblGravado: Label
-  private var gridPedidosEntrega: Grid<PedidoEntrega>
-  private lateinit var edtPedido: IntegerField
+  private lateinit var gridPedidosEntregaImpresso: Grid<PedidoEntrega>
+  private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
-  private val dataProviderProdutos = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderProdutosImprimir = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderProdutosImpresso = ListDataProvider<PedidoEntrega>(mutableListOf())
   
   override fun isAccept(user: UserSaci) = true
   
   init {
-    form("Editar pedidos")
-    gridPedidosEntrega = grid(dataProvider = dataProviderProdutos) {
-      isExpand = true
-      isMultiSort = true
-      addThemeVariants(LUMO_COMPACT)
-      setSelectionMode(SelectionMode.MULTI)
-  
-      addColumnInt(PedidoEntrega::loja){
-        this.setHeader("Loja")
-      }
-      addColumnInt(PedidoEntrega::pedido){
-        this.setHeader("Pedido")
-      }
-      addColumnDate(PedidoEntrega::data){
-        this.setHeader("Data")
-      }
-      addColumnTime(PedidoEntrega::hora){
-        this.setHeader("Hora")
-      }
-      addColumnString(PedidoEntrega::area){
-        this.setHeader("Área")
-      }
-      addColumnString(PedidoEntrega::rota){
-        this.setHeader("Rota")
-      }
-  
-      addColumnString(PedidoEntrega::nfFat){
-        this.setHeader("NF Fat")
-      }
-      addColumnDate(PedidoEntrega::dataFat){
-        this.setHeader("Data")
-      }
-      addColumnTime(PedidoEntrega::horaFat){
-        this.setHeader("Hora")
-      }
-  
-      addColumnString(PedidoEntrega::nfEnt){
-        this.setHeader("NF Ent")
-      }
-      addColumnDate(PedidoEntrega::dataEnt){
-        this.setHeader("Data")
-      }
-      addColumnTime(PedidoEntrega::horaEnt){
-        this.setHeader("Hora")
-      }
-  
-      addColumnInt(PedidoEntrega::vendno){
-        this.setHeader("Vendedor")
-      }
-      addColumnDouble(PedidoEntrega::frete){
-        this.setHeader("R$ Frete")
-      }
-      addColumnDouble(PedidoEntrega::valor){
-        this.setHeader("R$ Nota")
-      }
-      addColumnInt(PedidoEntrega::custno){
-        this.setHeader("Cliente")
-      }
-      addColumnString(PedidoEntrega::obs){
-        this.setHeader("Obs")
-      }
-      addColumnString(PedidoEntrega::username){
-        this.setHeader("Usuário")
-      }
-      shiftSelect()
-    }
-    toolbar {
-      button("Imprimir") {
-        icon = PRINT.create()
-        addClickListener {
-          viewModel.imprimir()
-        }
-      }
-    }
-    viewModel.updateGrid()
+    val tabs = PagedTabs()
+    tabs.add(painelImprimir(), "Imprimir")
+    tabs.add(painelImpresso(), "Impresso")
+    add(tabs)
+    tabs.content.isPadding = false
+    tabs.content.isMargin = false
+    tabs.setSizeFull()
   }
   
-  var pedidoInicial : PedidoEntrega? = null
-  var pedidoFinal : PedidoEntrega? = null
+  fun painelImprimir() : VerticalLayout {
+    return VerticalLayout().apply {
+      isExpand = true
+      isMargin = false
+      isPadding = false
+      gridPedidosEntregaImprimir = grid(dataProvider = dataProviderProdutosImprimir) {
+        isExpand = true
+        isMultiSort = true
+        addThemeVariants(LUMO_COMPACT)
+        setSelectionMode(SelectionMode.MULTI)
+        
+        addColumnInt(PedidoEntrega::loja) {
+          this.setHeader("Loja")
+        }
+        addColumnInt(PedidoEntrega::pedido) {
+          this.setHeader("Pedido")
+        }
+        addColumnDate(PedidoEntrega::data) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::hora) {
+          this.setHeader("Hora")
+        }
+        addColumnString(PedidoEntrega::area) {
+          this.setHeader("Área")
+        }
+        addColumnString(PedidoEntrega::rota) {
+          this.setHeader("Rota")
+        }
+        
+        addColumnString(PedidoEntrega::nfFat) {
+          this.setHeader("NF Fat")
+        }
+        addColumnDate(PedidoEntrega::dataFat) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaFat) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnString(PedidoEntrega::nfEnt) {
+          this.setHeader("NF Ent")
+        }
+        addColumnDate(PedidoEntrega::dataEnt) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaEnt) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnInt(PedidoEntrega::vendno) {
+          this.setHeader("Vendedor")
+        }
+        addColumnDouble(PedidoEntrega::frete) {
+          this.setHeader("R$ Frete")
+        }
+        addColumnDouble(PedidoEntrega::valor) {
+          this.setHeader("R$ Nota")
+        }
+        addColumnInt(PedidoEntrega::custno) {
+          this.setHeader("Cliente")
+        }
+        addColumnString(PedidoEntrega::obs) {
+          this.setHeader("Obs")
+        }
+        addColumnString(PedidoEntrega::username) {
+          this.setHeader("Usuário")
+        }
+        shiftSelect()
+      }
+      toolbar {
+        button("Imprimir") {
+          icon = PRINT.create()
+          addClickListener {
+            viewModel.imprimir()
+          }
+        }
+      }
+      viewModel.updateGridImprimir()
+    }
+  }
+  
+  fun painelImpresso() : VerticalLayout {
+    return VerticalLayout().apply {
+      isExpand = true
+      isMargin = false
+      isPadding = false
+      gridPedidosEntregaImpresso = grid(dataProvider = dataProviderProdutosImpresso) {
+        isExpand = true
+        isMultiSort = true
+        addThemeVariants(LUMO_COMPACT)
+    
+        addColumnInt(PedidoEntrega::loja) {
+          this.setHeader("Loja")
+        }
+        addColumnInt(PedidoEntrega::pedido) {
+          this.setHeader("Pedido")
+        }
+        addColumnDate(PedidoEntrega::data) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::hora) {
+          this.setHeader("Hora")
+        }
+        addColumnString(PedidoEntrega::area) {
+          this.setHeader("Área")
+        }
+        addColumnString(PedidoEntrega::rota) {
+          this.setHeader("Rota")
+        }
+    
+        addColumnString(PedidoEntrega::nfFat) {
+          this.setHeader("NF Fat")
+        }
+        addColumnDate(PedidoEntrega::dataFat) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaFat) {
+          this.setHeader("Hora")
+        }
+    
+        addColumnString(PedidoEntrega::nfEnt) {
+          this.setHeader("NF Ent")
+        }
+        addColumnDate(PedidoEntrega::dataEnt) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaEnt) {
+          this.setHeader("Hora")
+        }
+    
+        addColumnInt(PedidoEntrega::vendno) {
+          this.setHeader("Vendedor")
+        }
+        addColumnDouble(PedidoEntrega::frete) {
+          this.setHeader("R$ Frete")
+        }
+        addColumnDouble(PedidoEntrega::valor) {
+          this.setHeader("R$ Nota")
+        }
+        addColumnInt(PedidoEntrega::custno) {
+          this.setHeader("Cliente")
+        }
+        addColumnString(PedidoEntrega::obs) {
+          this.setHeader("Obs")
+        }
+        addColumnString(PedidoEntrega::username) {
+          this.setHeader("Usuário")
+        }
+        //shiftSelect()
+      }
+      this.expand(gridPedidosEntregaImpresso)
+      viewModel.updateGridImpresso()
+    }
+  }
+  
+  var pedidoInicial: PedidoEntrega? = null
+  var pedidoFinal: PedidoEntrega? = null
   
   private fun @VaadinDsl Grid<PedidoEntrega>.shiftSelect() {
     this.addItemClickListener {evento ->
@@ -156,9 +244,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   }
   
   private fun list(grade: Grid<PedidoEntrega>): List<PedidoEntrega> {
-    val filter = dataProviderProdutos.filter
+    val filter = dataProviderProdutosImprimir.filter
     val queryOrdem = comparator(grade)
-    return dataProviderProdutos.items.toList()
+    return dataProviderProdutosImprimir.items.toList()
       .filter {
         filter?.test(it) ?: true
       }
@@ -190,13 +278,19 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       }
   }
   
-  override fun updateGrid(itens: List<PedidoEntrega>) {
-    dataProviderProdutos.items.clear()
-    dataProviderProdutos.items.addAll(itens)
-    dataProviderProdutos.refreshAll()
+  override fun updateGridImprimir(itens: List<PedidoEntrega>) {
+    dataProviderProdutosImprimir.items.clear()
+    dataProviderProdutosImprimir.items.addAll(itens)
+    dataProviderProdutosImprimir.refreshAll()
+  }
+  
+  override fun updateGridImpresso(itens: List<PedidoEntrega>) {
+    dataProviderProdutosImpresso.items.clear()
+    dataProviderProdutosImpresso.items.addAll(itens)
+    dataProviderProdutosImpresso.refreshAll()
   }
   
   override fun itensSelecionado(): List<PedidoEntrega> {
-    return gridPedidosEntrega.selectedItems.toList()
+    return gridPedidosEntregaImprimir.selectedItems.toList()
   }
 }

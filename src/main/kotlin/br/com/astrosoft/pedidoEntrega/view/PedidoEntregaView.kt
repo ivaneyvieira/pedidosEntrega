@@ -101,15 +101,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       addColumnString(PedidoEntrega::username){
         this.setHeader("Usuário")
       }
-      /*
-      this.setClassNameGenerator {
-        when {
-          it.saldoInsuficiente -> "error_row"
-          it.qttyAlterada      -> "info_row"
-          else                 -> null
-        }
-      }
-      */
+      shiftSelect()
     }
     toolbar {
       button("Imprimir") {

@@ -68,13 +68,11 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
     val lastIndex = statements.lastIndex
     val query = statements[lastIndex]
     val updates = if(statements.size > 1) statements.subList(0, lastIndex) else emptyList()
-    return this.sql2o.beginTransaction()
-      .use {con ->
-        scriptSQL(con, updates, lambda)
-        val ret: List<T> = querySQL(con, query, classes, lambda)
-        con.commit()
-        ret
-      }
+    return transaction {con ->
+      scriptSQL(con, updates, lambda)
+      val ret: List<T> = querySQL(con, query, classes, lambda)
+      ret
+    }
   }
   
   private fun <T: Any> querySQL(con: Connection, sql: String?, classes: KClass<T>,
@@ -86,11 +84,9 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
   
   protected fun script(file: String, lambda: QueryHandle = {}) {
     val stratments = toStratments(file)
-    this.sql2o.beginTransaction()
-      .use {con ->
-        scriptSQL(con, stratments, lambda)
-        con.commit()
-      }
+    transaction {con ->
+      scriptSQL(con, stratments, lambda)
+    }
   }
   
   fun toStratments(file: String): List<String> {
@@ -124,11 +120,12 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
     return this
   }
   
-  private fun transaction(block: (Connection) -> Unit) {
-    sql2o.beginTransaction()
+  private fun <T> transaction(block: (Connection) -> T): T {
+    return sql2o.beginTransaction()
       .use {con ->
-        block(con)
+        val ret = block(con)
         con.commit()
+        ret
       }
   }
 }

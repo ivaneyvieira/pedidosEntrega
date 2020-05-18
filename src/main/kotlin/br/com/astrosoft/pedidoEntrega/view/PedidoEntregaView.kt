@@ -10,6 +10,7 @@ import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
 import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
+import com.github.mvysny.karibudsl.v10.VaadinDsl
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.grid
 import com.github.mvysny.karibudsl.v10.isExpand
@@ -23,6 +24,8 @@ import com.vaadin.flow.component.textfield.IntegerField
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import kotlin.reflect.KProperty1
+import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
@@ -112,6 +115,79 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       }
     }
     viewModel.updateGrid()
+  }
+  
+  var pedidoInicial : PedidoEntrega? = null
+  var pedidoFinal : PedidoEntrega? = null
+  
+  private fun @VaadinDsl Grid<PedidoEntrega>.shiftSelect() {
+    this.addItemClickListener {evento ->
+      val grade = evento.source
+      if(evento.isShiftKey) {
+        val pedido = evento.item
+        if(pedidoInicial == null) {
+          pedidoInicial = pedido
+          grade.select(pedido)
+        }
+        else {
+          if(pedidoFinal == null) {
+            val itens = list(grade)
+            pedidoFinal = pedido
+            val p1 = itens.indexOf(pedidoInicial!!)
+            val p2 = itens.indexOf(pedidoFinal!!) + 1
+            val subList = itens.subList(p1.coerceAtMost(p2), p1.coerceAtLeast(p2))
+            subList.forEach {
+              grade.select(it)
+            }
+            pedidoFinal = null
+            pedidoInicial = null
+          }
+          else {
+            pedidoFinal = null
+            pedidoInicial = null
+          }
+        }
+      }
+      else {
+        pedidoFinal = null
+        pedidoInicial = null
+      }
+    }
+  }
+  
+  private fun list(grade: Grid<PedidoEntrega>): List<PedidoEntrega> {
+    val filter = dataProviderProdutos.filter
+    val queryOrdem = comparator(grade)
+    return dataProviderProdutos.items.toList()
+      .filter {
+        filter?.test(it) ?: true
+      }
+      .let {list ->
+        if(queryOrdem == null) list
+        else list.sortedWith<PedidoEntrega>(queryOrdem)
+      }
+  }
+  
+  private fun comparator(grade: Grid<PedidoEntrega>): Comparator<PedidoEntrega>? {
+    if(grade.sortOrder.isEmpty()) return null
+    return grade.sortOrder.mapNotNull {gridSort ->
+      val prop = PedidoEntrega::class.members.toList()
+        .filterIsInstance<KProperty1<PedidoEntrega, Comparable<*>>>()
+        .firstOrNull {prop ->
+          prop.name == gridSort.sorted.key
+        }
+      if(gridSort.direction == DESCENDING)
+        compareByDescending {
+          prop?.get(it)
+        }
+      else
+        compareBy<PedidoEntrega> {
+          prop?.get(it)
+        }
+    }
+      .reduce {acc, comparator ->
+        acc.thenComparing(comparator)
+      }
   }
   
   override fun updateGrid(itens: List<PedidoEntrega>) {

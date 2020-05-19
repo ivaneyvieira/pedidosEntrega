@@ -4,13 +4,21 @@ import br.com.astrosoft.framework.util.Ssh
 import br.com.astrosoft.framework.util.execCommand
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
+import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
+import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
+import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci.Companion
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
-  fun imprimir() {
+  fun imprimir() = exec {
+    val pedidos = view.itensSelecionado().ifEmpty { fail("Não há pedido selecionado")}
+    val impressora = UserSaci.userAtual?.impressora ?: fail("O usuário não possui impresseora")
+    pedidos.forEach {pedido ->
+      printPedido(pedido.loja, pedido.pedido, impressora)
+    }
   }
   
-  private fun printPrdido(storeno: Int, ordno: Int, impressora: String) {
+  private fun printPedido(storeno: Int, ordno: Int, impressora: String) {
     Ssh("172.20.47.1", "ivaney", "ivaney").shell {
       execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
     }

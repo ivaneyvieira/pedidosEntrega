@@ -44,7 +44,7 @@ data class PedidoEntrega(
   }
   
   val paraImprimir: Boolean
-    get() = (marca != "S")
+    get() = (marca != "S") && (data?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
   val impressoSemNota: Boolean
     get() = (marca == "S") && (nfnoEnt == "")
   val impressoComNota: Boolean
@@ -53,7 +53,7 @@ data class PedidoEntrega(
   companion object {
     fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.paraImprimir}
-  
+    
     fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.impressoSemNota}
     

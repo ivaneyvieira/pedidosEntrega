@@ -25,13 +25,24 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   }
   
   val listPedidosEntregaImprimir: List<PedidoEntrega>
-    get() = PedidoEntrega.listaPedidoImprimir()
-  val listPedidosEntregaImpresso: List<PedidoEntrega>
-    get() = PedidoEntrega.listaPedidoImpresso()
+    get() {
+      val numPedido = view.pedidoImprimir
+      return PedidoEntrega.listaPedidoImprimir().filter{pedido ->
+        pedido.pedido == numPedido || numPedido == 0
+      }
+    }
+  val listPedidosEntregaImpresso: List<PedidoEntrega>get() {
+    val numPedido = view.pedidoImpresso
+    return PedidoEntrega.listaPedidoImpresso().filter{pedido ->
+      pedido.pedido == numPedido || numPedido == 0
+    }
+  }
 }
 
 interface IPedidoEntregaView: IView {
   fun updateGridImprimir(itens: List<PedidoEntrega>)
   fun updateGridImpresso(itens: List<PedidoEntrega>)
   fun itensSelecionado(): List<PedidoEntrega>
+  val pedidoImprimir : Int
+  val pedidoImpresso : Int
 }

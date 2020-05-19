@@ -31,32 +31,46 @@ data class PedidoEntrega(
   val username: String
                         ) {
   val nfFat: String
-    get() = when {
-      nfnoFat == "" -> ""
-      nfseFat == "" -> nfnoFat
-      else          -> "$nfnoFat/$nfseFat"
-    }
+    get() = numeroNota(nfnoFat, nfseFat)
   val nfEnt: String
-    get() = when {
-      nfnoEnt == "" -> ""
-      nfseEnt == "" -> nfnoEnt
-      else          -> "$nfnoEnt/$nfseEnt"
+    get() = numeroNota(nfnoEnt, nfseEnt)
+  
+  private fun numeroNota(nfno: String, nfse: String): String {
+    return when {
+      nfno == "" -> ""
+      nfse == "" -> nfnoEnt
+      else       -> "$nfno/$nfse"
     }
+  }
+  
   val paraImprimir: Boolean
     get() = (marca != "S")
+<<<<<<< HEAD
+  val impressoSemNota: Boolean
+    get() = (marca == "S") && (nfnoEnt == "")
+  val impressoComNota: Boolean
+    get() = (marca == "S") && (nfnoEnt != "")
+=======
   val impressoComNota: Boolean
     get() = (marca == "S") && (nfnoEnt != "")
   val impressoSemNota: Boolean
     get() = (marca == "S") && (nfnoEnt == "")
+>>>>>>> release/1.2
   
   companion object {
     fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.paraImprimir}
   
+<<<<<<< HEAD
+    fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
+      .filter {it.impressoSemNota}
+    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = saci.listaPedido()
+=======
     fun listaPedidoImpressoComNota(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.impressoComNota}
   
     fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
+>>>>>>> release/1.2
       .filter {it.impressoSemNota}
   }
 }

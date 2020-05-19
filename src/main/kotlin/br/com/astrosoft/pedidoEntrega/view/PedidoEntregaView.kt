@@ -12,25 +12,33 @@ import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
 import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
 import com.github.mvysny.karibudsl.v10.VaadinDsl
 import com.github.mvysny.karibudsl.v10.button
+import com.github.mvysny.karibudsl.v10.contents
 import com.github.mvysny.karibudsl.v10.grid
 import com.github.mvysny.karibudsl.v10.isExpand
+import com.github.mvysny.karibudsl.v10.tabSheet
+import com.github.mvysny.karibudsl.v10.textField
+import com.github.mvysny.karibudsl.v10.verticalLayout
+import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.textfield.TextField
+import com.vaadin.flow.component.textfield.TextFieldVariant.LUMO_SMALL
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
-import org.vaadin.tabs.PagedTabs
 import kotlin.reflect.KProperty1
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
+  private lateinit var edtPedidoImpresso: TextField
+  private lateinit var edtPedidoImprimir: TextField
   private lateinit var gridPedidosEntregaImpresso: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
@@ -40,21 +48,31 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override fun isAccept(user: UserSaci) = true
   
   init {
-    val tabs = PagedTabs()
-    tabs.add(painelImprimir(), "Imprimir")
-    tabs.add(painelImpresso(), "Impresso")
-    add(tabs)
-    tabs.content.isPadding = false
-    tabs.content.isMargin = false
-    tabs.setSizeFull()
+    tabSheet {
+      setSizeFull()
+      tab("Imprimir"){
+        painelImprimir()
+      }
+      tab("Impresso") {
+        painelImpresso()
+      }
+    }
   }
   
-  fun painelImprimir() : VerticalLayout {
-    return VerticalLayout().apply {
-      isExpand = true
+  fun HasComponents.painelImprimir(): VerticalLayout {
+    return verticalLayout {
+      this.setSizeFull()
       isMargin = false
       isPadding = false
-      gridPedidosEntregaImprimir = grid(dataProvider = dataProviderProdutosImprimir) {
+      edtPedidoImprimir = textField("Numero Pedido") {
+        placeholder = "Pressione Enter"
+        this.addThemeVariants(LUMO_SMALL)
+        this.isAutofocus = true
+        addValueChangeListener {event ->
+          viewModel.updateGridImprimir()
+        }
+      }
+      gridPedidosEntregaImprimir = this.grid(dataProvider = dataProviderProdutosImprimir) {
         isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
@@ -119,7 +137,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      toolbar {
+      this.toolbar {
+        isExpand = false
         button("Imprimir") {
           icon = PRINT.create()
           addClickListener {
@@ -131,16 +150,25 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
-  fun painelImpresso() : VerticalLayout {
-    return VerticalLayout().apply {
-      isExpand = true
+  fun HasComponents.painelImpresso(): VerticalLayout {
+    return verticalLayout {
+      this.setSizeFull()
       isMargin = false
       isPadding = false
+  
+      edtPedidoImpresso = textField("Numero Pedido") {
+        placeholder = "Pressione Enter"
+        this.addThemeVariants(LUMO_SMALL)
+        this.isAutofocus = true
+        addValueChangeListener {event ->
+          viewModel.updateGridImpresso()
+        }
+      }
       gridPedidosEntregaImpresso = grid(dataProvider = dataProviderProdutosImpresso) {
-        isExpand = true
+        this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
-    
+        
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
         }
@@ -159,7 +187,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::rota) {
           this.setHeader("Rota")
         }
-    
+        
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
@@ -169,7 +197,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnTime(PedidoEntrega::horaFat) {
           this.setHeader("Hora")
         }
-    
+        
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
@@ -179,7 +207,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnTime(PedidoEntrega::horaEnt) {
           this.setHeader("Hora")
         }
-    
+        
         addColumnInt(PedidoEntrega::vendno) {
           this.setHeader("Vendedor")
         }
@@ -200,7 +228,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         //shiftSelect()
       }
-      this.expand(gridPedidosEntregaImpresso)
       viewModel.updateGridImpresso()
     }
   }
@@ -293,4 +320,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override fun itensSelecionado(): List<PedidoEntrega> {
     return gridPedidosEntregaImprimir.selectedItems.toList()
   }
+  
+  override val pedidoImprimir: Int
+    get() = edtPedidoImprimir.value?.toIntOrNull() ?: 0
+  override val pedidoImpresso: Int
+    get() = edtPedidoImpresso.value?.toIntOrNull() ?: 0
 }

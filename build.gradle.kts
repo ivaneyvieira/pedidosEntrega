@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val karibudsl_version = "0.7.4"
+val karibudsl_version = "1.0.1"
 
 plugins {
   kotlin("jvm") version "1.3.60"
@@ -17,7 +17,7 @@ repositories {
 
 
 vaadin {
-  version = "14.1.3"
+  version = "14.1.28"
   // submitStatistics=true
 }
 //vaadin.productionMode = true
@@ -46,7 +46,7 @@ val staging by configurations.creating
 
 dependencies {
   // Karibu-DSL dependency
-  compile("com.github.mvysny.karibudsl:karibu-dsl-v10:$karibudsl_version")
+  compile("com.github.mvysny.karibudsl:karibu-dsl:$karibudsl_version")
   // Vaadin 14
   compile("com.vaadin:vaadin-core:${vaadin.version}")
   compile("com.vaadin:flow-server-compatibility-mode:2.0.10")

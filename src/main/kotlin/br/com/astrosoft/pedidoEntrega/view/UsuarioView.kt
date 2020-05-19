@@ -59,7 +59,7 @@ class UsuarioView: ViewLayout<UsuarioViewModel>(), IUsuarioView {
   private fun gridCrud(): GridCrud<UserSaci> {
     val crud: GridCrud<UserSaci> = GridCrud<UserSaci>(UserSaci::class.java)
     crud.grid
-      .setColumns(UserSaci::no.name, UserSaci::login.name, UserSaci::name.name)
+      .setColumns(UserSaci::no.name, UserSaci::login.name, UserSaci::name.name, UserSaci::impressora.name)
     
     crud.grid.addThemeVariants(LUMO_COMPACT)
     
@@ -112,6 +112,11 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrud
           textField("Nome") {
             isReadOnly = true
             binder.bind(this, UserSaci::name.name)
+          }
+        if(operation in listOf(READ, DELETE, UPDATE))
+          textField("Impressora") {
+            isReadOnly = true
+            binder.bind(this, UserSaci::impressora.name)
           }
       }
       hr()

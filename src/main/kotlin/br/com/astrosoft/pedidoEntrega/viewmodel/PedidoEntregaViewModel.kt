@@ -5,7 +5,6 @@ import br.com.astrosoft.framework.util.execCommand
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
-import br.com.astrosoft.pedidoEntrega.model.saci
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() {
@@ -17,15 +16,33 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     }
   }
   
-  fun updateGrid() {
-    view.updateGrid(listPedidosEntrega)
+  fun updateGridImprimir() {
+    view.updateGridImprimir(listPedidosEntregaImprimir)
   }
   
-  val listPedidosEntrega: List<PedidoEntrega>
-    get() = saci.listaPedido()
+  fun updateGridImpresso() {
+    view.updateGridImpresso(listPedidosEntregaImpresso)
+  }
+  
+  val listPedidosEntregaImprimir: List<PedidoEntrega>
+    get() {
+      val numPedido = view.pedidoImprimir
+      return PedidoEntrega.listaPedidoImprimir().filter{pedido ->
+        pedido.pedido == numPedido || numPedido == 0
+      }
+    }
+  val listPedidosEntregaImpresso: List<PedidoEntrega>get() {
+    val numPedido = view.pedidoImpresso
+    return PedidoEntrega.listaPedidoImpresso().filter{pedido ->
+      pedido.pedido == numPedido || numPedido == 0
+    }
+  }
 }
 
 interface IPedidoEntregaView: IView {
-  fun updateGrid(itens: List<PedidoEntrega>)
+  fun updateGridImprimir(itens: List<PedidoEntrega>)
+  fun updateGridImpresso(itens: List<PedidoEntrega>)
   fun itensSelecionado(): List<PedidoEntrega>
+  val pedidoImprimir : Int
+  val pedidoImpresso : Int
 }

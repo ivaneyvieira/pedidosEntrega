@@ -14,6 +14,10 @@ import com.github.mvysny.karibudsl.v10.em
 import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
+import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.HasComponents
+import com.vaadin.flow.component.charts.model.style.SolidColor
+import com.vaadin.flow.component.charts.model.style.SolidColor.AQUA
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -42,8 +46,7 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
   abstract val viewModel: VM
   
   init {
-    width = "100%"
-    height = "100%"
+    this.setSizeFull()
   }
   
   abstract fun isAccept(user: UserSaci): Boolean
@@ -114,8 +117,8 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
     }
   }
   
-  fun VerticalLayout.toolbar(compnentes: HorizontalLayout.() -> Unit) {
-    horizontalLayout {
+  fun HasComponents.toolbar(compnentes: HorizontalLayout.() -> Unit) {
+    this.horizontalLayout {
       width = "100%"
       compnentes()
     }
@@ -165,9 +168,9 @@ fun <T> (@VaadinDsl Grid<T>).addColumnTime(
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
   val column = this.addColumnFor(property,
-                                 TextRenderer{bean->
+                                 TextRenderer {bean ->
                                    val hora = property.get(bean)
-                                    hora.format()
+                                   hora.format()
                                  })
   column.isAutoWidth = true
   column.left()
@@ -212,3 +215,12 @@ fun <T> (@VaadinDsl Grid.Column<T>).center() {
   this.textAlign = CENTER
 }
 
+fun Component.style(name: String, value: String) {
+  this.element
+    .style
+    .set(name, value)
+}
+
+fun Component.background(color : SolidColor){
+  this.style("background", color.toString())
+}

@@ -4,17 +4,17 @@ CREATE TEMPORARY TABLE T2 (
 )
 SELECT pxa.storeno,
        pxa.pdvno,
-       pxa.eordno                                    AS ordno,
+       pxa.eordno                                       AS ordno,
        pxa.time,
        pxanf.fre_amt,
-       MAX(IF(pxa.cfo IN (5922, 6922), pxa.date, 0)) AS data_venda,
-       MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfno, 0)) AS nfno_venda,
-       MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfse, 0)) AS nfse_venda,
-       MAX(IF(pxa.cfo IN (5922, 6922), pxa.amt, 0))  AS valor_venda,
-       MAX(IF(pxa.cfo IN (5117), pxa.date, 0))       AS data_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.nfno, 0))       AS nfno_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.nfse, 0))       AS nfse_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.amt, 0))        AS valor_entrega
+       MAX(IF(pxa.cfo IN (5922, 6922), pxa.date, NULL)) AS data_venda,
+       MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfno, NULL)) AS nfno_venda,
+       MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfse, NULL)) AS nfse_venda,
+       MAX(IF(pxa.cfo IN (5922, 6922), pxa.amt, NULL))  AS valor_venda,
+       MAX(IF(pxa.cfo IN (5117), pxa.date, NULL))       AS data_entrega,
+       MAX(IF(pxa.cfo IN (5117), pxa.nfno, NULL))       AS nfno_entrega,
+       MAX(IF(pxa.cfo IN (5117), pxa.nfse, NULL))       AS nfse_entrega,
+       MAX(IF(pxa.cfo IN (5117), pxa.amt, NULL))        AS valor_entrega
 FROM sqlpdv.pxa
   LEFT JOIN sqlpdv.pxanf
 	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)

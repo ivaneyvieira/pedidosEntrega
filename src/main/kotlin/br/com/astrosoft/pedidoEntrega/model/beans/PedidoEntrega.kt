@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
+import br.com.astrosoft.pedidoEntrega.model.saci
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -30,7 +31,27 @@ data class PedidoEntrega(
   val username: String
                         ) {
   val nfFat: String
-    get() = "$nfnoFat/$nfseFat"
+    get() = when {
+      nfnoFat == "" -> ""
+      nfseFat == "" -> nfnoFat
+      else          -> "$nfnoFat/$nfseFat"
+    }
   val nfEnt: String
-    get() = "$nfnoEnt/$nfseEnt"
+    get() = when {
+      nfnoEnt == "" -> ""
+      nfseEnt == "" -> nfnoEnt
+      else          -> "$nfnoEnt/$nfseEnt"
+    }
+  val paraImprimir: Boolean
+    get() = (marca != "S") && (nfnoEnt == "")
+  val impresso: Boolean
+    get() = !paraImprimir
+  
+  companion object {
+    fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
+      .filter {it.paraImprimir}
+    
+    fun listaPedidoImpresso(): List<PedidoEntrega> = saci.listaPedido()
+      .filter {it.impresso}
+  }
 }

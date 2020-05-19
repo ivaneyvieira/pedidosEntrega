@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val karibudsl_version = "0.7.4"
+val karibudsl_version = "1.0.1"
 
 plugins {
   kotlin("jvm") version "1.3.60"
@@ -17,7 +17,7 @@ repositories {
 
 
 vaadin {
-  version = "14.1.3"
+  version = "14.1.28"
   // submitStatistics=true
 }
 //vaadin.productionMode = true
@@ -46,7 +46,7 @@ val staging by configurations.creating
 
 dependencies {
   // Karibu-DSL dependency
-  compile("com.github.mvysny.karibudsl:karibu-dsl-v10:$karibudsl_version")
+  compile("com.github.mvysny.karibudsl:karibu-dsl:$karibudsl_version")
   // Vaadin 14
   compile("com.vaadin:vaadin-core:${vaadin.version}")
   compile("com.vaadin:flow-server-compatibility-mode:2.0.10")
@@ -70,6 +70,7 @@ dependencies {
   compile("com.github.appreciated:app-layout-addon:3.0.0.beta5")
   compile("org.vaadin.tatu:twincolselect:1.2.0")
   compile("org.vaadin.gatanaso:multiselect-combo-box-flow:1.1.0")
+  compile("org.vaadin.tabs:paged-tabs:2.0.1")
   //  compile("org.webjars.bowergithub.vaadin:vaadin-combo-box:4.2.7")
   //compile("com.github.appreciated:app-layout-addon:4.0.0.rc4")
   compile("org.vaadin.crudui:crudui:4.1.0")

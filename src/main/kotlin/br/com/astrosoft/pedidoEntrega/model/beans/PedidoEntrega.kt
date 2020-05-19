@@ -53,11 +53,11 @@ data class PedidoEntrega(
   companion object {
     fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.paraImprimir}
-    
+  
     fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.impressoSemNota}
     
     fun listaPedidoImpressoComNota(): List<PedidoEntrega> = saci.listaPedido()
-      .filter {it.impressoSemNota}
+      .filter {it.impressoComNota}
   }
 }

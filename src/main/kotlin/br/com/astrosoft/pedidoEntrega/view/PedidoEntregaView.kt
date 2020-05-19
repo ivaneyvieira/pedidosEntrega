@@ -6,6 +6,7 @@ import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
+import br.com.astrosoft.framework.view.right
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
@@ -20,6 +21,7 @@ import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.verticalLayout
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.dependency.HtmlImport
+import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
@@ -83,7 +85,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
         setSelectionMode(SelectionMode.MULTI)
-        
+        val grid = this
+        addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
         }
@@ -156,6 +159,16 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
+  private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label : String) {
+    addColumn {
+      list(this).indexOf(it) + 1
+    }.apply {
+      this.textAlign = END
+      isAutoWidth = true
+      setHeader(label)
+    }
+  }
+  
   fun HasComponents.painelImpressoSemNota(): VerticalLayout {
     return verticalLayout {
       this.setSizeFull()
@@ -174,7 +187,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
-        
+  
+        addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
         }
@@ -359,9 +373,10 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   }
   
   private fun list(grade: Grid<PedidoEntrega>): List<PedidoEntrega> {
-    val filter = dataProviderProdutosImprimir.filter
+    val dataProvider = grade.dataProvider as ListDataProvider
+    val filter = dataProvider.filter
     val queryOrdem = comparator(grade)
-    return dataProviderProdutosImprimir.items.toList()
+    return dataProvider.items.toList()
       .filter {
         filter?.test(it) ?: true
       }

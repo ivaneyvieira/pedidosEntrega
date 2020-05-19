@@ -46,7 +46,7 @@ data class PedidoEntrega(
   val paraImprimir: Boolean
     get() = (marca != "S") && (data?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
   val impressoSemNota: Boolean
-    get() = (marca == "S") && (nfnoEnt == "")
+    get() = (marca == "S") && (nfnoEnt == "")&& (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val impressoComNota: Boolean
     get() = (marca == "S") && (nfnoEnt != "")
   

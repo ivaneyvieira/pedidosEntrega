@@ -43,15 +43,20 @@ data class PedidoEntrega(
       else          -> "$nfnoEnt/$nfseEnt"
     }
   val paraImprimir: Boolean
-    get() = (marca != "S") && (nfnoEnt == "")
-  val impresso: Boolean
-    get() = !paraImprimir
+    get() = (marca != "S")
+  val impressoComNota: Boolean
+    get() = (marca == "S") && (nfnoEnt != "")
+  val impressoSemNota: Boolean
+    get() = (marca == "S") && (nfnoEnt == "")
   
   companion object {
     fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.paraImprimir}
-    
-    fun listaPedidoImpresso(): List<PedidoEntrega> = saci.listaPedido()
-      .filter {it.impresso}
+  
+    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = saci.listaPedido()
+      .filter {it.impressoComNota}
+  
+    fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
+      .filter {it.impressoSemNota}
   }
 }

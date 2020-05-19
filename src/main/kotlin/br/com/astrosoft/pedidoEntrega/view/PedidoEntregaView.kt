@@ -37,13 +37,16 @@ import kotlin.reflect.KProperty1
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
-  private lateinit var edtPedidoImpresso: TextField
+  private lateinit var edtPedidoImpressoSemNota: TextField
+  private lateinit var edtPedidoImpressoComNota: TextField
   private lateinit var edtPedidoImprimir: TextField
-  private lateinit var gridPedidosEntregaImpresso: Grid<PedidoEntrega>
+  private lateinit var gridPedidosEntregaImpressoComNota: Grid<PedidoEntrega>
+  private lateinit var gridPedidosEntregaImpressoSemNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   private val dataProviderProdutosImprimir = ListDataProvider<PedidoEntrega>(mutableListOf())
-  private val dataProviderProdutosImpresso = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderProdutosImpressoSemNota = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderProdutosImpressoComNota = ListDataProvider<PedidoEntrega>(mutableListOf())
   
   override fun isAccept(user: UserSaci) = true
   
@@ -53,8 +56,11 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       tab("Imprimir"){
         painelImprimir()
       }
-      tab("Impresso") {
-        painelImpresso()
+      tab("Impresso sem nota") {
+        painelImpressoSemNota()
+      }
+      tab("Impresso com nota") {
+        painelImpressoComNota()
       }
     }
   }
@@ -150,21 +156,21 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
-  fun HasComponents.painelImpresso(): VerticalLayout {
+  fun HasComponents.painelImpressoSemNota(): VerticalLayout {
     return verticalLayout {
       this.setSizeFull()
       isMargin = false
       isPadding = false
-  
-      edtPedidoImpresso = textField("Numero Pedido") {
+      
+      edtPedidoImpressoSemNota = textField("Numero Pedido") {
         placeholder = "Pressione Enter"
         this.addThemeVariants(LUMO_SMALL)
         this.isAutofocus = true
         addValueChangeListener {event ->
-          viewModel.updateGridImpresso()
+          viewModel.updateGridImpressoSemNota()
         }
       }
-      gridPedidosEntregaImpresso = grid(dataProvider = dataProviderProdutosImpresso) {
+      gridPedidosEntregaImpressoSemNota = grid(dataProvider = dataProviderProdutosImpressoSemNota) {
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
@@ -228,7 +234,89 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         //shiftSelect()
       }
-      viewModel.updateGridImpresso()
+      viewModel.updateGridImpressoSemNota()
+    }
+  }
+  
+  fun HasComponents.painelImpressoComNota(): VerticalLayout {
+    return verticalLayout {
+      this.setSizeFull()
+      isMargin = false
+      isPadding = false
+      
+      edtPedidoImpressoComNota = textField("Numero Pedido") {
+        placeholder = "Pressione Enter"
+        this.addThemeVariants(LUMO_SMALL)
+        this.isAutofocus = true
+        addValueChangeListener {event ->
+          viewModel.updateGridImpressoComNota()
+        }
+      }
+      gridPedidosEntregaImpressoComNota = grid(dataProvider = dataProviderProdutosImpressoComNota) {
+        this.isExpand = true
+        isMultiSort = true
+        addThemeVariants(LUMO_COMPACT)
+        
+        addColumnInt(PedidoEntrega::loja) {
+          this.setHeader("Loja")
+        }
+        addColumnInt(PedidoEntrega::pedido) {
+          this.setHeader("Pedido")
+        }
+        addColumnDate(PedidoEntrega::data) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::hora) {
+          this.setHeader("Hora")
+        }
+        addColumnString(PedidoEntrega::area) {
+          this.setHeader("Área")
+        }
+        addColumnString(PedidoEntrega::rota) {
+          this.setHeader("Rota")
+        }
+        
+        addColumnString(PedidoEntrega::nfFat) {
+          this.setHeader("NF Fat")
+        }
+        addColumnDate(PedidoEntrega::dataFat) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaFat) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnString(PedidoEntrega::nfEnt) {
+          this.setHeader("NF Ent")
+        }
+        addColumnDate(PedidoEntrega::dataEnt) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaEnt) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnInt(PedidoEntrega::vendno) {
+          this.setHeader("Vendedor")
+        }
+        addColumnDouble(PedidoEntrega::frete) {
+          this.setHeader("R$ Frete")
+        }
+        addColumnDouble(PedidoEntrega::valor) {
+          this.setHeader("R$ Nota")
+        }
+        addColumnInt(PedidoEntrega::custno) {
+          this.setHeader("Cliente")
+        }
+        addColumnString(PedidoEntrega::obs) {
+          this.setHeader("Obs")
+        }
+        addColumnString(PedidoEntrega::username) {
+          this.setHeader("Usuário")
+        }
+        //shiftSelect()
+      }
+      viewModel.updateGridImpressoComNota()
     }
   }
   
@@ -311,10 +399,16 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     dataProviderProdutosImprimir.refreshAll()
   }
   
-  override fun updateGridImpresso(itens: List<PedidoEntrega>) {
-    dataProviderProdutosImpresso.items.clear()
-    dataProviderProdutosImpresso.items.addAll(itens)
-    dataProviderProdutosImpresso.refreshAll()
+  override fun updateGridImpressoComNota(itens: List<PedidoEntrega>) {
+    dataProviderProdutosImpressoComNota.items.clear()
+    dataProviderProdutosImpressoComNota.items.addAll(itens)
+    dataProviderProdutosImpressoComNota.refreshAll()
+  }
+  
+  override fun updateGridImpressoSemNota(itens: List<PedidoEntrega>) {
+    dataProviderProdutosImpressoSemNota.items.clear()
+    dataProviderProdutosImpressoSemNota.items.addAll(itens)
+    dataProviderProdutosImpressoSemNota.refreshAll()
   }
   
   override fun itensSelecionado(): List<PedidoEntrega> {
@@ -323,6 +417,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   override val pedidoImprimir: Int
     get() = edtPedidoImprimir.value?.toIntOrNull() ?: 0
-  override val pedidoImpresso: Int
-    get() = edtPedidoImpresso.value?.toIntOrNull() ?: 0
+  override val pedidoImpressoSemNota: Int
+    get() = edtPedidoImpressoSemNota.value?.toIntOrNull() ?: 0
+  override val pedidoImpressoComNota: Int
+    get() = edtPedidoImpressoComNota.value?.toIntOrNull() ?: 0
 }

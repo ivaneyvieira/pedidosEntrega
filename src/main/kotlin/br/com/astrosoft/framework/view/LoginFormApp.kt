@@ -29,7 +29,7 @@ class LoginFormApp(appName: String, version: String, val navigate: (UserSaci) ->
   }
   
   private fun login(user: UserSaci) {
-    LoginService.login(LoginInfo(user.login ?: ""))
+    LoginService.login(LoginInfo(user.login))
     navigate(user)
     close()
   }

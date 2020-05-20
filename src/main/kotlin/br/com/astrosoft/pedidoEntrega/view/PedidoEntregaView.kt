@@ -6,6 +6,7 @@ import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
+import br.com.astrosoft.framework.view.background
 import br.com.astrosoft.framework.view.right
 import br.com.astrosoft.framework.view.selectedChange
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
@@ -28,6 +29,7 @@ import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
+import com.vaadin.flow.component.charts.model.style.SolidColor
 import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.HtmlImport
@@ -36,6 +38,8 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
+import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.component.textfield.TextField
@@ -43,6 +47,8 @@ import com.vaadin.flow.component.textfield.TextFieldVariant.LUMO_SMALL
 import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
+import com.vaadin.flow.data.value.ValueChangeMode.EAGER
+import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
@@ -118,32 +124,42 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isMargin = false
       isPadding = false
       horizontalLayout {
+        setWidthFull()
         edtPedidoImprimir = textField("Numero Pedido") {
-          placeholder = "Pressione Enter"
+          this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         edtDataImprimir = datePicker("Data") {
-          placeholder = "Pressione Enter"
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         cmbAreaImprimir = textField("Área") {
-          placeholder = "Pressione Enter"
+          this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         cmbRotaImprimir = textField("Rota") {
-          placeholder = "Pressione Enter"
+          this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
           
           addValueChangeListener {
             viewModel.updateGridImprimir()
+          }
+        }
+        horizontalLayout {
+          isExpand = true
+          this.justifyContentMode = JustifyContentMode.END
+          button("Imprimir") {
+            icon = PRINT.create()
+            addClickListener {
+              viewModel.imprimir()
+            }
           }
         }
       }
@@ -213,15 +229,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      this.toolbar {
-        isExpand = false
-        button("Imprimir") {
-          icon = PRINT.create()
-          addClickListener {
-            viewModel.imprimir()
-          }
-        }
-      }
+      
       viewModel.updateGridImprimir()
     }
   }
@@ -241,19 +249,32 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       this.setSizeFull()
       isMargin = false
       isPadding = false
-      
-      edtPedidoImpressoSemNota = textField("Numero Pedido") {
-        placeholder = "Pressione Enter"
-        this.addThemeVariants(LUMO_SMALL)
-        this.isAutofocus = true
-        addValueChangeListener {
-          viewModel.updateGridImpressoSemNota()
+      horizontalLayout {
+        setWidthFull()
+        edtPedidoImpressoSemNota = textField("Numero Pedido") {
+          this.valueChangeMode = TIMEOUT
+          this.addThemeVariants(LUMO_SMALL)
+          this.isAutofocus = true
+          addValueChangeListener {
+            viewModel.updateGridImpressoSemNota()
+          }
+        }
+        horizontalLayout {
+          isExpand = true
+          this.justifyContentMode = JustifyContentMode.END
+          button("Desmarcar") {
+            icon = CLOSE.create()
+            addClickListener {
+              viewModel.desmarcaSemNota()
+            }
+          }
         }
       }
       gridPedidosEntregaImpressoSemNota = grid(dataProvider = dataProviderProdutosImpressoSemNota) {
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
+        setSelectionMode(SelectionMode.MULTI)
         
         addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
@@ -313,6 +334,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }
+        shiftSelect()
       }
       viewModel.updateGridImpressoSemNota()
     }
@@ -324,18 +346,33 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isMargin = false
       isPadding = false
       
-      edtPedidoImpressoComNota = textField("Numero Pedido") {
-        placeholder = "Pressione Enter"
-        this.addThemeVariants(LUMO_SMALL)
-        this.isAutofocus = true
-        addValueChangeListener {
-          viewModel.updateGridImpressoComNota()
+      horizontalLayout {
+        setWidthFull()
+        edtPedidoImpressoComNota = textField("Numero Pedido") {
+          this.valueChangeMode = TIMEOUT
+          this.addThemeVariants(LUMO_SMALL)
+          this.isAutofocus = true
+          addValueChangeListener {
+            viewModel.updateGridImpressoComNota()
+          }
+        }
+        horizontalLayout {
+          isExpand = true
+          this.justifyContentMode = JustifyContentMode.END
+          button("Desmarcar") {
+            icon = CLOSE.create()
+            addClickListener {
+              viewModel.desmarcaComNota()
+            }
+          }
         }
       }
+      
       gridPedidosEntregaImpressoComNota = grid(dataProvider = dataProviderProdutosImpressoComNota) {
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
+        setSelectionMode(SelectionMode.MULTI)
         
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
@@ -394,7 +431,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }
-        //shiftSelect()
+        shiftSelect()
       }
       viewModel.updateGridImpressoComNota()
     }
@@ -492,8 +529,16 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     dataProviderProdutosImpressoSemNota.refreshAll()
   }
   
-  override fun itensSelecionado(): List<PedidoEntrega> {
+  override fun itensSelecionadoImprimir(): List<PedidoEntrega> {
     return gridPedidosEntregaImprimir.selectedItems.toList()
+  }
+  
+  override fun itensSelecionadoImpressoComNota(): List<PedidoEntrega> {
+    return gridPedidosEntregaImpressoComNota.selectedItems.toList()
+  }
+  
+  override fun itensSelecionadoImpressoSemNota(): List<PedidoEntrega> {
+    return gridPedidosEntregaImpressoSemNota.selectedItems.toList()
   }
   
   override val pedidoImprimir: Int

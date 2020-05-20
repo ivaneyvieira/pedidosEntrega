@@ -79,6 +79,7 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
                                 lambda: QueryHandle = {}): List<T> {
     val query = con.createQuery(sql)
     query.lambda()
+    println(sql)
     return query.executeAndFetch(classes.java)
   }
   
@@ -102,6 +103,7 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
       val query = con.createQuery(sql)
       query.lambda()
       query.executeUpdate()
+      println(sql)
     }
   }
   

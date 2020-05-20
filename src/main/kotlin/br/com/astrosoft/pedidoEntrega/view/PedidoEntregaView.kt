@@ -122,6 +122,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         cmbRotaImprimir = textField("Rota") {
           placeholder = "Pressione Enter"
           this.isAutofocus = true
+          
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }

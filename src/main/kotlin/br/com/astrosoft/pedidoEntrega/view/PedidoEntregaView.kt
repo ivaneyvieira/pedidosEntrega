@@ -102,27 +102,27 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         edtPedidoImprimir = textField("Numero Pedido") {
           placeholder = "Pressione Enter"
           this.isAutofocus = true
-          addValueChangeListener {event ->
+          addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         edtDataImprimir = datePicker("Data") {
           placeholder = "Pressione Enter"
-          addValueChangeListener {event ->
+          addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         cmbAreaImprimir = textField("Área") {
           placeholder = "Pressione Enter"
           this.isAutofocus = true
-          addValueChangeListener {event ->
+          addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         cmbRotaImprimir = textField("Rota") {
           placeholder = "Pressione Enter"
           this.isAutofocus = true
-          addValueChangeListener {event ->
+          addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
@@ -132,7 +132,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
         setSelectionMode(SelectionMode.MULTI)
-        val grid = this
+
         addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
@@ -226,7 +226,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         placeholder = "Pressione Enter"
         this.addThemeVariants(LUMO_SMALL)
         this.isAutofocus = true
-        addValueChangeListener {event ->
+        addValueChangeListener {
           viewModel.updateGridImpressoSemNota()
         }
       }
@@ -308,7 +308,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         placeholder = "Pressione Enter"
         this.addThemeVariants(LUMO_SMALL)
         this.isAutofocus = true
-        addValueChangeListener {event ->
+        addValueChangeListener {
           viewModel.updateGridImpressoComNota()
         }
       }

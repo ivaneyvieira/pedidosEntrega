@@ -35,7 +35,7 @@ class LoginView: VerticalLayout(), BeforeEnterObserver {
   
   override fun beforeEnter(event: BeforeEnterEvent?) {
     saci.findUser(RegistryUserInfo.usuario)
-      ?.let {usuario ->
+      ?.let {
         event?.rerouteTo(PedidoEntregaView::class.java)
       }
   }

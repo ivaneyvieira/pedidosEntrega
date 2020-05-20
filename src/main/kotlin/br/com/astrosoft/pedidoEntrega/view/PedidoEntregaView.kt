@@ -7,19 +7,27 @@ import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
 import br.com.astrosoft.framework.view.right
+import br.com.astrosoft.framework.view.selectedChange
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
 import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
+import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
 import com.github.mvysny.karibudsl.v10.button
+import com.github.mvysny.karibudsl.v10.comboBox
 import com.github.mvysny.karibudsl.v10.contents
+import com.github.mvysny.karibudsl.v10.datePicker
 import com.github.mvysny.karibudsl.v10.grid
+import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.github.mvysny.karibudsl.v10.tabSheet
 import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.verticalLayout
+import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasComponents
+import com.vaadin.flow.component.combobox.ComboBox
+import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.Grid
@@ -27,18 +35,26 @@ import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.component.textfield.TextFieldVariant.LUMO_SMALL
+import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
+import java.time.LocalDate
 import kotlin.reflect.KProperty1
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
+  private lateinit var cmbRotaImprimir: TextField
+  private val listAreaImprimir = ListDataProvider<String>(mutableListOf())
+  private val listRotaImprimir = ListDataProvider<String>(mutableListOf())
+  private lateinit var cmbAreaImprimir: TextField
+  private lateinit var edtDataImprimir: DatePicker
   private lateinit var edtPedidoImpressoSemNota: TextField
   private lateinit var edtPedidoImpressoComNota: TextField
   private lateinit var edtPedidoImprimir: TextField
@@ -55,16 +71,26 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   init {
     tabSheet {
       setSizeFull()
-      tab("Imprimir"){
+      val tab1 = tab(Companion.TAB_IMPRESSO) {
         painelImprimir()
       }
-      tab("Impresso sem nota") {
+      val tab2 = tab("Impresso sem nota") {
         painelImpressoSemNota()
       }
-      tab("Impresso com nota") {
+      val tab3 = tab("Impresso com nota") {
         painelImpressoComNota()
       }
+      this.selectedChange {event->
+        event.apply {
+          when(source.selectedTab) {
+            tab1 -> viewModel.updateGridImprimir()
+            tab2 -> viewModel.updateGridImpressoSemNota()
+            tab3 -> viewModel.updateGridImpressoComNota()
+          }
+        }
+      }
     }
+
   }
   
   fun HasComponents.painelImprimir(): VerticalLayout {
@@ -72,12 +98,33 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       this.setSizeFull()
       isMargin = false
       isPadding = false
-      edtPedidoImprimir = textField("Numero Pedido") {
-        placeholder = "Pressione Enter"
-        this.addThemeVariants(LUMO_SMALL)
-        this.isAutofocus = true
-        addValueChangeListener {event ->
-          viewModel.updateGridImprimir()
+      horizontalLayout {
+        edtPedidoImprimir = textField("Numero Pedido") {
+          placeholder = "Pressione Enter"
+          this.isAutofocus = true
+          addValueChangeListener {event ->
+            viewModel.updateGridImprimir()
+          }
+        }
+        edtDataImprimir = datePicker("Data") {
+          placeholder = "Pressione Enter"
+          addValueChangeListener {event ->
+            viewModel.updateGridImprimir()
+          }
+        }
+        cmbAreaImprimir = textField("Área") {
+          placeholder = "Pressione Enter"
+          this.isAutofocus = true
+          addValueChangeListener {event ->
+            viewModel.updateGridImprimir()
+          }
+        }
+        cmbRotaImprimir = textField("Rota") {
+          placeholder = "Pressione Enter"
+          this.isAutofocus = true
+          addValueChangeListener {event ->
+            viewModel.updateGridImprimir()
+          }
         }
       }
       gridPedidosEntregaImprimir = this.grid(dataProvider = dataProviderProdutosImprimir) {
@@ -159,7 +206,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
-  private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label : String) {
+  private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
     addColumn {
       list(this).indexOf(it) + 1
     }.apply {
@@ -187,7 +234,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
-  
+        
         addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")
@@ -246,7 +293,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }
-        //shiftSelect()
       }
       viewModel.updateGridImpressoSemNota()
     }
@@ -436,4 +482,26 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     get() = edtPedidoImpressoSemNota.value?.toIntOrNull() ?: 0
   override val pedidoImpressoComNota: Int
     get() = edtPedidoImpressoComNota.value?.toIntOrNull() ?: 0
+  override val dataImprimir: LocalDate?
+    get() = edtDataImprimir.value
+  override val areaImprimir: String
+    get() = cmbAreaImprimir.value ?: ""
+  override val rotaImprimir: String
+    get() = cmbRotaImprimir.value ?: ""
+  
+  override fun updateComboAreaImprimir(itens: List<String>) {
+    listAreaImprimir.items.clear()
+    listAreaImprimir.items.addAll(itens)
+    listAreaImprimir.refreshAll()
+  }
+  
+  override fun updateComboRotaImprimir(itens: List<String>) {
+    listRotaImprimir.items.clear()
+    listRotaImprimir.items.addAll(itens)
+    listRotaImprimir.refreshAll()
+  }
+  
+  companion object {
+    const val TAB_IMPRESSO: String = "Imprimir"
+  }
 }

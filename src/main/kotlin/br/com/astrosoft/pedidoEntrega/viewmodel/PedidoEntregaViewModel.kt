@@ -8,10 +8,13 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci.Companion
+import java.time.LocalDate
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() = exec {
-    val pedidos = view.itensSelecionado().ifEmpty { fail("Não há pedido selecionado")}
+    val pedidos =
+      view.itensSelecionado()
+        .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = UserSaci.userAtual?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
       printPedido(pedido.loja, pedido.pedido, impressora)
@@ -25,36 +28,55 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   }
   
   fun updateGridImprimir() {
-    view.updateGridImprimir(listPedidosEntregaImprimir)
+    view.updateGridImprimir(listPedidosEntregaImprimir())
   }
   
   fun updateGridImpressoComNota() {
-    view.updateGridImpressoComNota(listPedidosEntregaImpressoComNota)
+    view.updateGridImpressoComNota(listPedidosEntregaImpressoComNota())
   }
   
   fun updateGridImpressoSemNota() {
-    view.updateGridImpressoSemNota(listPedidosEntregaImpressoSemNota)
+    view.updateGridImpressoSemNota(listPedidosEntregaImpressoSemNota())
   }
   
-  val listPedidosEntregaImprimir: List<PedidoEntrega>
-    get() {
-      val numPedido = view.pedidoImprimir
-      return PedidoEntrega.listaPedidoImprimir().filter{pedido ->
+  private fun listPedidosEntregaImprimir(): List<PedidoEntrega> {
+    val numPedido = view.pedidoImprimir
+    val data = view.dataImprimir
+    val area = view.areaImprimir.trim()
+    val rota = view.rotaImprimir.trim()
+    return PedidoEntrega.listaPedidoImprimir()
+      .filter {pedido ->
+        (pedido.pedido == numPedido || numPedido == 0) &&
+        (pedido.data == data || data == null) &&
+        (pedido.rota.contains(rota) || rota == "") &&
+        (pedido.area.contains(area) || area == "")
+      }
+  }
+  
+  private fun listPedidosEntregaImpressoSemNota(): List<PedidoEntrega> {
+    val numPedido = view.pedidoImpressoSemNota
+    return PedidoEntrega.listaPedidoImpressoSemNota()
+      .filter {pedido ->
         pedido.pedido == numPedido || numPedido == 0
       }
-    }
-  val listPedidosEntregaImpressoSemNota: List<PedidoEntrega>get() {
-    val numPedido = view.pedidoImpressoSemNota
-    return PedidoEntrega.listaPedidoImpressoSemNota().filter{pedido ->
-      pedido.pedido == numPedido || numPedido == 0
-    }
   }
-  val listPedidosEntregaImpressoComNota: List<PedidoEntrega>get() {
+  
+  private fun listPedidosEntregaImpressoComNota(): List<PedidoEntrega> {
     val numPedido = view.pedidoImpressoComNota
-    return PedidoEntrega.listaPedidoImpressoComNota().filter{pedido ->
-      pedido.pedido == numPedido || numPedido == 0
-    }
+    return PedidoEntrega.listaPedidoImpressoComNota()
+      .filter {pedido ->
+        pedido.pedido == numPedido || numPedido == 0
+      }
   }
+  
+  private fun listAreas() = PedidoEntrega.listaPedido()
+    .map {it.area}
+    .distinct()
+    .sorted()
+  private fun listRotas() = PedidoEntrega.listaPedido()
+    .map {it.rota}
+    .distinct()
+    .sorted()
 }
 
 interface IPedidoEntregaView: IView {
@@ -62,7 +84,12 @@ interface IPedidoEntregaView: IView {
   fun updateGridImpressoSemNota(itens: List<PedidoEntrega>)
   fun updateGridImpressoComNota(itens: List<PedidoEntrega>)
   fun itensSelecionado(): List<PedidoEntrega>
-  val pedidoImprimir : Int
-  val pedidoImpressoSemNota : Int
-  val pedidoImpressoComNota : Int
+  val pedidoImprimir: Int
+  val pedidoImpressoSemNota: Int
+  val pedidoImpressoComNota: Int
+  val dataImprimir: LocalDate?
+  val areaImprimir: String
+  val rotaImprimir: String
+  fun updateComboAreaImprimir(itens: List<String>)
+  fun updateComboRotaImprimir(itens: List<String>)
 }

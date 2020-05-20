@@ -8,6 +8,7 @@ import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import com.github.mvysny.karibudsl.v10.KFormLayout
+import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
 import com.github.mvysny.karibudsl.v10.addColumnFor
 import com.github.mvysny.karibudsl.v10.em
@@ -15,6 +16,7 @@ import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.charts.model.style.SolidColor
 import com.vaadin.flow.component.charts.model.style.SolidColor.AQUA
@@ -38,6 +40,7 @@ import kotlin.reflect.KProperty1
 import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.ColumnTextAlign.START
+import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.data.renderer.TextRenderer
 import java.time.LocalTime
 
@@ -123,6 +126,10 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
       compnentes()
     }
   }
+}
+
+fun (@VaadinDsl TabSheet).selectedChange(onEvent: (event: SelectedChangeEvent) -> Unit) {
+  addSelectedChangeListener(ComponentEventListener<SelectedChangeEvent> {event -> onEvent(event)})
 }
 
 fun <T> (@VaadinDsl Grid<T>).addColumnString(

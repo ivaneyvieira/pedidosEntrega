@@ -106,6 +106,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
       }
+      /*
       this.selectedChange {event ->
         event.apply {
           when(source.selectedTab) {
@@ -115,6 +116,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           }
         }
       }
+     
+       */
     }
   }
   

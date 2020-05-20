@@ -19,7 +19,7 @@ FROM sqlpdv.pxa
   LEFT JOIN sqlpdv.pxanf
 	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)
 WHERE (pxa.storeno IN (1, 2, 3, 4, 5, 6))
-  AND (pxa.date >= 20200501)
+  AND (pxa.date >= 20200518)
   AND pxa.cfo IN (5922, 6922, 5117, 6117)
 GROUP BY pxa.storeno, pxa.eordno;
 
@@ -87,5 +87,5 @@ FROM sqldados.eord
 WHERE (eord.storeno IN (1, 2, 3, 4, 5, 6))
   AND ((NOT eoprdf.bits & POW(2, 1)))
   AND eord.status NOT IN (3, 5)
-  AND (eord.date >= 20200501)
+  AND (eord.date >= 20200518)
 GROUP BY eord.storeno, pedido

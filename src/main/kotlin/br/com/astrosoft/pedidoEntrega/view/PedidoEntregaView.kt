@@ -26,6 +26,8 @@ import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.verticalLayout
 import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasComponents
+import com.vaadin.flow.component.button.Button
+import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.HtmlImport
@@ -71,16 +73,34 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   init {
     tabSheet {
       setSizeFull()
-      val tab1 = tab(Companion.TAB_IMPRESSO) {
+      val tab1 = tab {
         painelImprimir()
+      }.apply {
+        val button = Button(Companion.TAB_IMPRESSO) {
+          viewModel.updateGridImprimir()
+        }
+        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+        this.addComponentAsFirst(button)
       }
-      val tab2 = tab("Impresso sem nota") {
+      val tab2 = tab {
         painelImpressoSemNota()
+      }.apply {
+        val button = Button("Impresso sem nota") {
+          viewModel.updateGridImprimir()
+        }
+        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+        this.addComponentAsFirst(button)
       }
-      val tab3 = tab("Impresso com nota") {
+      val tab3 = tab {
         painelImpressoComNota()
+      }.apply {
+        val button = Button("Impresso com nota") {
+          viewModel.updateGridImprimir()
+        }
+        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+        this.addComponentAsFirst(button)
       }
-      this.selectedChange {event->
+      this.selectedChange {event ->
         event.apply {
           when(source.selectedTab) {
             tab1 -> viewModel.updateGridImprimir()
@@ -90,7 +110,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
       }
     }
-
   }
   
   fun HasComponents.painelImprimir(): VerticalLayout {
@@ -133,7 +152,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
         setSelectionMode(SelectionMode.MULTI)
-
+        
         addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {
           this.setHeader("Loja")

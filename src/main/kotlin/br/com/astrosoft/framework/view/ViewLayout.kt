@@ -1,12 +1,12 @@
 package br.com.astrosoft.framework.view
 
-import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
-import br.com.astrosoft.pedidoEntrega.model.saci
-import br.com.astrosoft.pedidoEntrega.view.LoginService
 import br.com.astrosoft.framework.model.RegistryUserInfo
 import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
+import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
+import br.com.astrosoft.pedidoEntrega.model.saci
+import br.com.astrosoft.pedidoEntrega.view.LoginService
 import com.github.mvysny.karibudsl.v10.KFormLayout
 import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
@@ -15,34 +15,39 @@ import com.github.mvysny.karibudsl.v10.em
 import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
+import com.github.mvysny.karibudsl.v10.tab
 import com.vaadin.flow.component.Component
+import com.vaadin.flow.component.ComponentEvent
 import com.vaadin.flow.component.ComponentEventListener
+import com.vaadin.flow.component.DomEvent
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.charts.model.style.SolidColor
-import com.vaadin.flow.component.charts.model.style.SolidColor.AQUA
+import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
+import com.vaadin.flow.component.grid.ColumnTextAlign.END
+import com.vaadin.flow.component.grid.ColumnTextAlign.START
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
+import com.vaadin.flow.component.tabs.Tab
+import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.data.renderer.LocalDateRenderer
 import com.vaadin.flow.data.renderer.NumberRenderer
+import com.vaadin.flow.data.renderer.TextRenderer
+import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.AfterNavigationEvent
 import com.vaadin.flow.router.AfterNavigationObserver
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
 import com.vaadin.flow.router.BeforeLeaveEvent
 import com.vaadin.flow.router.BeforeLeaveObserver
+import com.vaadin.flow.shared.Registration
 import org.claspina.confirmdialog.ButtonOption
 import org.claspina.confirmdialog.ConfirmDialog
 import java.text.DecimalFormat
 import java.time.LocalDate
-import kotlin.reflect.KProperty1
-import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
-import com.vaadin.flow.component.grid.ColumnTextAlign.END
-import com.vaadin.flow.component.grid.ColumnTextAlign.START
-import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
-import com.vaadin.flow.data.renderer.TextRenderer
 import java.time.LocalTime
+import kotlin.reflect.KProperty1
 
 abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeaveObserver,
                                              BeforeEnterObserver, AfterNavigationObserver {
@@ -228,6 +233,17 @@ fun Component.style(name: String, value: String) {
     .set(name, value)
 }
 
-fun Component.background(color : SolidColor){
+fun Component.background(color: SolidColor) {
   this.style("background", color.toString())
 }
+
+class TabClick(s: String?): Tab(s) {
+  @DomEvent("click")
+  class ClickTabEvent(source: Tab?, fromClient: Boolean): ComponentEvent<Tab?>(source, fromClient)
+  
+  fun addClickListener(listener: ComponentEventListener<ClickTabEvent?>?): Registration {
+    return addListener(ClickTabEvent::class.java, listener)
+  }
+}
+
+

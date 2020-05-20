@@ -50,6 +50,14 @@ data class PedidoEntrega(
   val impressoComNota: Boolean
     get() = (marca == "S") && (nfnoEnt != "")
   
+  fun marcaImpresso() {
+    saci.ativaMarca(loja, pedido, "S")
+  }
+  
+  fun desmarcaImpresso() {
+    saci.ativaMarca(loja, pedido, " ")
+  }
+  
   companion object {
     fun listaPedido(): List<PedidoEntrega> = saci.listaPedido()
     

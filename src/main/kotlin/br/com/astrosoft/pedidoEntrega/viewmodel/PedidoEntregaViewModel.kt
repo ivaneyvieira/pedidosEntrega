@@ -17,13 +17,21 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = UserSaci.userAtual?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
-      printPedido(pedido.loja, pedido.pedido, impressora)
+      if(printPedido(pedido.loja, pedido.pedido, impressora))
+        pedido.marcaImpresso()
     }
+    view.showInformation("Impressão finalizada")
+    updateGridImprimir()
   }
   
-  private fun printPedido(storeno: Int, ordno: Int, impressora: String) {
-    Ssh("172.20.47.1", "ivaney", "ivaney").shell {
-      execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
+  private fun printPedido(storeno: Int, ordno: Int, impressora: String) : Boolean {
+    return try {
+      Ssh("172.20.47.1", "ivaney", "ivaney").shell {
+        execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
+      }
+      true
+    }catch(e : Throwable){
+      false
     }
   }
   

@@ -28,7 +28,8 @@ import kotlin.reflect.KClass
 @Push
 @PWA(name = "Pedidos de venda",
      shortName = "Pedidos",
-     iconPath = "icons/logo.png")
+     iconPath = "icons/logo.png",
+     enableInstallPrompt = false)
 class AppPedidoLayout: AppLayoutRouterLayout() {
   init {
     init(atualizaMenu())

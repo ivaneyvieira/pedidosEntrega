@@ -37,6 +37,16 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     return query(sql, PedidoEntrega::class)
   }
   
+  fun ativaMarca(storeno : Int, ordno : Int, marca : String) {
+    val sql = "/sqlSaci/ativaMarca.sql"
+    script(sql) {
+      addOptionalParameter("storeno", storeno)
+      addOptionalParameter("ordno", ordno)
+      addOptionalParameter("marca", marca)
+    }
+  }
+  
+  
   companion object {
     private val db = DB("saci")
     internal val driver = db.driver

@@ -59,15 +59,24 @@ data class PedidoEntrega(
   }
   
   companion object {
-    fun listaPedido(): List<PedidoEntrega> = saci.listaPedido()
+    val listaPedido = mutableListOf<PedidoEntrega>()
     
-    fun listaPedidoImprimir(): List<PedidoEntrega> = saci.listaPedido()
+    fun update() {
+      listaPedido.run{
+        this.clear()
+        this.addAll(saci.listaPedido())
+      }
+    }
+    
+    fun listaPedido(): List<PedidoEntrega> = listaPedido
+    
+    fun listaPedidoImprimir(): List<PedidoEntrega> = listaPedido
       .filter {it.paraImprimir}
     
     fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.impressoSemNota}
     
-    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = saci.listaPedido()
+    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = listaPedido
       .filter {it.impressoComNota}
   }
 }

@@ -9,6 +9,8 @@ import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci.Companion
 import java.time.LocalDate
+import java.time.LocalDateTime
+import kotlin.concurrent.thread
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() = exec {
@@ -24,26 +26,29 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     updateGridImprimir()
   }
   
-  private fun printPedido(storeno: Int, ordno: Int, impressora: String) : Boolean {
+  private fun printPedido(storeno: Int, ordno: Int, impressora: String): Boolean {
     return try {
       Ssh("172.20.47.1", "ivaney", "ivaney").shell {
         execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       }
       true
-    }catch(e : Throwable){
+    } catch(e: Throwable) {
       false
     }
   }
   
   fun updateGridImprimir() {
+    updatePedidos()
     view.updateGridImprimir(listPedidosEntregaImprimir())
   }
   
   fun updateGridImpressoComNota() {
+    updatePedidos()
     view.updateGridImpressoComNota(listPedidosEntregaImpressoComNota())
   }
   
   fun updateGridImpressoSemNota() {
+    updatePedidos()
     view.updateGridImpressoSemNota(listPedidosEntregaImpressoSemNota())
   }
   
@@ -81,6 +86,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     .map {it.area}
     .distinct()
     .sorted()
+  
   private fun listRotas() = PedidoEntrega.listaPedido()
     .map {it.rota}
     .distinct()
@@ -97,6 +103,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     
     updateGridImpressoSemNota()
   }
+  
   fun desmarcaComNota() = exec {
     val pedidos =
       view.itensSelecionadoImpressoComNota()
@@ -107,6 +114,10 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     }
     
     updateGridImpressoComNota()
+  }
+  
+  private fun updatePedidos() {
+    PedidoEntrega.update()
   }
 }
 

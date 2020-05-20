@@ -52,6 +52,7 @@ import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
+import kotlin.concurrent.thread
 import kotlin.reflect.KProperty1
 
 @Route(layout = AppPedidoLayout::class)
@@ -92,7 +93,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         painelImpressoSemNota()
       }.apply {
         val button = Button("Impresso sem nota") {
-          viewModel.updateGridImprimir()
+          viewModel.updateGridImpressoSemNota()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
@@ -101,7 +102,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         painelImpressoComNota()
       }.apply {
         val button = Button("Impresso com nota") {
-          viewModel.updateGridImprimir()
+          viewModel.updateGridImpressoComNota()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
@@ -128,6 +129,12 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isPadding = false
       horizontalLayout {
         setWidthFull()
+        button("Imprimir") {
+          icon = PRINT.create()
+          addClickListener {
+            viewModel.imprimir()
+          }
+        }
         edtPedidoImprimir = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -142,27 +149,15 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         cmbAreaImprimir = textField("Área") {
           this.valueChangeMode = TIMEOUT
-          this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }
         }
         cmbRotaImprimir = textField("Rota") {
           this.valueChangeMode = TIMEOUT
-          this.isAutofocus = true
           
           addValueChangeListener {
             viewModel.updateGridImprimir()
-          }
-        }
-        horizontalLayout {
-          isExpand = true
-          this.justifyContentMode = JustifyContentMode.END
-          button("Imprimir") {
-            icon = PRINT.create()
-            addClickListener {
-              viewModel.imprimir()
-            }
           }
         }
       }
@@ -254,22 +249,18 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isPadding = false
       horizontalLayout {
         setWidthFull()
+        button("Desmarcar") {
+          icon = CLOSE.create()
+          addClickListener {
+            viewModel.desmarcaSemNota()
+          }
+        }
         edtPedidoImpressoSemNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.addThemeVariants(LUMO_SMALL)
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImpressoSemNota()
-          }
-        }
-        horizontalLayout {
-          isExpand = true
-          this.justifyContentMode = JustifyContentMode.END
-          button("Desmarcar") {
-            icon = CLOSE.create()
-            addClickListener {
-              viewModel.desmarcaSemNota()
-            }
           }
         }
       }
@@ -339,7 +330,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      viewModel.updateGridImpressoSemNota()
+      //viewModel.updateGridImpressoSemNota()
     }
   }
   
@@ -351,22 +342,18 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       
       horizontalLayout {
         setWidthFull()
+        button("Desmarcar") {
+          icon = CLOSE.create()
+          addClickListener {
+            viewModel.desmarcaComNota()
+          }
+        }
         edtPedidoImpressoComNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.addThemeVariants(LUMO_SMALL)
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImpressoComNota()
-          }
-        }
-        horizontalLayout {
-          isExpand = true
-          this.justifyContentMode = JustifyContentMode.END
-          button("Desmarcar") {
-            icon = CLOSE.create()
-            addClickListener {
-              viewModel.desmarcaComNota()
-            }
           }
         }
       }
@@ -436,7 +423,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      viewModel.updateGridImpressoComNota()
+      //viewModel.updateGridImpressoComNota()
     }
   }
   

@@ -13,7 +13,7 @@ import java.time.LocalDate
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() = exec {
     val pedidos =
-      view.itensSelecionado()
+      view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = UserSaci.userAtual?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
@@ -85,13 +85,38 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     .map {it.rota}
     .distinct()
     .sorted()
+  
+  fun desmarcaSemNota() = exec {
+    val pedidos =
+      view.itensSelecionadoImpressoSemNota()
+        .ifEmpty {fail("Não há pedido selecionado")}
+    
+    pedidos.forEach {pedido ->
+      pedido.desmarcaImpresso()
+    }
+    
+    updateGridImpressoSemNota()
+  }
+  fun desmarcaComNota() = exec {
+    val pedidos =
+      view.itensSelecionadoImpressoComNota()
+        .ifEmpty {fail("Não há pedido selecionado")}
+    
+    pedidos.forEach {pedido ->
+      pedido.desmarcaImpresso()
+    }
+    
+    updateGridImpressoComNota()
+  }
 }
 
 interface IPedidoEntregaView: IView {
   fun updateGridImprimir(itens: List<PedidoEntrega>)
   fun updateGridImpressoSemNota(itens: List<PedidoEntrega>)
   fun updateGridImpressoComNota(itens: List<PedidoEntrega>)
-  fun itensSelecionado(): List<PedidoEntrega>
+  fun itensSelecionadoImprimir(): List<PedidoEntrega>
+  fun itensSelecionadoImpressoComNota(): List<PedidoEntrega>
+  fun itensSelecionadoImpressoSemNota(): List<PedidoEntrega>
   val pedidoImprimir: Int
   val pedidoImpressoSemNota: Int
   val pedidoImpressoComNota: Int

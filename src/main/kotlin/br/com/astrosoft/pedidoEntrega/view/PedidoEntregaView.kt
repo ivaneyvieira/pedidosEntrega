@@ -232,16 +232,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
-  private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
-    addColumn {
-      list(this).indexOf(it) + 1
-    }.apply {
-      this.textAlign = END
-      isAutoWidth = true
-      setHeader(label)
-    }
-  }
-  
   fun HasComponents.painelImpressoSemNota(): VerticalLayout {
     return verticalLayout {
       this.setSizeFull()
@@ -249,12 +239,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isPadding = false
       horizontalLayout {
         setWidthFull()
-        button("Desmarcar") {
-          icon = CLOSE.create()
-          addClickListener {
-            viewModel.desmarcaSemNota()
+        if(UserSaci.userAtual?.admin == true)
+          button("Desmarcar") {
+            icon = CLOSE.create()
+            addClickListener {
+              viewModel.desmarcaSemNota()
+            }
           }
-        }
         edtPedidoImpressoSemNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -341,12 +332,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       
       horizontalLayout {
         setWidthFull()
-        button("Desmarcar") {
-          icon = CLOSE.create()
-          addClickListener {
-            viewModel.desmarcaComNota()
+        if(UserSaci.userAtual?.admin == true)
+          button("Desmarcar") {
+            icon = CLOSE.create()
+            addClickListener {
+              viewModel.desmarcaComNota()
+            }
           }
-        }
         edtPedidoImpressoComNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -422,6 +414,16 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         shiftSelect()
       }
       //viewModel.updateGridImpressoComNota()
+    }
+  }
+  
+  private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
+    addColumn {
+      list(this).indexOf(it) + 1
+    }.apply {
+      this.textAlign = END
+      isAutoWidth = true
+      setHeader(label)
     }
   }
   

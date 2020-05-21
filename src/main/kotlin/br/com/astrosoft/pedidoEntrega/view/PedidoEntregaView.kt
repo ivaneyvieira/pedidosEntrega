@@ -257,7 +257,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         edtPedidoImpressoSemNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
-          this.addThemeVariants(LUMO_SMALL)
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImpressoSemNota()
@@ -350,7 +349,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         edtPedidoImpressoComNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
-          this.addThemeVariants(LUMO_SMALL)
           this.isAutofocus = true
           addValueChangeListener {
             viewModel.updateGridImpressoComNota()
@@ -540,9 +538,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override val dataImprimir: LocalDate?
     get() = edtDataImprimir.value
   override val areaImprimir: String
-    get() = cmbAreaImprimir.value ?: ""
+    get() = cmbAreaImprimir.value?.toUpperCase() ?: ""
   override val rotaImprimir: String
-    get() = cmbRotaImprimir.value ?: ""
+    get() = cmbRotaImprimir.value?.toUpperCase() ?: ""
   
   override fun updateComboAreaImprimir(itens: List<String>) {
     listAreaImprimir.items.clear()

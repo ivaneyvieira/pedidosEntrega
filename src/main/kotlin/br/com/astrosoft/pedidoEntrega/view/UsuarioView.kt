@@ -84,6 +84,8 @@ class UsuarioView: ViewLayout<UsuarioViewModel>(), IUsuarioView {
     column.setHeader(caption)
     column.textAlign = ColumnTextAlign.CENTER
   }
+  
+  
 }
 
 class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrudFormFactory<UserSaci>() {

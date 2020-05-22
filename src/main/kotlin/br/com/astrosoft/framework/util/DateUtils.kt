@@ -1,5 +1,6 @@
 package br.com.astrosoft.framework.util
 
+import java.sql.Time
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -64,9 +65,15 @@ fun LocalDateTime?.format(): String {
   return DATETIME_FORMATTER.format(this)
 }
 
-fun Date?.format(): String? {
-  if(this == null) return null
+fun Date?.format(): String {
+  if(this == null) return ""
   val sdf = SimpleDateFormat(DATE_PATTERN)
+  return sdf.format(this)
+}
+
+fun Time?.format(): String {
+  if(this == null) return ""
+  val sdf = SimpleDateFormat(TIME_PATTERN)
   return sdf.format(this)
 }
 

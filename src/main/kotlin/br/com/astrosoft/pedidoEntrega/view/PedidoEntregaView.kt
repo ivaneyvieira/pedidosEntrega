@@ -80,7 +80,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   init {
     tabSheet {
       setSizeFull()
-      val tab1 = tab {
+      tab {
         painelImprimir()
       }.apply {
         val button = Button(Companion.TAB_IMPRESSO) {
@@ -89,7 +89,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
       }
-      val tab2 = tab {
+      tab {
         painelImpressoSemNota()
       }.apply {
         val button = Button("Impresso sem nota") {
@@ -98,7 +98,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
       }
-      val tab3 = tab {
+      tab {
         painelImpressoComNota()
       }.apply {
         val button = Button("Impresso com nota") {
@@ -107,18 +107,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
       }
-      /*
-      this.selectedChange {event ->
-        event.apply {
-          when(source.selectedTab) {
-            tab1 -> viewModel.updateGridImprimir()
-            tab2 -> viewModel.updateGridImpressoSemNota()
-            tab3 -> viewModel.updateGridImpressoComNota()
-          }
-        }
-      }
-     
-       */
     }
   }
   
@@ -176,6 +164,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         addColumnDate(PedidoEntrega::data) {
           this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::hora) {
           this.setHeader("Hora")
@@ -192,6 +181,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         addColumnDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::horaFat) {
           this.setHeader("Hora")
@@ -202,6 +192,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         addColumnDate(PedidoEntrega::dataEnt) {
           this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::horaEnt) {
           this.setHeader("Hora")
@@ -320,7 +311,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      //viewModel.updateGridImpressoSemNota()
     }
   }
   
@@ -413,7 +403,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         shiftSelect()
       }
-      //viewModel.updateGridImpressoComNota()
     }
   }
   
@@ -488,7 +477,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           prop.name == gridSort.sorted.key
         }
       if(gridSort.direction == DESCENDING)
-        compareByDescending {
+        compareByDescending<PedidoEntrega> {
           prop?.get(it)
         }
       else
@@ -502,18 +491,21 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   }
   
   override fun updateGridImprimir(itens: List<PedidoEntrega>) {
+    gridPedidosEntregaImprimir.deselectAll()
     dataProviderProdutosImprimir.items.clear()
-    dataProviderProdutosImprimir.items.addAll(itens)
+    dataProviderProdutosImprimir.items.addAll(itens.sortedBy { it.hashCode()})
     dataProviderProdutosImprimir.refreshAll()
   }
   
   override fun updateGridImpressoComNota(itens: List<PedidoEntrega>) {
+    gridPedidosEntregaImpressoComNota.deselectAll()
     dataProviderProdutosImpressoComNota.items.clear()
     dataProviderProdutosImpressoComNota.items.addAll(itens)
     dataProviderProdutosImpressoComNota.refreshAll()
   }
   
   override fun updateGridImpressoSemNota(itens: List<PedidoEntrega>) {
+    gridPedidosEntregaImpressoSemNota.deselectAll()
     dataProviderProdutosImpressoSemNota.items.clear()
     dataProviderProdutosImpressoSemNota.items.addAll(itens)
     dataProviderProdutosImpressoSemNota.refreshAll()

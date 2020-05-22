@@ -1,23 +1,25 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
+import br.com.astrosoft.framework.util.toLocalDate
 import br.com.astrosoft.pedidoEntrega.model.saci
+import java.sql.Time
 import java.time.LocalDate
-import java.time.LocalTime
+import java.util.*
 
 data class PedidoEntrega(
   val loja: Int,
   val pedido: Int,
   val marca: String,
-  val data: LocalDate?,
-  val hora: LocalTime?,
+  val data: Date?,
+  val hora: Time?,
   val nfnoFat: String,
   val nfseFat: String,
-  val dataFat: LocalDate?,
-  val horaFat: LocalTime?,
+  val dataFat: Date?,
+  val horaFat: Time?,
   val nfnoEnt: String,
   val nfseEnt: String,
-  val dataEnt: LocalDate?,
-  val horaEnt: LocalTime?,
+  val dataEnt: Date?,
+  val horaEnt: Time?,
   val vendno: Int,
   val custno: Int,
   val frete: Double,
@@ -43,10 +45,12 @@ data class PedidoEntrega(
     }
   }
   
+  val dataLD get() = data.toLocalDate()
+  
   val paraImprimir: Boolean
-    get() = (marca != "S") && (data?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
+    get() = (marca != "S") && (dataLD?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
   val impressoSemNota: Boolean
-    get() = (marca == "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+    get() = (marca == "S") && (nfnoEnt == "") && (dataLD?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val impressoComNota: Boolean
     get() = (marca == "S") && (nfnoEnt != "")
   

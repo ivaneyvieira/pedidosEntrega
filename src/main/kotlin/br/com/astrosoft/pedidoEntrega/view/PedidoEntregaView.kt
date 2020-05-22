@@ -59,19 +59,27 @@ import kotlin.reflect.KProperty1
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
+  private lateinit var edtPedidoImprimir: TextField
   private lateinit var cmbRotaImprimir: TextField
-  private val listAreaImprimir = ListDataProvider<String>(mutableListOf())
-  private val listRotaImprimir = ListDataProvider<String>(mutableListOf())
   private lateinit var cmbAreaImprimir: TextField
   private lateinit var edtDataImprimir: DatePicker
+  
+  private lateinit var edtPedidoPendente: TextField
+  private lateinit var cmbRotaPendente: TextField
+  private lateinit var cmbAreaPendente: TextField
+  private lateinit var edtDataPendente: DatePicker
+  
   private lateinit var edtPedidoImpressoSemNota: TextField
   private lateinit var edtPedidoImpressoComNota: TextField
-  private lateinit var edtPedidoImprimir: TextField
+
   private lateinit var gridPedidosEntregaImpressoComNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImpressoSemNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
+  private lateinit var gridPedidosEntregaPendente: Grid<PedidoEntrega>
+  
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   private val dataProviderProdutosImprimir = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderProdutosPendente = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderProdutosImpressoSemNota = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderProdutosImpressoComNota = ListDataProvider<PedidoEntrega>(mutableListOf())
   
@@ -83,7 +91,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       tab {
         painelImprimir()
       }.apply {
-        val button = Button(Companion.TAB_IMPRESSO) {
+        val button = Button(TAB_IMPRESSO) {
           viewModel.updateGridImprimir()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
@@ -92,8 +100,17 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       tab {
         painelImpressoSemNota()
       }.apply {
-        val button = Button("Impresso sem nota") {
+        val button = Button(TAB_SEM_NOTA) {
           viewModel.updateGridImpressoSemNota()
+        }
+        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+        this.addComponentAsFirst(button)
+      }
+      tab {
+        painelPendente()
+      }.apply {
+        val button = Button(TAB_PENDENTE) {
+          viewModel.updateGridPendente()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
@@ -101,7 +118,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       tab {
         painelImpressoComNota()
       }.apply {
-        val button = Button("Impresso com nota") {
+        val button = Button(TAB_COM_NOTA) {
           viewModel.updateGridImpressoComNota()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
@@ -314,6 +331,111 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
+  fun HasComponents.painelPendente(): VerticalLayout {
+    return verticalLayout {
+      this.setSizeFull()
+      isMargin = false
+      isPadding = false
+      horizontalLayout {
+        setWidthFull()
+        edtPedidoPendente = textField("Numero Pedido") {
+          this.valueChangeMode = TIMEOUT
+          this.isAutofocus = true
+          addValueChangeListener {
+            viewModel.updateGridPendente()
+          }
+        }
+        edtDataPendente = datePicker("Data") {
+          addValueChangeListener {
+            viewModel.updateGridPendente()
+          }
+        }
+        cmbAreaPendente = textField("Área") {
+          this.valueChangeMode = TIMEOUT
+          addValueChangeListener {
+            viewModel.updateGridPendente()
+          }
+        }
+        cmbRotaPendente = textField("Rota") {
+          this.valueChangeMode = TIMEOUT
+          
+          addValueChangeListener {
+            viewModel.updateGridPendente()
+          }
+        }
+      }
+      gridPedidosEntregaPendente = this.grid(dataProvider = dataProviderProdutosPendente) {
+        isExpand = true
+        isMultiSort = true
+        addThemeVariants(LUMO_COMPACT)
+        setSelectionMode(SelectionMode.MULTI)
+        
+        addColumnSeq("Num")
+        addColumnInt(PedidoEntrega::loja) {
+          this.setHeader("Loja")
+        }
+        addColumnInt(PedidoEntrega::pedido) {
+          this.setHeader("Pedido")
+        }
+        addColumnDate(PedidoEntrega::data) {
+          this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
+        }
+        addColumnTime(PedidoEntrega::hora) {
+          this.setHeader("Hora")
+        }
+        addColumnString(PedidoEntrega::area) {
+          this.setHeader("Área")
+        }
+        addColumnString(PedidoEntrega::rota) {
+          this.setHeader("Rota")
+        }
+        
+        addColumnString(PedidoEntrega::nfFat) {
+          this.setHeader("NF Fat")
+        }
+        addColumnDate(PedidoEntrega::dataFat) {
+          this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
+        }
+        addColumnTime(PedidoEntrega::horaFat) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnString(PedidoEntrega::nfEnt) {
+          this.setHeader("NF Ent")
+        }
+        addColumnDate(PedidoEntrega::dataEnt) {
+          this.setHeader("Data")
+          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
+        }
+        addColumnTime(PedidoEntrega::horaEnt) {
+          this.setHeader("Hora")
+        }
+        
+        addColumnInt(PedidoEntrega::vendno) {
+          this.setHeader("Vendedor")
+        }
+        addColumnDouble(PedidoEntrega::frete) {
+          this.setHeader("R$ Frete")
+        }
+        addColumnDouble(PedidoEntrega::valor) {
+          this.setHeader("R$ Nota")
+        }
+        addColumnInt(PedidoEntrega::custno) {
+          this.setHeader("Cliente")
+        }
+        addColumnString(PedidoEntrega::obs) {
+          this.setHeader("Obs")
+        }
+        addColumnString(PedidoEntrega::username) {
+          this.setHeader("Usuário")
+        }
+        shiftSelect()
+      }
+    }
+  }
+  
   fun HasComponents.painelImpressoComNota(): VerticalLayout {
     return verticalLayout {
       this.setSizeFull()
@@ -497,6 +619,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     dataProviderProdutosImprimir.refreshAll()
   }
   
+  override fun updateGridPendente(itens: List<PedidoEntrega>) {
+    gridPedidosEntregaPendente.deselectAll()
+    dataProviderProdutosPendente.items.clear()
+    dataProviderProdutosPendente.items.addAll(itens.sortedBy { it.hashCode()})
+    dataProviderProdutosPendente.refreshAll()
+  }
+  
   override fun updateGridImpressoComNota(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImpressoComNota.deselectAll()
     dataProviderProdutosImpressoComNota.items.clear()
@@ -523,32 +652,32 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     return gridPedidosEntregaImpressoSemNota.selectedItems.toList()
   }
   
-  override val pedidoImprimir: Int
-    get() = edtPedidoImprimir.value?.toIntOrNull() ?: 0
+
   override val pedidoImpressoSemNota: Int
     get() = edtPedidoImpressoSemNota.value?.toIntOrNull() ?: 0
   override val pedidoImpressoComNota: Int
     get() = edtPedidoImpressoComNota.value?.toIntOrNull() ?: 0
+  override val pedidoImprimir: Int
+    get() = edtPedidoImprimir.value?.toIntOrNull() ?: 0
   override val dataImprimir: LocalDate?
     get() = edtDataImprimir.value
   override val areaImprimir: String
     get() = cmbAreaImprimir.value?.toUpperCase() ?: ""
   override val rotaImprimir: String
     get() = cmbRotaImprimir.value?.toUpperCase() ?: ""
-  
-  override fun updateComboAreaImprimir(itens: List<String>) {
-    listAreaImprimir.items.clear()
-    listAreaImprimir.items.addAll(itens)
-    listAreaImprimir.refreshAll()
-  }
-  
-  override fun updateComboRotaImprimir(itens: List<String>) {
-    listRotaImprimir.items.clear()
-    listRotaImprimir.items.addAll(itens)
-    listRotaImprimir.refreshAll()
-  }
+  override val pedidoPendente: Int
+    get() = edtPedidoPendente.value?.toIntOrNull() ?: 0
+  override val dataPendente: LocalDate?
+    get() = edtDataPendente.value
+  override val areaPendente: String
+    get() = cmbAreaPendente.value?.toUpperCase() ?: ""
+  override val rotaPendente: String
+    get() = cmbRotaPendente.value?.toUpperCase() ?: ""
   
   companion object {
     const val TAB_IMPRESSO: String = "Imprimir"
+    const val TAB_PENDENTE: String = "Entrega Pendente"
+    const val TAB_COM_NOTA: String = "Impresso com Nota"
+    const val TAB_SEM_NOTA: String = "Impresso sem Nota"
   }
 }

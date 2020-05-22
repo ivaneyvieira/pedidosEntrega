@@ -28,9 +28,13 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   
   private fun printPedido(storeno: Int, ordno: Int, impressora: String): Boolean {
     return try {
+      
       Ssh("172.20.47.1", "ivaney", "ivaney").shell {
         execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       }
+      
+      
+      println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       true
     } catch(e: Throwable) {
       false
@@ -60,7 +64,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     return PedidoEntrega.listaPedidoImprimir()
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
-        (pedido.data == data || data == null) &&
+        (pedido.dataLD == data || data == null) &&
         (pedido.rota.contains(rota) || rota == "") &&
         (pedido.area.contains(area) || area == "")
       }

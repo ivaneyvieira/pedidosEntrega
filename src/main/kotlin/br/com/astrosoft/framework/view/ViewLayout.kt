@@ -44,9 +44,11 @@ import com.vaadin.flow.router.BeforeLeaveObserver
 import com.vaadin.flow.shared.Registration
 import org.claspina.confirmdialog.ButtonOption
 import org.claspina.confirmdialog.ConfirmDialog
+import java.sql.Time
 import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 import kotlin.reflect.KProperty1
 
 abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeaveObserver,
@@ -163,7 +165,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnBool(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnDate(
+fun <T> (@VaadinDsl Grid<T>).addColumnLocalDate(
   property: KProperty1<T, LocalDate?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
@@ -172,11 +174,43 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDate(
   column.isAutoWidth = true
   column.left()
   column.block()
+  
+  return column
+}
+
+fun <T> (@VaadinDsl Grid<T>).addColumnDate(
+  property: KProperty1<T, Date?>,
+  block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
+                                          ): Grid.Column<T> {
+  val column = this.addColumnFor(property,
+                                 renderer = TextRenderer {bean ->
+                                   val date = property.get(bean)
+                                   date.format()
+                                 })
+  column.isAutoWidth = true
+  column.left()
+  column.block()
+  
+  return column
+}
+
+fun <T> (@VaadinDsl Grid<T>).addColumnLocalTime(
+  property: KProperty1<T, LocalTime?>,
+  block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
+                                          ): Grid.Column<T> {
+  val column = this.addColumnFor(property,
+                                 TextRenderer {bean ->
+                                   val hora = property.get(bean)
+                                   hora.format()
+                                 })
+  column.isAutoWidth = true
+  column.left()
+  column.block()
   return column
 }
 
 fun <T> (@VaadinDsl Grid<T>).addColumnTime(
-  property: KProperty1<T, LocalTime?>,
+  property: KProperty1<T, Time?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
   val column = this.addColumnFor(property,

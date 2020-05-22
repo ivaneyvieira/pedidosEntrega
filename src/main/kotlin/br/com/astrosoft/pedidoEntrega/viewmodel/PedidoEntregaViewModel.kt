@@ -28,11 +28,9 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   
   private fun printPedido(storeno: Int, ordno: Int, impressora: String): Boolean {
     return try {
-      
       Ssh("172.20.47.1", "ivaney", "ivaney").shell {
         execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       }
-      
       
       println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       true
@@ -44,6 +42,11 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   fun updateGridImprimir() {
     updatePedidos()
     view.updateGridImprimir(listPedidosEntregaImprimir())
+  }
+  
+  fun updateGridPendente() {
+    updatePedidos()
+    view.updateGridPendente(listPedidosEntregaPendente())
   }
   
   fun updateGridImpressoComNota() {
@@ -70,6 +73,20 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
       }
   }
   
+  private fun listPedidosEntregaPendente(): List<PedidoEntrega> {
+    val numPedido = view.pedidoPendente
+    val data = view.dataPendente
+    val area = view.areaPendente.trim()
+    val rota = view.rotaPendente.trim()
+    return PedidoEntrega.listaPedidoPendente()
+      .filter {pedido ->
+        (pedido.pedido == numPedido || numPedido == 0) &&
+        (pedido.dataLD == data || data == null) &&
+        (pedido.rota.contains(rota) || rota == "") &&
+        (pedido.area.contains(area) || area == "")
+      }
+  }
+  
   private fun listPedidosEntregaImpressoSemNota(): List<PedidoEntrega> {
     val numPedido = view.pedidoImpressoSemNota
     return PedidoEntrega.listaPedidoImpressoSemNota()
@@ -85,16 +102,6 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
         pedido.pedido == numPedido || numPedido == 0
       }
   }
-  
-  private fun listAreas() = PedidoEntrega.listaPedido()
-    .map {it.area}
-    .distinct()
-    .sorted()
-  
-  private fun listRotas() = PedidoEntrega.listaPedido()
-    .map {it.rota}
-    .distinct()
-    .sorted()
   
   fun desmarcaSemNota() = exec {
     val pedidos =
@@ -129,15 +136,24 @@ interface IPedidoEntregaView: IView {
   fun updateGridImprimir(itens: List<PedidoEntrega>)
   fun updateGridImpressoSemNota(itens: List<PedidoEntrega>)
   fun updateGridImpressoComNota(itens: List<PedidoEntrega>)
+  fun updateGridPendente(itens: List<PedidoEntrega>)
+  
   fun itensSelecionadoImprimir(): List<PedidoEntrega>
   fun itensSelecionadoImpressoComNota(): List<PedidoEntrega>
   fun itensSelecionadoImpressoSemNota(): List<PedidoEntrega>
-  val pedidoImprimir: Int
+  
   val pedidoImpressoSemNota: Int
   val pedidoImpressoComNota: Int
+  //
+  val pedidoImprimir: Int
   val dataImprimir: LocalDate?
   val areaImprimir: String
   val rotaImprimir: String
-  fun updateComboAreaImprimir(itens: List<String>)
-  fun updateComboRotaImprimir(itens: List<String>)
+  //
+  val pedidoPendente: Int
+  val dataPendente: LocalDate?
+  val areaPendente: String
+  val rotaPendente: String
+  //  fun updateComboAreaImprimir(itens: List<String>)
+  //  fun updateComboRotaImprimir(itens: List<String>)
 }

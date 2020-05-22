@@ -52,7 +52,9 @@ data class PedidoEntrega(
   val impressoSemNota: Boolean
     get() = (marca == "S") && (nfnoEnt == "") && (dataLD?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val impressoComNota: Boolean
-    get() = (marca == "S") && (nfnoEnt != "")
+    get() = (marca == "S") && (nfnoEnt != "") && (dataLD?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+  val pedidoPendente: Boolean
+    get() = (nfnoEnt == "") && (dataLD?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
   
   fun marcaImpresso() {
     saci.ativaMarca(loja, pedido, "S")
@@ -79,8 +81,11 @@ data class PedidoEntrega(
     
     fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
       .filter {it.impressoSemNota}
-    
+  
     fun listaPedidoImpressoComNota(): List<PedidoEntrega> = listaPedido
       .filter {it.impressoComNota}
+ 
+    fun listaPedidoPendente(): List<PedidoEntrega> = listaPedido
+      .filter {it.pedidoPendente}
   }
 }

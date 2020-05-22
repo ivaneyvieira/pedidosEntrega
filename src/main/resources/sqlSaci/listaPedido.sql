@@ -87,5 +87,5 @@ FROM sqldados.eord
 WHERE (eord.storeno IN (1, 2, 3, 4, 5, 6))
   AND ((NOT eoprdf.bits & POW(2, 1)))
   AND eord.status NOT IN (3, 5)
-  AND (eord.date >= 20200518)
+  AND (eord.date >= 20200101)
 GROUP BY eord.storeno, eord.ordno

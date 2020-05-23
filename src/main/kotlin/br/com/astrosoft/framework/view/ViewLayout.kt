@@ -173,6 +173,11 @@ fun <T> (@VaadinDsl Grid<T>).addColumnLocalDate(
                                  renderer = LocalDateRenderer(property, "dd/MM/yyyy"))
   column.isAutoWidth = true
   column.left()
+  column.setComparator {a, b ->
+    val dataA = property.get(a) ?: LocalDate.of(1900, 1, 1)
+    val dataB = property.get(b) ?: LocalDate.of(1900, 1, 1)
+    dataA.compareTo(dataB)
+  }
   column.block()
   
   return column
@@ -189,6 +194,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDate(
                                  })
   column.isAutoWidth = true
   column.left()
+  
   column.block()
   
   return column
@@ -220,6 +226,11 @@ fun <T> (@VaadinDsl Grid<T>).addColumnTime(
                                  })
   column.isAutoWidth = true
   column.left()
+  column.setComparator {a, b ->
+    val dataA = property.get(a) ?: Time(0)
+    val dataB = property.get(b) ?: Time(0)
+    dataA.compareTo(dataB)
+  }
   column.block()
   return column
 }

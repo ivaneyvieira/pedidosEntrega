@@ -22,6 +22,8 @@ import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.DomEvent
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.charts.model.style.SolidColor
+import com.vaadin.flow.component.datepicker.DatePicker
+import com.vaadin.flow.component.datepicker.DatePicker.DatePickerI18n
 import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.ColumnTextAlign.START
@@ -289,6 +291,20 @@ class TabClick(s: String?): Tab(s) {
   fun addClickListener(listener: ComponentEventListener<ClickTabEvent?>?): Registration {
     return addListener(ClickTabEvent::class.java, listener)
   }
+}
+
+fun DatePicker.localePtBr() {
+  this.setLocale(Locale("pt-br"))
+  this.setI18n( DatePickerI18n().setWeek("semana")
+    .setCalendar("calendário").setClear("apagar")
+    .setToday("hoje").setCancel("cancelar").setFirstDayOfWeek(1)
+    .setMonthNames(Arrays.asList("janeiro", "fevereiro", "março",
+                                 "abril", "maio", "junho", "julho", "agosto",
+                                 "setembro", "outubro", "novembro", "dezembro"))
+    .setWeekdays(Arrays.asList("domingo", "segunda", "terça",
+                               "quarta", "quinta", "sexta", "sábado"))
+    .setWeekdaysShort(Arrays.asList("dom", "seg", "ter", "qua", "qui",
+                                    "sex", "sab")))
 }
 
 

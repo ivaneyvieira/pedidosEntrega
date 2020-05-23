@@ -9,6 +9,7 @@ import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
+import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
@@ -48,6 +49,8 @@ import com.vaadin.flow.function.SerializablePredicate
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
+import java.util.*
+import kotlin.Comparator
 import kotlin.reflect.KProperty1
 import kotlin.streams.toList
 
@@ -140,6 +143,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           }
         }
         edtDataImprimir = datePicker("Data") {
+          localePtBr()
           addValueChangeListener {
             viewModel.updateGridImprimir()
           }
@@ -337,6 +341,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           }
         }
         edtDataPendente = datePicker("Data") {
+          localePtBr()
           addValueChangeListener {
             viewModel.updateGridPendente()
           }

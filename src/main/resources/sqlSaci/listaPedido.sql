@@ -11,10 +11,10 @@ SELECT pxa.storeno,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfno, NULL)) AS nfno_venda,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfse, NULL)) AS nfse_venda,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.amt, NULL))  AS valor_venda,
-       MAX(IF(pxa.cfo IN (5117), pxa.date, NULL))       AS data_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.nfno, NULL))       AS nfno_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.nfse, NULL))       AS nfse_entrega,
-       MAX(IF(pxa.cfo IN (5117), pxa.amt, NULL))        AS valor_entrega
+       MAX(IF(pxa.cfo IN (5117, 6922), pxa.date, NULL)) AS data_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6922), pxa.nfno, NULL)) AS nfno_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6922), pxa.nfse, NULL)) AS nfse_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6922), pxa.amt, NULL))  AS valor_entrega
 FROM sqlpdv.pxa
   LEFT JOIN sqlpdv.pxanf
 	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)
@@ -88,4 +88,5 @@ WHERE (eord.storeno IN (1, 2, 3, 4, 5, 6))
   AND ((NOT eoprdf.bits & POW(2, 1)))
   AND eord.status NOT IN (3, 5)
   AND (eord.date >= 20200101)
+  AND (nff.status <> 1 OR nff.status IS NULL)
 GROUP BY eord.storeno, eord.ordno

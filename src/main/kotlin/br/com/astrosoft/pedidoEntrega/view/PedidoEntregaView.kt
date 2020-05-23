@@ -359,7 +359,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
-        setSelectionMode(SelectionMode.MULTI)
         
         addColumnSeq("Num")
         addColumnInt(PedidoEntrega::loja) {

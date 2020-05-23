@@ -67,7 +67,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     return PedidoEntrega.listaPedidoImprimir()
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
-        (pedido.dataLD == data || data == null) &&
+        (pedido.data == data || data == null) &&
         (pedido.rota.contains(rota) || rota == "") &&
         (pedido.area.contains(area) || area == "")
       }
@@ -81,7 +81,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     return PedidoEntrega.listaPedidoPendente()
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
-        (pedido.dataLD == data || data == null) &&
+        (pedido.data == data || data == null) &&
         (pedido.rota.contains(rota) || rota == "") &&
         (pedido.area.contains(area) || area == "")
       }

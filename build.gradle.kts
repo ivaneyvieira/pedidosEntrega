@@ -17,7 +17,7 @@ repositories {
 
 
 vaadin {
-  version = "14.1.28"
+  version = "14.2.0"
   // submitStatistics=true
 }
 //vaadin.productionMode = true

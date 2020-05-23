@@ -1,59 +1,55 @@
 package br.com.astrosoft.pedidoEntrega.view
 
+import br.com.astrosoft.framework.util.format
+import br.com.astrosoft.framework.view.GridDataProvider
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.addColumnDate
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
+import br.com.astrosoft.framework.view.addColumnLocalDate
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
-import br.com.astrosoft.framework.view.background
-import br.com.astrosoft.framework.view.right
-import br.com.astrosoft.framework.view.selectedChange
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
 import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
-import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
+import com.github.mvysny.karibudsl.v10.addColumnFor
 import com.github.mvysny.karibudsl.v10.button
-import com.github.mvysny.karibudsl.v10.comboBox
-import com.github.mvysny.karibudsl.v10.contents
 import com.github.mvysny.karibudsl.v10.datePicker
+import com.github.mvysny.karibudsl.v10.getAll
 import com.github.mvysny.karibudsl.v10.grid
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.github.mvysny.karibudsl.v10.tabSheet
 import com.github.mvysny.karibudsl.v10.textField
 import com.github.mvysny.karibudsl.v10.verticalLayout
-import com.vaadin.flow.component.ComponentEventListener
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
-import com.vaadin.flow.component.charts.model.style.SolidColor
-import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
+import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
-import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
-import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode
+import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.component.textfield.TextFieldVariant.LUMO_SMALL
-import com.vaadin.flow.data.provider.DataProvider
 import com.vaadin.flow.data.provider.ListDataProvider
+import com.vaadin.flow.data.provider.Query
+import com.vaadin.flow.data.provider.QuerySortOrder
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
-import com.vaadin.flow.data.value.ValueChangeMode.EAGER
+import com.vaadin.flow.data.renderer.TextRenderer
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
+import com.vaadin.flow.function.SerializablePredicate
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
-import kotlin.concurrent.thread
 import kotlin.reflect.KProperty1
+import kotlin.streams.toList
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
@@ -63,20 +59,16 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   private lateinit var cmbRotaImprimir: TextField
   private lateinit var cmbAreaImprimir: TextField
   private lateinit var edtDataImprimir: DatePicker
-  
   private lateinit var edtPedidoPendente: TextField
   private lateinit var cmbRotaPendente: TextField
   private lateinit var cmbAreaPendente: TextField
   private lateinit var edtDataPendente: DatePicker
-  
   private lateinit var edtPedidoImpressoSemNota: TextField
   private lateinit var edtPedidoImpressoComNota: TextField
-
   private lateinit var gridPedidosEntregaImpressoComNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImpressoSemNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaPendente: Grid<PedidoEntrega>
-  
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   private val dataProviderProdutosImprimir = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderProdutosPendente = ListDataProvider<PedidoEntrega>(mutableListOf())
@@ -179,9 +171,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
         }
-        addColumnDate(PedidoEntrega::data) {
+        
+        addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")
-          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::hora) {
           this.setHeader("Hora")
@@ -196,9 +188,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
-        addColumnDate(PedidoEntrega::dataFat) {
+  
+        addColumnLocalDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
-          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::horaFat) {
           this.setHeader("Hora")
@@ -207,9 +199,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
-        addColumnDate(PedidoEntrega::dataEnt) {
+        addColumnLocalDate(PedidoEntrega::dataEnt) {
           this.setHeader("Data")
-          this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
         addColumnTime(PedidoEntrega::horaEnt) {
           this.setHeader("Hora")
@@ -275,7 +266,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
         }
-        addColumnDate(PedidoEntrega::data) {
+        addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::hora) {
@@ -291,7 +282,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
-        addColumnDate(PedidoEntrega::dataFat) {
+        addColumnLocalDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::horaFat) {
@@ -301,7 +292,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
-        addColumnDate(PedidoEntrega::dataEnt) {
+        addColumnLocalDate(PedidoEntrega::dataEnt) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::horaEnt) {
@@ -377,7 +368,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
         }
-        addColumnDate(PedidoEntrega::data) {
+        addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")
           this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
@@ -394,7 +385,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
-        addColumnDate(PedidoEntrega::dataFat) {
+        addColumnLocalDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
           this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
@@ -405,7 +396,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
-        addColumnDate(PedidoEntrega::dataEnt) {
+        addColumnLocalDate(PedidoEntrega::dataEnt) {
           this.setHeader("Data")
           this.setSortProperty(PedidoEntrega::data.name, PedidoEntrega::loja.name, PedidoEntrega::pedido.name)
         }
@@ -472,7 +463,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
         }
-        addColumnDate(PedidoEntrega::data) {
+        addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::hora) {
@@ -488,7 +479,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
-        addColumnDate(PedidoEntrega::dataFat) {
+        addColumnLocalDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::horaFat) {
@@ -498,7 +489,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
-        addColumnDate(PedidoEntrega::dataEnt) {
+        addColumnLocalDate(PedidoEntrega::dataEnt) {
           this.setHeader("Data")
         }
         addColumnTime(PedidoEntrega::horaEnt) {
@@ -530,7 +521,21 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
     addColumn {
-      list(this).indexOf(it) + 1
+      /*val listDataProvider = (dataProvider as ListDataProvider)
+      listDataProvider.sortComparator
+      val query = Query<PedidoEntrega, SerializablePredicate<PedidoEntrega>>(0,
+                                                                             Int.Companion.MAX_VALUE,
+                                                                             emptyList<QuerySortOrder>(),
+                                                                             null,
+                                                                             PedicateTrue<PedidoEntrega>())
+      val lista = listDataProvider.getAll()
+      lista.indexOf(it) + 1
+      
+       */
+      val lista = list(this)
+      //lista.indexOf(it) + 1
+      //val lista = (this.dataProvider as ListDataProvider).items
+      lista.indexOf(it) + 1
     }.apply {
       this.textAlign = END
       isAutoWidth = true
@@ -592,20 +597,32 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   private fun comparator(grade: Grid<PedidoEntrega>): Comparator<PedidoEntrega>? {
     if(grade.sortOrder.isEmpty()) return null
-    return grade.sortOrder.mapNotNull {gridSort ->
-      val prop = PedidoEntrega::class.members.toList()
+    val sortOrder = grade.sortOrder
+    return comparator(sortOrder)
+  }
+  
+  private fun comparator(sortOrder: List<GridSortOrder<PedidoEntrega>>): Comparator<PedidoEntrega>? {
+    return sortOrder.flatMap {gridSort ->
+      val sortOrdem =
+        gridSort.sorted.getSortOrder(gridSort.direction)
+          .toList()
+      val propsBean = PedidoEntrega::class.members.toList()
         .filterIsInstance<KProperty1<PedidoEntrega, Comparable<*>>>()
-        .firstOrNull {prop ->
-          prop.name == gridSort.sorted.key
+      val props = sortOrdem.mapNotNull {querySortOrder ->
+        propsBean.firstOrNull {prop ->
+          prop.name == querySortOrder.sorted
         }
-      if(gridSort.direction == DESCENDING)
-        compareByDescending<PedidoEntrega> {
-          prop?.get(it)
-        }
-      else
-        compareBy<PedidoEntrega> {
-          prop?.get(it)
-        }
+      }
+      props.map {prop ->
+        if(gridSort.direction == DESCENDING)
+          compareByDescending<PedidoEntrega> {
+            prop.get(it)
+          }
+        else
+          compareBy<PedidoEntrega> {
+            prop.get(it)
+          }
+      }
     }
       .reduce {acc, comparator ->
         acc.thenComparing(comparator)
@@ -615,14 +632,14 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override fun updateGridImprimir(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImprimir.deselectAll()
     dataProviderProdutosImprimir.items.clear()
-    dataProviderProdutosImprimir.items.addAll(itens.sortedBy { it.hashCode()})
+    dataProviderProdutosImprimir.items.addAll(itens.sortedBy {it.hashCode()})
     dataProviderProdutosImprimir.refreshAll()
   }
   
   override fun updateGridPendente(itens: List<PedidoEntrega>) {
     gridPedidosEntregaPendente.deselectAll()
     dataProviderProdutosPendente.items.clear()
-    dataProviderProdutosPendente.items.addAll(itens.sortedBy { it.hashCode()})
+    dataProviderProdutosPendente.items.addAll(itens.sortedBy {it.hashCode()})
     dataProviderProdutosPendente.refreshAll()
   }
   
@@ -652,7 +669,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     return gridPedidosEntregaImpressoSemNota.selectedItems.toList()
   }
   
-
   override val pedidoImpressoSemNota: Int
     get() = edtPedidoImpressoSemNota.value?.toIntOrNull() ?: 0
   override val pedidoImpressoComNota: Int
@@ -680,4 +696,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     const val TAB_COM_NOTA: String = "Impresso com Nota"
     const val TAB_SEM_NOTA: String = "Impresso sem Nota"
   }
+}
+
+class PedicateTrue<T>: SerializablePredicate<T> {
+  override fun test(p0: T?): Boolean = true
 }

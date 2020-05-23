@@ -10,15 +10,15 @@ data class PedidoEntrega(
   val loja: Int,
   val pedido: Int,
   val marca: String,
-  val data: Date?,
+  val data: LocalDate?,
   val hora: Time?,
   val nfnoFat: String,
   val nfseFat: String,
-  val dataFat: Date?,
+  val dataFat: LocalDate?,
   val horaFat: Time?,
   val nfnoEnt: String,
   val nfseEnt: String,
-  val dataEnt: Date?,
+  val dataEnt: LocalDate?,
   val horaEnt: Time?,
   val vendno: Int,
   val custno: Int,
@@ -45,16 +45,14 @@ data class PedidoEntrega(
     }
   }
   
-  val dataLD get() = data.toLocalDate()
-  
   val paraImprimir: Boolean
-    get() = (marca != "S") && (dataLD?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
+    get() = (marca != "S") && (data?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
   val impressoSemNota: Boolean
-    get() = (marca == "S") && (nfnoEnt == "") && (dataLD?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+    get() = (marca == "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val impressoComNota: Boolean
-    get() = (marca == "S") && (nfnoEnt != "") && (dataLD?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+    get() = (marca == "S") && (nfnoEnt != "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val pedidoPendente: Boolean
-    get() = (nfnoEnt == "") && (dataLD?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
+    get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
   
   fun marcaImpresso() {
     saci.ativaMarca(loja, pedido, "S")

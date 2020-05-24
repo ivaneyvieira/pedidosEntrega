@@ -37,7 +37,6 @@ repositories {
   }
 }
 
-
 gretty {
   contextPath = "/"
   servletContainer = "jetty9.4"

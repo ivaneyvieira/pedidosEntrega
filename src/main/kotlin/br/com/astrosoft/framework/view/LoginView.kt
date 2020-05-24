@@ -1,42 +1,41 @@
 package br.com.astrosoft.framework.view
 
-import br.com.astrosoft.pedidoEntrega.model.saci
-import br.com.astrosoft.pedidoEntrega.view.AppPedidoLayout
-import br.com.astrosoft.pedidoEntrega.view.PedidoEntregaView
-import br.com.astrosoft.framework.model.RegistryUserInfo
-import br.com.astrosoft.framework.view.LoginView.Companion.LOGIN_PATH
-import com.github.mvysny.karibudsl.v10.navigateToView
+
+import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment
+import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.CENTER
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.router.BeforeEnterEvent
 import com.vaadin.flow.router.BeforeEnterObserver
+import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import com.vaadin.flow.theme.Theme
 import com.vaadin.flow.theme.lumo.Lumo
 
-@Route(LOGIN_PATH)
+@Route("login")
+@PageTitle("Login")
 @Theme(value = Lumo::class, variant = Lumo.DARK)
 class LoginView: VerticalLayout(), BeforeEnterObserver {
-  private val appName = RegistryUserInfo.appName
-  private val version = "Versão ${RegistryUserInfo.version}"
-  private val loginForm = LoginFormApp(appName, version) {
-    AppPedidoLayout.updateLayout()
-    navigateToView<LoginView>()
+  private val loginFormApp = LoginFormApp()
+  
+  override fun beforeEnter(beforeEnterEvent: BeforeEnterEvent) {
+    if(isError(beforeEnterEvent))
+      loginFormApp.isError = true
+  }
+  
+  private fun isError(beforeEnterEvent: BeforeEnterEvent): Boolean {
+    return beforeEnterEvent.location
+      .queryParameters
+      .parameters
+      .getOrDefault("error", emptyList())
+      .isNotEmpty()
   }
   
   init {
-    //add(loginForm)
-    element.appendChild(loginForm.element)
-    loginForm.isOpened = true
-  }
-  
-  companion object {
-    const val LOGIN_PATH = "login"
-  }
-  
-  override fun beforeEnter(event: BeforeEnterEvent?) {
-    saci.findUser(RegistryUserInfo.usuario)
-      ?.let {
-        event?.rerouteTo(PedidoEntregaView::class.java)
-      }
+    addClassName("login-view")
+    setSizeFull()
+    justifyContentMode = CENTER
+    alignItems = Alignment.CENTER
+    loginFormApp.action = "login"
+    add(/*H1(loginInfo.appName), */loginFormApp)
   }
 }

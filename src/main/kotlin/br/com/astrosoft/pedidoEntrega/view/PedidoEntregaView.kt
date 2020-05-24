@@ -6,7 +6,10 @@ import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
+import br.com.astrosoft.framework.view.list
 import br.com.astrosoft.framework.view.localePtBr
+import br.com.astrosoft.framework.view.shiftSelect
+import br.com.astrosoft.framework.view.updateItens
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
@@ -28,22 +31,17 @@ import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
-import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.provider.ListDataProvider
-import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import com.vaadin.flow.function.SerializablePredicate
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
-import kotlin.Comparator
-import kotlin.reflect.KProperty1
-import kotlin.streams.toList
 
 @Route(layout = AppPedidoLayout::class)
 @PageTitle("Pedidos")
@@ -220,7 +218,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }
-        shiftSelect()
+        this.shiftSelect()
       }
       
       viewModel.updateGridImprimir()
@@ -540,118 +538,24 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
-  var pedidoInicial: PedidoEntrega? = null
-  var pedidoFinal: PedidoEntrega? = null
-  
-  private fun @VaadinDsl Grid<PedidoEntrega>.shiftSelect() {
-    this.addItemClickListener {evento ->
-      val grade = evento.source
-      if(evento.isShiftKey) {
-        val pedido = evento.item
-        if(pedidoInicial == null) {
-          pedidoInicial = pedido
-          grade.select(pedido)
-        }
-        else {
-          if(pedidoFinal == null) {
-            val itens = list(grade)
-            pedidoFinal = pedido
-            val p1 = itens.indexOf(pedidoInicial!!)
-            val p2 = itens.indexOf(pedidoFinal!!) + 1
-            val subList = itens.subList(p1.coerceAtMost(p2), p1.coerceAtLeast(p2))
-            subList.forEach {
-              grade.select(it)
-            }
-            pedidoFinal = null
-            pedidoInicial = null
-          }
-          else {
-            pedidoFinal = null
-            pedidoInicial = null
-          }
-        }
-      }
-      else {
-        pedidoFinal = null
-        pedidoInicial = null
-      }
-    }
-  }
-  
-  private fun list(grade: Grid<PedidoEntrega>): List<PedidoEntrega> {
-    val dataProvider = grade.dataProvider as ListDataProvider
-    val filter = dataProvider.filter
-    val queryOrdem = comparator(grade)
-    return dataProvider.items.toList()
-      .filter {
-        filter?.test(it) ?: true
-      }
-      .let {list ->
-        if(queryOrdem == null) list
-        else list.sortedWith<PedidoEntrega>(queryOrdem)
-      }
-  }
-  
-  private fun comparator(grade: Grid<PedidoEntrega>): Comparator<PedidoEntrega>? {
-    if(grade.sortOrder.isEmpty()) return null
-    val sortOrder = grade.sortOrder
-    return comparator(sortOrder)
-  }
-  
-  private fun comparator(sortOrder: List<GridSortOrder<PedidoEntrega>>): Comparator<PedidoEntrega>? {
-    return sortOrder.flatMap {gridSort ->
-      val sortOrdem =
-        gridSort.sorted.getSortOrder(gridSort.direction)
-          .toList()
-      val propsBean = PedidoEntrega::class.members.toList()
-        .filterIsInstance<KProperty1<PedidoEntrega, Comparable<*>>>()
-      val props = sortOrdem.mapNotNull {querySortOrder ->
-        propsBean.firstOrNull {prop ->
-          prop.name == querySortOrder.sorted
-        }
-      }
-      props.map {prop ->
-        if(gridSort.direction == DESCENDING)
-          compareByDescending<PedidoEntrega> {
-            prop.get(it)
-          }
-        else
-          compareBy<PedidoEntrega> {
-            prop.get(it)
-          }
-      }
-    }
-      .reduce {acc, comparator ->
-        acc.thenComparing(comparator)
-      }
-  }
-  
   override fun updateGridImprimir(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImprimir.deselectAll()
-    dataProviderPedidoImprimir.items.clear()
-    dataProviderPedidoImprimir.items.addAll(itens.sortedBy {it.hashCode()})
-    dataProviderPedidoImprimir.refreshAll()
+    dataProviderPedidoImprimir.updateItens(itens)
   }
   
   override fun updateGridPendente(itens: List<PedidoEntrega>) {
     gridPedidosEntregaPendente.deselectAll()
-    dataProviderPedidoPendente.items.clear()
-    dataProviderPedidoPendente.items.addAll(itens.sortedBy {it.hashCode()})
-    dataProviderPedidoPendente.refreshAll()
+    dataProviderPedidoPendente.updateItens(itens)
   }
   
   override fun updateGridImpressoComNota(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImpressoComNota.deselectAll()
-    dataProviderPedidoImpressoComNota.items.clear()
-    dataProviderPedidoImpressoComNota.items.addAll(itens)
-    dataProviderPedidoImpressoComNota.refreshAll()
+    dataProviderPedidoImpressoComNota.updateItens(itens)
   }
   
   override fun updateGridImpressoSemNota(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImpressoSemNota.deselectAll()
-    dataProviderPedidoImpressoSemNota.items.clear()
-    dataProviderPedidoImpressoSemNota.items.addAll(itens)
-    dataProviderPedidoImpressoSemNota.refreshAll()
+    dataProviderPedidoImpressoSemNota.updateItens(itens)
   }
   
   override fun itensSelecionadoImprimir(): List<PedidoEntrega> {

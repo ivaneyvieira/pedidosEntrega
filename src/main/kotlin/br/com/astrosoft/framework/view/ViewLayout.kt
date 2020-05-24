@@ -15,7 +15,6 @@ import com.github.mvysny.karibudsl.v10.em
 import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
-import com.github.mvysny.karibudsl.v10.tab
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.ComponentEvent
 import com.vaadin.flow.component.ComponentEventListener
@@ -33,10 +32,10 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
+import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.renderer.LocalDateRenderer
 import com.vaadin.flow.data.renderer.NumberRenderer
 import com.vaadin.flow.data.renderer.TextRenderer
-import com.vaadin.flow.dom.Element
 import com.vaadin.flow.router.AfterNavigationEvent
 import com.vaadin.flow.router.AfterNavigationObserver
 import com.vaadin.flow.router.BeforeEnterEvent
@@ -307,4 +306,8 @@ fun DatePicker.localePtBr() {
                                     "sex", "sab")))
 }
 
-
+fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {
+  this.items.clear()
+  this.items.addAll(itens.sortedBy {it.hashCode()})
+  this.refreshAll()
+}

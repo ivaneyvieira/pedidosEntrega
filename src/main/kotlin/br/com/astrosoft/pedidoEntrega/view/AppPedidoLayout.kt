@@ -1,35 +1,5 @@
 package br.com.astrosoft.pedidoEntrega.view
-
-import br.com.astrosoft.framework.model.RegistryUserInfo
-import com.github.appreciated.app.layout.behaviour.AppLayout
-import com.github.appreciated.app.layout.behaviour.Behaviour.LEFT_RESPONSIVE
-import com.github.appreciated.app.layout.builder.AppLayoutBuilder
-import com.github.appreciated.app.layout.component.appbar.AppBarBuilder
-import com.github.appreciated.app.layout.component.menu.left.builder.LeftAppMenuBuilder
-import com.github.appreciated.app.layout.component.menu.left.items.LeftHeaderItem
-import com.github.appreciated.app.layout.component.menu.left.items.LeftNavigationItem
-import com.github.appreciated.app.layout.component.menu.top.item.TopClickableItem
-import com.github.appreciated.app.layout.entity.Section
-import com.github.appreciated.app.layout.router.AppLayoutRouterLayout
-import com.github.mvysny.karibudsl.v10.navigateToView
-import com.vaadin.flow.component.Component
-import com.vaadin.flow.component.html.Hr
-import com.vaadin.flow.component.icon.VaadinIcon
-import com.vaadin.flow.component.icon.VaadinIcon.CLOSE_CIRCLE
-import com.vaadin.flow.component.icon.VaadinIcon.FORM
-import com.vaadin.flow.component.icon.VaadinIcon.USER
-import com.vaadin.flow.component.page.Push
-import com.vaadin.flow.server.PWA
-import com.vaadin.flow.theme.Theme
-import com.vaadin.flow.theme.lumo.Lumo
-import kotlin.reflect.KClass
-
-@Theme(value = Lumo::class, variant = Lumo.DARK)
-@Push
-@PWA(name = "Pedidos de venda",
-     shortName = "Pedidos",
-     iconPath = "icons/logo.png",
-     enableInstallPrompt = false)
+/*
 class AppPedidoLayout: AppLayoutRouterLayout() {
   init {
     init(atualizaMenu())
@@ -37,15 +7,15 @@ class AppPedidoLayout: AppLayoutRouterLayout() {
   
   private fun atualizaMenu(): AppLayout? {
     val appMenu = appMenu()
-    return appLayout(RegistryUserInfo.appName, appMenu)
+    return appLayout(AppConfig.title, appMenu)
   }
   
   private fun appLayout(title: String, appMenu: Component): AppLayout {
     return AppLayoutBuilder.get(LEFT_RESPONSIVE)
       .withTitle(title)
       .withAppBar(AppBarBuilder.get().add(TopClickableItem(null, CLOSE_CIRCLE.create()) {
-        LoginService.logout()
-        navigateToView(DefaultView::class)
+        //LoginService.logout()
+        navigateToView(ViewEmpty::class)
       }).build())
       .withAppMenu(appMenu)
       .build()
@@ -74,7 +44,7 @@ class AppPedidoLayout: AppLayoutRouterLayout() {
     }
     
     fun appMenu(): Component {
-      val appMenu = headerMenu(RegistryUserInfo.commpany, "Versão ${RegistryUserInfo.version}")
+      val appMenu = headerMenu(AppConfig.commpany, "Versão ${AppConfig.version}")
       menuEditar = addMenu("Pedidos", FORM, PedidoEntregaView::class)
       menuUsuario = addMenu("Usuários", USER, UsuarioView::class)
       appMenu.add(menuEditar)
@@ -91,3 +61,4 @@ class AppPedidoLayout: AppLayoutRouterLayout() {
     }
   }
 }
+ */

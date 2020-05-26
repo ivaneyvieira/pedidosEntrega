@@ -43,7 +43,7 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
 
-@Route(layout = AppPedidoLayout::class)
+@Route(layout = PedidoEntregaLayout::class)
 @PageTitle("Pedidos")
 @HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {

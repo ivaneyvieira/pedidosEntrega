@@ -1,12 +1,9 @@
 package br.com.astrosoft.framework.view
 
-import br.com.astrosoft.framework.model.RegistryUserInfo
 import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
-import br.com.astrosoft.pedidoEntrega.model.saci
-import br.com.astrosoft.pedidoEntrega.view.LoginService
 import com.github.mvysny.karibudsl.v10.KFormLayout
 import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
@@ -102,6 +99,7 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
   }
   
   override fun beforeEnter(event: BeforeEnterEvent?) {
+    /*
     if(!LoginService.isLogged())
       event?.forwardTo(LoginView::class.java)
     else {
@@ -110,7 +108,7 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
           if(!isAccept(usuario))
             event?.rerouteTo(AccessNotAllowed::class.java)
         }
-    }
+    }*/
   }
   
   override fun afterNavigation(event: AfterNavigationEvent?) {
@@ -169,7 +167,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnBool(
 fun <T> (@VaadinDsl Grid<T>).addColumnLocalDate(
   property: KProperty1<T, LocalDate?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                          ): Grid.Column<T> {
+                                               ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  renderer = LocalDateRenderer(property, "dd/MM/yyyy"))
   column.isAutoWidth = true
@@ -204,7 +202,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDate(
 fun <T> (@VaadinDsl Grid<T>).addColumnLocalTime(
   property: KProperty1<T, LocalTime?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                          ): Grid.Column<T> {
+                                               ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  TextRenderer {bean ->
                                    val hora = property.get(bean)
@@ -294,16 +292,19 @@ class TabClick(s: String?): Tab(s) {
 
 fun DatePicker.localePtBr() {
   this.setLocale(Locale("pt-br"))
-  this.setI18n( DatePickerI18n().setWeek("semana")
-    .setCalendar("calendário").setClear("apagar")
-    .setToday("hoje").setCancel("cancelar").setFirstDayOfWeek(1)
-    .setMonthNames(Arrays.asList("janeiro", "fevereiro", "março",
-                                 "abril", "maio", "junho", "julho", "agosto",
-                                 "setembro", "outubro", "novembro", "dezembro"))
-    .setWeekdays(Arrays.asList("domingo", "segunda", "terça",
-                               "quarta", "quinta", "sexta", "sábado"))
-    .setWeekdaysShort(Arrays.asList("dom", "seg", "ter", "qua", "qui",
-                                    "sex", "sab")))
+  this.setI18n(DatePickerI18n().setWeek("semana")
+                 .setCalendar("calendário")
+                 .setClear("apagar")
+                 .setToday("hoje")
+                 .setCancel("cancelar")
+                 .setFirstDayOfWeek(1)
+                 .setMonthNames(Arrays.asList("janeiro", "fevereiro", "março",
+                                              "abril", "maio", "junho", "julho", "agosto",
+                                              "setembro", "outubro", "novembro", "dezembro"))
+                 .setWeekdays(Arrays.asList("domingo", "segunda", "terça",
+                                            "quarta", "quinta", "sexta", "sábado"))
+                 .setWeekdaysShort(Arrays.asList("dom", "seg", "ter", "qua", "qui",
+                                                 "sex", "sab")))
 }
 
 fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {

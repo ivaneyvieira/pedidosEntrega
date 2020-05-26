@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedidoEntrega.viewmodel
 
+import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.util.Ssh
 import br.com.astrosoft.framework.util.execCommand
 import br.com.astrosoft.framework.viewmodel.IView
@@ -17,7 +18,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     val pedidos =
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
-    val impressora = UserSaci.userAtual?.impressora ?: fail("O usuário não possui impresseora")
+    val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
       if(printPedido(pedido.loja, pedido.pedido, impressora))
         pedido.marcaImpresso()

@@ -31,8 +31,8 @@ class UserSaci {
   }
   
   companion object {
-    val userAtual
-      get() = saci.findUser(SecurityUtils.userDetails?.username)
+    //val userAtual
+    //  get() = saci.findUser(SecurityUtils.userDetails?.username)
     
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser()

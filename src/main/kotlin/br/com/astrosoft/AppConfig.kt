@@ -8,7 +8,8 @@ object AppConfig {
   const val commpany = "Engecopi"
   const val title = "Pedido Entrega"
   const val shortName = "Pedido"
-  const val iconPath = "icons/logo.png\""
+  const val iconPath = "icons/logo.png"
   
-  val username get() = SecurityUtils.userDetails?.username ?: "Desconhecido"
+  val userDetails get() = SecurityUtils.userDetails
+  val userSaci get() = userDetails?.userSaci
 }

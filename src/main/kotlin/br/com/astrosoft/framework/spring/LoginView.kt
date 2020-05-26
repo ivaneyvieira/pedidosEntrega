@@ -1,5 +1,8 @@
 package br.com.astrosoft.framework.spring
 
+import br.com.astrosoft.AppConfig
+import com.github.mvysny.karibudsl.v10.h1
+import com.github.mvysny.karibudsl.v10.h2
 import com.vaadin.flow.component.orderedlayout.FlexComponent.Alignment
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.CENTER
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -35,6 +38,6 @@ class LoginView: VerticalLayout(), BeforeEnterObserver {
     justifyContentMode = CENTER
     alignItems = Alignment.CENTER
     loginFormApp.action = "login"
-    add(/*H1(loginInfo.appName), */loginFormApp)
+    add(loginFormApp)
   }
 }

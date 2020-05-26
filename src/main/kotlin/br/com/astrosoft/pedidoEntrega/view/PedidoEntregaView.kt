@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedidoEntrega.view
 
+import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
@@ -232,7 +233,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       isPadding = false
       horizontalLayout {
         setWidthFull()
-        if(UserSaci.userAtual?.admin == true)
+        if(AppConfig.userSaci?.admin == true)
           button("Desmarcar") {
             icon = CLOSE.create()
             addClickListener {
@@ -430,7 +431,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       
       horizontalLayout {
         setWidthFull()
-        if(UserSaci.userAtual?.admin == true)
+        if(AppConfig.userSaci?.admin == true)
           button("Desmarcar") {
             icon = CLOSE.create()
             addClickListener {

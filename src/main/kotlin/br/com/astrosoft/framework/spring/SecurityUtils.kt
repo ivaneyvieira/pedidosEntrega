@@ -19,9 +19,9 @@ object SecurityUtils {
       return authentication.isAuthenticated
     }
   
-  val userDetails : UserDetails ?
+  val userDetails : UserSaciDetails ?
   get(){
     val authentication = SecurityContextHolder.getContext().authentication ?: return null
-    return authentication.principal as? UserDetails
+    return authentication.principal as? UserSaciDetails
   }
 }

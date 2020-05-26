@@ -49,7 +49,7 @@ class PedidoEntregaLayout: AppLayout() {
     drawer {
       verticalLayout {
         label("Versão ${AppConfig.version}")
-        label(AppConfig.username)
+        label(AppConfig.userSaci?.login)
       }
       hr()
       tabs {

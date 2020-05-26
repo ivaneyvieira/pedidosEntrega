@@ -24,6 +24,7 @@ import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END
 import com.vaadin.flow.component.page.Push
+import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.server.PWA
 import com.vaadin.flow.theme.Theme
@@ -36,6 +37,8 @@ import com.vaadin.flow.theme.lumo.Lumo
      iconPath = AppConfig.iconPath,
      enableInstallPrompt = false)
 class PedidoEntregaLayout: AppLayout() {
+  private lateinit var tabUser: Tab
+  
   init {
     isDrawerOpened = true
     navbar {
@@ -58,7 +61,8 @@ class PedidoEntregaLayout: AppLayout() {
           this.icon(VaadinIcon.FORM)
           routerLink(text = "Pedido", viewType = PedidoEntregaView::class)
         }
-        tab {
+        tabUser =tab {
+          this.isEnabled = AppConfig.userSaci?.admin ?: false
           this.icon(VaadinIcon.USER)
           routerLink(text = "Usuário", viewType = UsuarioView::class)
         }

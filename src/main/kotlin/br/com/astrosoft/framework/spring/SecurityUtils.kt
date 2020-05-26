@@ -1,28 +1,27 @@
 package br.com.astrosoft.framework.spring
 
-import com.vaadin.flow.server.ServletHelper.RequestType
+import com.vaadin.flow.server.HandlerHelper.RequestType
 import com.vaadin.flow.shared.ApplicationConstants
-import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
-import java.util.stream.*
+import org.springframework.security.core.userdetails.UserDetails
 import javax.servlet.http.HttpServletRequest
 
 object SecurityUtils {
   fun isFrameworkInternalRequest(request: HttpServletRequest?): Boolean {
-    request ?: return false
-    val parameterValue = request.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER)
-    return parameterValue != null &&
-           Stream.of(*RequestType.values())
-             .anyMatch {r: RequestType -> r.identifier == parameterValue}
+    val parameterValue = request?.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER) ?: return false
+    return RequestType.values()
+      .any {it.identifier == parameterValue}
   }
   
   val isUserLoggedIn: Boolean
     get() {
-      val authentication =
-        SecurityContextHolder.getContext()
-          .authentication
-      return authentication != null &&
-             authentication !is AnonymousAuthenticationToken &&
-             authentication.isAuthenticated
+      val authentication = SecurityContextHolder.getContext().authentication ?: return false
+      return authentication.isAuthenticated
     }
+  
+  val userDetails : UserDetails ?
+  get(){
+    val authentication = SecurityContextHolder.getContext().authentication ?: return null
+    return authentication.principal as? UserDetails
+  }
 }

@@ -7,8 +7,12 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 class UserSaciDetailsService: UserDetailsService {
+  private var userDetails: User? = null
+  
   override fun loadUserByUsername(username: String?): UserDetails {
+    userDetails = null
     val userSaci = saci.findUser(username) ?: throw UsernameNotFoundException("Usuário inválido")
-    return User(userSaci.login, userSaci.senha, emptyList())
+    userDetails = User(userSaci.login, userSaci.senha, emptyList())
+    return userDetails!!
   }
 }

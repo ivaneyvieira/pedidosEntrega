@@ -1,7 +1,7 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
+import br.com.astrosoft.framework.spring.SecurityUtils
 import br.com.astrosoft.pedidoEntrega.model.saci
-import br.com.astrosoft.framework.model.RegistryUserInfo
 import kotlin.math.pow
 
 class UserSaci {
@@ -32,7 +32,7 @@ class UserSaci {
   
   companion object {
     val userAtual
-      get() = saci.findUser(RegistryUserInfo.usuario)
+      get() = saci.findUser(SecurityUtils.userDetails?.username)
     
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser()

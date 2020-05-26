@@ -1,21 +1,14 @@
 package br.com.astrosoft
 
+import br.com.astrosoft.framework.spring.SecurityUtils
 import br.com.astrosoft.framework.view.ViewUtil
 
-class AppConfig {
-  private val versao = ViewUtil.versao
-  private val title = "Boleto Crediário"
-  private val shortName = "Boleto"
-  private val iconPath = "icons/logoPintos.png"
+object AppConfig {
+  val version = ViewUtil.versao
+  const val commpany = "Engecopi"
+  const val title = "Pedido Entrega"
+  const val shortName = "Pedido"
+  const val iconPath = "icons/logo.png\""
   
-  fun loginInfo() = LoginInfo(title, shortName, versao, iconPath)
-  // fun loginFormApp() = LoginFormApp()
-  
-  companion object {
-    private val instance = AppConfig()
-    val loginInfo = instance.loginInfo()
-    //val loginFormApp get() = instance.loginFormApp()
-  }
+  val username get() = SecurityUtils.userDetails?.username ?: "Desconhecido"
 }
-
-open class LoginInfo(val appName: String, val shortName: String, val version: String, val iconPath: String)

@@ -20,3 +20,7 @@ deploy.sh
 .gradle
 ebean.properties
 .directory
+execute.sh
+logs
+webpack.*
+package*

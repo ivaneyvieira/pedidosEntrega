@@ -17,7 +17,7 @@ import '@vaadin/vaadin-custom-field/theme/lumo/vaadin-custom-field.js';
 import '@vaadin/vaadin-details/theme/lumo/vaadin-details.js';
 import '@vaadin/vaadin-grid-pro/theme/lumo/vaadin-grid-pro-edit-column.js';
 import '@vaadin/vaadin-grid-pro/theme/lumo/vaadin-grid-pro.js';
-import '@vaadin/vaadin-login/theme/lumo/vaadin-login-form.js';
+import '@vaadin/vaadin-login/theme/lumo/vaadin-login-overlay.js';
 import '@vaadin/vaadin-menu-bar/theme/lumo/vaadin-menu-bar.js';
 import '@vaadin/vaadin-progress-bar/theme/lumo/vaadin-progress-bar.js';
 import '@vaadin/vaadin-radio-button/theme/lumo/vaadin-radio-button.js';

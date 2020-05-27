@@ -2,7 +2,7 @@ version: "3"
 services:
   engecopi:
     image: tomcat:8
-    container_name: eng_pedido_entrega
+    container_name: eng_pedido_entrega2
     ports:
       - "8083:8080"
     environment:

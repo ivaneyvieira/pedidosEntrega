@@ -82,7 +82,7 @@ dependencies {
 }
 
 vaadin {
-  productionMode = false
+  productionMode = true
 }
 
 dependencyManagement {

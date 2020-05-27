@@ -15,7 +15,7 @@ plugins {
   kotlin("plugin.spring") version "1.3.71"
 }
 
-defaultTasks("clean", "build")
+defaultTasks("clean", "vaadinBuildFrontend", "build")
 
 repositories {
   mavenCentral()

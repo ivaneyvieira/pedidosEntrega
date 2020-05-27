@@ -35,6 +35,9 @@ tasks.withType<KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
 
+group = "pedidoEntrega"
+version = "1.0"
+
 dependencies {
   //Spring
   implementation("org.springframework.boot:spring-boot-starter-security")

@@ -2,22 +2,22 @@ version: "3"
 services:
   engecopi:
     image: tomcat:8
-    container_name: eng_abastecimento
+    container_name: eng_pedido_entrega
     ports:
-      - "8096:8080"
+      - "8083:8080"
     environment:
       TZ: "America/Fortaleza"
       EBEAN_PROPS: /etc/ebean.properties
     volumes:
-      - ./build/libs/engAbastecimento-1.0.war:/usr/local/tomcat/webapps/engAbastecimento.war
+      - ./build/libs/pedidosEntrega-1.0.war:/usr/local/tomcat/webapps/pedidosEntrega.war
       - ./ebean.properties:/etc/ebean.properties
     restart: always
     networks:
       rede_separacao:
-        ipv4_address: 172.39.1.1
+        ipv4_address: 172.50.1.1
 networks:
-  rede_separacao:
+  rede_pedido_entrega:
     ipam:
       driver: default
       config:
-        - subnet: 172.39.0.0/16
+        - subnet: 172.50.0.0/16

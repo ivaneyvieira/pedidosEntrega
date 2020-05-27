@@ -13,7 +13,7 @@ services:
       - ./ebean.properties:/etc/ebean.properties
     restart: always
     networks:
-      rede_separacao:
+      rede_pedido_entrega:
         ipv4_address: 172.50.1.1
 networks:
   rede_pedido_entrega:

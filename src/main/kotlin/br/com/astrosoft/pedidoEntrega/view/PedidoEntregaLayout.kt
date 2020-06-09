@@ -58,45 +58,17 @@ class PedidoEntregaLayout: AppLayout() {
         label(AppConfig.userSaci?.login)
       }
       hr()
-      /*
+      
       tabs {
         orientation = Tabs.Orientation.VERTICAL
-        tabPedido = tab {
+        tab {
           this.icon(VaadinIcon.FORM)
           routerLink(text = "Pedido", viewType = PedidoEntregaView::class)
         }
-      }
-      tabs {
-        orientation = Tabs.Orientation.VERTICAL
-        tabUser = tab {
+        tab {
           this.isEnabled = AppConfig.userSaci?.admin ?: false
           this.icon(VaadinIcon.USER)
           routerLink(text = "Usuário", viewType = UsuarioView::class)
-        }
-      }
-       */
-      verticalLayout {
-        width = "100%"
-        isSpacing = false
-        button("Pedidos") {
-          width = "100%"
-          icon = VaadinIcon.FORM.create()
-          this.addThemeVariants(LUMO_PRIMARY , LUMO_SMALL)
-        }
-        button("Usuários") {
-          width = "100%"
-          icon = VaadinIcon.USER.create()
-          this.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL)
-        }
-        button("Sair") {
-          width = "100%"
-          icon = VaadinIcon.CLOSE_CIRCLE.create()
-          this.addThemeVariants(LUMO_TERTIARY, LUMO_SMALL)
-        }
-        listBox<String> {
-          width = "100%"
-          this.add("Menu 0")
-          this.setItems("Menu 0", "Menu 1", "Menu 0")
         }
       }
     }

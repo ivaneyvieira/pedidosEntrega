@@ -11,10 +11,10 @@ SELECT pxa.storeno,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfno, NULL)) AS nfno_venda,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.nfse, NULL)) AS nfse_venda,
        MAX(IF(pxa.cfo IN (5922, 6922), pxa.amt, NULL))  AS valor_venda,
-       MAX(IF(pxa.cfo IN (5117, 6922), pxa.date, NULL)) AS data_entrega,
-       MAX(IF(pxa.cfo IN (5117, 6922), pxa.nfno, NULL)) AS nfno_entrega,
-       MAX(IF(pxa.cfo IN (5117, 6922), pxa.nfse, NULL)) AS nfse_entrega,
-       MAX(IF(pxa.cfo IN (5117, 6922), pxa.amt, NULL))  AS valor_entrega
+       MAX(IF(pxa.cfo IN (5117, 6117), pxa.date, NULL)) AS data_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6117), pxa.nfno, NULL)) AS nfno_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6117), pxa.nfse, NULL)) AS nfse_entrega,
+       MAX(IF(pxa.cfo IN (5117, 6117), pxa.amt, NULL))  AS valor_entrega
 FROM sqlpdv.pxa
   LEFT JOIN sqlpdv.pxanf
 	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)

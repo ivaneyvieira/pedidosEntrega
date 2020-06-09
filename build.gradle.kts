@@ -11,7 +11,7 @@ plugins {
   kotlin("jvm") version "1.3.71"
   id("org.gretty") version "3.0.1"
   war
-  id("com.vaadin") version "0.6.0"
+  id("com.vaadin") version "0.7.0"
   kotlin("plugin.spring") version "1.3.71"
 }
 

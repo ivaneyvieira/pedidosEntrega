@@ -40,7 +40,7 @@ data class PedidoEntrega(
   private fun numeroNota(nfno: String, nfse: String): String {
     return when {
       nfno == "" -> ""
-      nfse == "" -> nfnoEnt
+      nfse == "" -> nfno
       else       -> "$nfno/$nfse"
     }
   }

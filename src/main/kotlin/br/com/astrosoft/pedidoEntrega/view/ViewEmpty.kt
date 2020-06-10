@@ -12,3 +12,4 @@ class ViewEmpty: VerticalLayout(), BeforeEnterObserver {
       event.forwardTo(PedidoEntregaView::class.java)
   }
 }
+  

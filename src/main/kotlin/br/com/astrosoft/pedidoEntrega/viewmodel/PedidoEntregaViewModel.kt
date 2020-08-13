@@ -23,7 +23,8 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
         if(printPedido(pedido.loja, pedido.pedido, impressora))
           pedido.marcaDataHora(datetime)
     }
-    view.showInformation("Impressão finalizada")
+    if(pedidos.any {it.dataHoraPrint == null})
+      view.showInformation("Impressão finalizada")
     updateGridImprimir()
   }
   
@@ -129,12 +130,12 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     val pedidos =
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
-
+    
     pedidos.forEach {pedido ->
       if(pedido.dataHoraPrint != null)
         pedido.marcaImpresso()
     }
-
+    
     updateGridImprimir()
   }
 }

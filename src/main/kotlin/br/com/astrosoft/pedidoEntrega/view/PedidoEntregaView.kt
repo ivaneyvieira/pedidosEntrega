@@ -5,6 +5,7 @@ import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
+import br.com.astrosoft.framework.view.addColumnLocalDateTime
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
 import br.com.astrosoft.framework.view.list
@@ -18,6 +19,7 @@ import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
 import com.github.mvysny.karibudsl.v10.VaadinDsl
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
+import com.github.mvysny.karibudsl.v10.getColumnBy
 import com.github.mvysny.karibudsl.v10.grid
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
@@ -28,16 +30,18 @@ import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 import com.vaadin.flow.component.datepicker.DatePicker
-import com.vaadin.flow.component.dependency.HtmlImport
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
+import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.provider.ListDataProvider
+import com.vaadin.flow.data.provider.SortDirection
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import com.vaadin.flow.function.SerializablePredicate
 import com.vaadin.flow.router.PageTitle
@@ -124,6 +128,14 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
             viewModel.imprimir()
           }
         }
+  
+        button("Confirma") {
+          icon = VaadinIcon.THUMBS_UP.create()
+          addClickListener {
+            viewModel.confirmaPrint()
+          }
+        }
+  
         edtPedidoImprimir = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -165,7 +177,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
         }
-        
+        addColumnLocalDateTime(PedidoEntrega::dataHoraPrint) {
+          this.setHeader("Data Hora Impressão")
+        }
         addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")
         }
@@ -182,7 +196,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::nfFat) {
           this.setHeader("NF Fat")
         }
-  
+        
         addColumnLocalDate(PedidoEntrega::dataFat) {
           this.setHeader("Data")
         }
@@ -219,6 +233,10 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           this.setHeader("Usuário")
         }
         this.shiftSelect()
+        this.sort(listOf(
+          GridSortOrder(getColumnBy(PedidoEntrega::loja), SortDirection.ASCENDING),
+                  GridSortOrder(getColumnBy(PedidoEntrega::pedido), SortDirection.DESCENDING))
+        )
       }
       
       viewModel.updateGridImprimir()
@@ -259,6 +277,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
         addColumnInt(PedidoEntrega::pedido) {
           this.setHeader("Pedido")
+        }
+        addColumnLocalDateTime(PedidoEntrega::dataHoraPrint) {
+          this.setHeader("Data Hora Impressão")
         }
         addColumnLocalDate(PedidoEntrega::data) {
           this.setHeader("Data")

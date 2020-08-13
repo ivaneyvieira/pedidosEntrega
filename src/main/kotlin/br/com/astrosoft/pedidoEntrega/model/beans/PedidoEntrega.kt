@@ -1,10 +1,10 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
-import br.com.astrosoft.framework.util.toLocalDate
 import br.com.astrosoft.pedidoEntrega.model.saci
 import java.sql.Time
 import java.time.LocalDate
-import java.util.*
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 data class PedidoEntrega(
   val loja: Int,
@@ -30,8 +30,13 @@ data class PedidoEntrega(
   val obs: String,
   val codArea: Int,
   val userno: Int,
-  val username: String
+  val username: String,
+  val dataPrint: LocalDate?,
+  val horaPrint: LocalTime?
                         ) {
+  val dataHoraPrint
+    get() = if(dataPrint == null || horaPrint == null) null
+    else LocalDateTime.of(dataPrint, horaPrint)
   val nfFat: String
     get() = numeroNota(nfnoFat, nfseFat)
   val nfEnt: String
@@ -60,30 +65,31 @@ data class PedidoEntrega(
   
   fun desmarcaImpresso() {
     saci.ativaMarca(loja, pedido, " ")
+    desmarcaDataHora()
+  }
+  
+  fun marcaDataHora(dataHora : LocalDateTime) {
+    saci.ativaDataHoraImpressao(loja, pedido, dataHora.toLocalDate(), dataHora.toLocalTime())
+  }
+  
+  private fun desmarcaDataHora() {
+    saci.ativaDataHoraImpressao(loja, pedido, null, null)
   }
   
   companion object {
-    val listaPedido = mutableListOf<PedidoEntrega>()
+    fun listaPedido(): List<PedidoEntrega> = saci.listaPedido().sortedWith(compareBy<PedidoEntrega>{it.data}.thenBy{
+      it.hora})
     
-    fun update() {
-      listaPedido.run{
-        this.clear()
-        this.addAll(saci.listaPedido())
-      }
-    }
-    
-    fun listaPedido(): List<PedidoEntrega> = listaPedido
-    
-    fun listaPedidoImprimir(): List<PedidoEntrega> = listaPedido
+    fun listaPedidoImprimir(): List<PedidoEntrega> = listaPedido()
       .filter {it.paraImprimir}
     
-    fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = saci.listaPedido()
+    fun listaPedidoImpressoSemNota(): List<PedidoEntrega> = listaPedido()
       .filter {it.impressoSemNota}
-  
-    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = listaPedido
+    
+    fun listaPedidoImpressoComNota(): List<PedidoEntrega> = listaPedido()
       .filter {it.impressoComNota}
- 
-    fun listaPedidoPendente(): List<PedidoEntrega> = listaPedido
+    
+    fun listaPedidoPendente(): List<PedidoEntrega> = listaPedido()
       .filter {it.pedidoPendente}
   }
 }

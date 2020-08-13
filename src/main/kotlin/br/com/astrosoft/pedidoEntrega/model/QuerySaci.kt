@@ -55,7 +55,7 @@ class QuerySaci: QueryDB(driver, url, username, password) {
       addParameter("storeno", storeno)
       addParameter("ordno", ordno)
       addParameter("data", data?.toSaciDate() ?: 0)
-      addParameter("hora", hora)
+      addParameter("hora", hora ?: LocalTime.MIN)
     }
   }
   

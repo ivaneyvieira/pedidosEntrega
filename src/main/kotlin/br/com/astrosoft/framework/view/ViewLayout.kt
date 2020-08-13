@@ -31,6 +31,7 @@ import com.vaadin.flow.component.tabs.Tab
 import com.vaadin.flow.component.tabs.Tabs.SelectedChangeEvent
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.renderer.LocalDateRenderer
+import com.vaadin.flow.data.renderer.LocalDateTimeRenderer
 import com.vaadin.flow.data.renderer.NumberRenderer
 import com.vaadin.flow.data.renderer.TextRenderer
 import com.vaadin.flow.router.AfterNavigationEvent
@@ -45,6 +46,7 @@ import org.claspina.confirmdialog.ConfirmDialog
 import java.sql.Time
 import java.text.DecimalFormat
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import kotlin.reflect.KProperty1
@@ -231,6 +233,23 @@ fun <T> (@VaadinDsl Grid<T>).addColumnTime(
     dataA.compareTo(dataB)
   }
   column.block()
+  return column
+}
+
+fun <T> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T, LocalDateTime?>,
+                                                    block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
+  val column = this.addColumnFor(property, renderer = LocalDateTimeRenderer(property, "dd/MM/yyyy hh:mm:ss"))
+  //column.width = "8em"
+  column.isAutoWidth = true
+  column.left()
+  column.setComparator {a, b ->
+    val dataA = property.get(a) ?: LocalDateTime.MIN
+    val dataB = property.get(b) ?: LocalDateTime.MIN
+    dataA.compareTo(dataB)
+  }
+  
+  column.block()
+  
   return column
 }
 

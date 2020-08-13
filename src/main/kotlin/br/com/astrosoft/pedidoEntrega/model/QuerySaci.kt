@@ -3,7 +3,10 @@ package br.com.astrosoft.pedidoEntrega.model
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
+import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
+import java.time.LocalDate
+import java.time.LocalTime
 
 class QuerySaci: QueryDB(driver, url, username, password) {
   fun findUser(login: String?): UserSaci? {
@@ -43,6 +46,16 @@ class QuerySaci: QueryDB(driver, url, username, password) {
       addOptionalParameter("storeno", storeno)
       addOptionalParameter("ordno", ordno)
       addOptionalParameter("marca", marca)
+    }
+  }
+  
+  fun ativaDataHoraImpressao(storeno : Int, ordno : Int, data : LocalDate?, hora : LocalTime?) {
+    val sql = "/sqlSaci/ativaDataHoraImpressao.sql"
+    script(sql) {
+      addParameter("storeno", storeno)
+      addParameter("ordno", ordno)
+      addParameter("data", data?.toSaciDate() ?: 0)
+      addParameter("hora", hora)
     }
   }
   

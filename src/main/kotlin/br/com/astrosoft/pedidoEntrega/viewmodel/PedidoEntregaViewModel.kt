@@ -6,22 +6,22 @@ import br.com.astrosoft.framework.util.execCommand
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.framework.viewmodel.fail
+import br.com.astrosoft.pedidoEntrega.model.QuerySaci
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
-import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
-import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci.Companion
 import java.time.LocalDate
 import java.time.LocalDateTime
-import kotlin.concurrent.thread
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() = exec {
+    val datetime = LocalDateTime.now()
     val pedidos =
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
-      if(printPedido(pedido.loja, pedido.pedido, impressora))
-        pedido.marcaImpresso()
+      if(pedido.dataHoraPrint == null)
+        if(printPedido(pedido.loja, pedido.pedido, impressora))
+          pedido.marcaDataHora(datetime)
     }
     view.showInformation("Impressão finalizada")
     updateGridImprimir()
@@ -29,9 +29,10 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   
   private fun printPedido(storeno: Int, ordno: Int, impressora: String): Boolean {
     return try {
-      Ssh("172.20.47.1", "ivaney", "ivaney").shell {
-        execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
-      }
+      if(!QuerySaci.test)
+        Ssh("172.20.47.1", "ivaney", "ivaney").shell {
+          execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
+        }
       
       println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       true
@@ -41,22 +42,18 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
   }
   
   fun updateGridImprimir() {
-    updatePedidos()
     view.updateGridImprimir(listPedidosEntregaImprimir())
   }
   
   fun updateGridPendente() {
-    updatePedidos()
     view.updateGridPendente(listPedidosEntregaPendente())
   }
   
   fun updateGridImpressoComNota() {
-    updatePedidos()
     view.updateGridImpressoComNota(listPedidosEntregaImpressoComNota())
   }
   
   fun updateGridImpressoSemNota() {
-    updatePedidos()
     view.updateGridImpressoSemNota(listPedidosEntregaImpressoSemNota())
   }
   
@@ -128,8 +125,17 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     updateGridImpressoComNota()
   }
   
-  private fun updatePedidos() {
-    PedidoEntrega.update()
+  fun confirmaPrint() {
+    val pedidos =
+      view.itensSelecionadoImprimir()
+        .ifEmpty {fail("Não há pedido selecionado")}
+
+    pedidos.forEach {pedido ->
+      if(pedido.dataHoraPrint != null)
+        pedido.marcaImpresso()
+    }
+
+    updateGridImprimir()
   }
 }
 
@@ -145,11 +151,13 @@ interface IPedidoEntregaView: IView {
   
   val pedidoImpressoSemNota: Int
   val pedidoImpressoComNota: Int
+  
   //
   val pedidoImprimir: Int
   val dataImprimir: LocalDate?
   val areaImprimir: String
   val rotaImprimir: String
+  
   //
   val pedidoPendente: Int
   val dataPendente: LocalDate?

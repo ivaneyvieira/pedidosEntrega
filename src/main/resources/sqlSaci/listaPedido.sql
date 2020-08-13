@@ -49,7 +49,9 @@ SELECT eord.storeno                                                             
        IF(LEFT(eordrk.remarks__480, 2) = 'EF ', LEFT(eordrk.remarks__480, 11), ' ') AS obs,
        area.no                                                                      AS codArea,
        eord.userno                                                                  AS userno,
-       IFNULL(U.name, '')                                                           AS username
+       IFNULL(U.name, '')                                                           AS username,
+       CAST(IF(eord.l14 = 0, NULL, eord.l14) AS DATE)                               AS dataPrint,
+       sec_to_time(IF(eord.l13 = 0, NULL, eord.l13))                                AS horaPrint
 FROM sqldados.eord
   INNER JOIN T2
 	       ON (T2.storeno = eord.storeno AND T2.ordno = eord.ordno)

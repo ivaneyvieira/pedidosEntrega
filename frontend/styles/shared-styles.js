@@ -1,7 +1,7 @@
 // eagerly import theme styles so as we can override them
 import '@vaadin/vaadin-lumo-styles/all-imports';
 
-//import '@vaadin/vaadin-charts/theme/vaadin-chart-default-theme';
+import '@vaadin/vaadin-charts/theme/vaadin-chart-default-theme';
 
 const $_documentContainer = document.createElement('template');
 
@@ -38,17 +38,69 @@ $_documentContainer.innerHTML = `
   </style>
 </custom-style>
 
+<dom-module id="button-style" theme-for="vaadin-button">
+  <template>
+    <style>
+      :host(:not([theme~="tertiary"])) {
+        background-image: linear-gradient(var(--lumo-tint-5pct), var(--lumo-shade-5pct));
+        box-shadow: inset 0 0 0 1px var(--lumo-contrast-20pct);
+      }
+
+      :host(:not([theme~="tertiary"]):not([theme~="primary"]):not([theme~="error"]):not([theme~="success"])) {
+        color: var(--lumo-body-text-color);
+      }
+
+      :host([theme~="primary"]) {
+        text-shadow: 0 -1px 0 var(--lumo-shade-20pct);
+      }
+    </style>
+  </template>
+</dom-module>
+
+<dom-module id="text-field-style" theme-for="vaadin-text-field vaadin-text-area vaadin-password-field">
+  <template>
+    <style>
+      [part="input-field"] {
+        box-shadow: inset 0 0 0 1px var(--lumo-contrast-30pct);
+        background-color: var(--lumo-base-color);
+      }
+
+      :host([invalid]) [part="input-field"] {
+        box-shadow: inset 0 0 0 1px var(--lumo-error-color);
+      }
+    </style>
+  </template>
+</dom-module>
 
 <custom-style>
   <style>
     html {
       overflow:hidden;
     }
-    vaadin-app-layout vaadin-tab a:hover {
-      text-decoration: none;
-    }
   </style>
 </custom-style>
+
+<dom-module id="app-layout" theme-for="vaadin-app-layout">
+  <template>
+    <style>
+      :host(:not([dir='rtl']):not([overlay])) [part='drawer'] {
+        border-right: none;
+        box-shadow: var(--lumo-box-shadow-s);
+        background-color: var(--lumo-base-color);
+        z-index: 1;
+      }
+      :host([dir='rtl']:not([overlay])) [part='drawer'] {
+        border-left: none;
+        box-shadow: var(--lumo-box-shadow-s);
+        background-color: var(--lumo-base-color);
+        z-index: 1;
+      }
+      [part='navbar'] {
+        box-shadow: var(--lumo-box-shadow-s);
+      }
+    </style>
+  </template>
+</dom-module>
 
 <dom-module id="chart" theme-for="vaadin-chart">
   <template>

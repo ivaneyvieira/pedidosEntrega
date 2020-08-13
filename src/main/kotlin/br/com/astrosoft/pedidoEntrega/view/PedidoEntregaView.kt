@@ -46,7 +46,6 @@ import java.time.LocalDate
 
 @Route(layout = PedidoEntregaLayout::class)
 @PageTitle("Pedidos")
-@HtmlImport("frontend://styles/shared-styles.html")
 class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
   private lateinit var edtPedidoImprimir: TextField
   private lateinit var edtRotaImprimir: TextField

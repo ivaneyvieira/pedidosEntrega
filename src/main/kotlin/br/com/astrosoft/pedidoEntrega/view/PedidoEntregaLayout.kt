@@ -26,6 +26,7 @@ import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_PRIMARY
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_SMALL
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_TERTIARY
+import com.vaadin.flow.component.dependency.JsModule
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.FlexComponent.JustifyContentMode.END
 import com.vaadin.flow.component.page.Push
@@ -41,6 +42,7 @@ import com.vaadin.flow.theme.lumo.Lumo
      shortName = AppConfig.shortName,
      iconPath = AppConfig.iconPath,
      enableInstallPrompt = false)
+@JsModule("./styles/shared-styles.js")
 class PedidoEntregaLayout: AppLayout() {
   init {
     isDrawerOpened = true

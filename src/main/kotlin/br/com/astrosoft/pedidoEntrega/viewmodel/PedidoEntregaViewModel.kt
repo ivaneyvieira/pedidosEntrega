@@ -19,11 +19,11 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
-      if(pedido.dataHoraPrint == null)
+      if(pedido.canPrint())
         if(printPedido(pedido.loja, pedido.pedido, impressora))
           pedido.marcaDataHora(datetime)
     }
-    if(pedidos.any {it.dataHoraPrint == null})
+    if(pedidos.any {it.canPrint()})
       view.showInformation("Impressão finalizada")
     updateGridImprimir()
   }

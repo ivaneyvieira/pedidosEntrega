@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
+import br.com.astrosoft.AppConfig
 import br.com.astrosoft.pedidoEntrega.model.saci
 import java.sql.Time
 import java.time.LocalDate
@@ -75,6 +76,8 @@ data class PedidoEntrega(
   private fun desmarcaDataHora() {
     saci.ativaDataHoraImpressao(loja, pedido, null, null)
   }
+  
+  fun canPrint(): Boolean  = dataHoraPrint == null || (AppConfig.userSaci?.admin ?: false)
   
   companion object {
     fun listaPedido(): List<PedidoEntrega> = saci.listaPedido().sortedWith(compareBy<PedidoEntrega>{it.data}.thenBy{

@@ -328,6 +328,7 @@ fun DatePicker.localePtBr() {
 
 fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {
   this.items.clear()
-  this.items.addAll(itens.sortedBy {it.hashCode()})
+//  this.items.addAll(itens.sortedBy {it.hashCode()})
+  this.items.addAll(itens)
   this.refreshAll()
 }

@@ -1,6 +1,5 @@
 package br.com.astrosoft.pedidoEntrega.model.beans
 
-import br.com.astrosoft.framework.spring.SecurityUtils
 import br.com.astrosoft.pedidoEntrega.model.saci
 import kotlin.math.pow
 
@@ -14,23 +13,18 @@ class UserSaci {
   var impressora: String = ""
   
   //Otiros campos
-  var ativo: Boolean = true
+  var ativo
+    get() = (bitAcesso and BIT_ATIVO) != 0 || admin
+    set(value) {
+      bitAcesso = if(value) bitAcesso or BIT_ATIVO
+      else bitAcesso and BIT_ATIVO.inv()
+    }
   val admin
     get() = login == "ADM"
   
-  fun initVars(): UserSaci {
-    val bits = bitAcesso
-    ativo = (bits and 2.pow(7)) != 0 || admin
-    return this
-  }
-  
-  fun bitAcesso(): Int {
-    val ativoSum = if(ativo) 2.pow(7) else 0
-    val bits = saci.findUser(login)?.bitAcesso ?: 0
-    return ativoSum or bits
-  }
-  
   companion object {
+    private val BIT_ATIVO = 2.pow(7)
+    
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser()
         .filter {it.ativo}
@@ -44,10 +38,8 @@ class UserSaci {
       return saci.findUser(login)
     }
   }
-  
-  fun Int.pow(e: Int): Int = this.toDouble()
-    .pow(e)
-    .toInt()
 }
 
-
+fun Int.pow(e: Int): Int = this.toDouble()
+  .pow(e)
+  .toInt()

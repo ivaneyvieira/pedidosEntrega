@@ -310,20 +310,20 @@ class TabClick(s: String?): Tab(s) {
 }
 
 fun DatePicker.localePtBr() {
-  this.setLocale(Locale("pt-br"))
-  this.setI18n(DatePickerI18n().setWeek("semana")
-                 .setCalendar("calendário")
-                 .setClear("apagar")
-                 .setToday("hoje")
-                 .setCancel("cancelar")
-                 .setFirstDayOfWeek(1)
-                 .setMonthNames(Arrays.asList("janeiro", "fevereiro", "março",
-                                              "abril", "maio", "junho", "julho", "agosto",
-                                              "setembro", "outubro", "novembro", "dezembro"))
-                 .setWeekdays(Arrays.asList("domingo", "segunda", "terça",
-                                            "quarta", "quinta", "sexta", "sábado"))
-                 .setWeekdaysShort(Arrays.asList("dom", "seg", "ter", "qua", "qui",
-                                                 "sex", "sab")))
+  this.locale = Locale("pt-br")
+  this.i18n = DatePickerI18n().setWeek("semana")
+    .setCalendar("calendário")
+    .setClear("apagar")
+    .setToday("hoje")
+    .setCancel("cancelar")
+    .setFirstDayOfWeek(1)
+    .setMonthNames(listOf("janeiro", "fevereiro", "março",
+                          "abril", "maio", "junho", "julho", "agosto",
+                          "setembro", "outubro", "novembro", "dezembro"))
+    .setWeekdays(listOf("domingo", "segunda", "terça",
+                        "quarta", "quinta", "sexta", "sábado"))
+    .setWeekdaysShort(listOf("dom", "seg", "ter", "qua", "qui",
+                             "sex", "sab"))
 }
 
 fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {

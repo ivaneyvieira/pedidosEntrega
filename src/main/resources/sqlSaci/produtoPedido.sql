@@ -1,12 +1,12 @@
-SELECT LPAD(E.prdno * 1, 6, '0')              AS codigo,
-       TRIM(MID(P.name, 1, 37))               AS descricao,
-       E.grade                                AS grade,
-       P.mfno_ref                             AS refFab,
-       IFNULL(B.barcode, P.barcode)           AS barcode,
-       ROUND(E.qtty / 1000)                   AS qtd,
-       E.price / 100                          AS vlUnit,
-       ROUND(E.qtty / 1000) * (E.price / 100) AS vlTotal,
-       IFNULL(L.localizacao, '')              AS localizacao
+SELECT CAST(LPAD(E.prdno * 1, 6, '0') AS CHAR) AS codigo,
+       TRIM(MID(P.name, 1, 37))                AS descricao,
+       E.grade                                 AS grade,
+       P.mfno_ref                              AS refFab,
+       IFNULL(B.barcode, P.barcode)            AS barcode,
+       ROUND(E.qtty / 1000)                    AS qtd,
+       E.price / 100                           AS vlUnit,
+       ROUND(E.qtty / 1000) * (E.price / 100)  AS vlTotal,
+       IFNULL(L.localizacao, '')               AS localizacao
 FROM sqldados.eoprd          AS E
   INNER JOIN sqldados.prd    AS P
 	       ON P.no = E.prdno

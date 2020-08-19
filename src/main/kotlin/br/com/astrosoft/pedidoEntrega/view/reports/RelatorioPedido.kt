@@ -83,7 +83,6 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         .columnGrid(* colunms)
         .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
         .setDataSource(dataSource())
-        .setDefaultFont(stl.fontCourierNew())
         .summary(pageFooterBuilder())
         .setSubtotalStyle(stl.style().setPadding(2)
                             .setTopBorder(stl.pen1Point()))

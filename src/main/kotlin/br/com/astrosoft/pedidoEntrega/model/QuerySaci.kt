@@ -5,6 +5,7 @@ import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
 import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
+import br.com.astrosoft.pedidoEntrega.model.beans.ProdutoPedido
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -56,6 +57,13 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
+  fun produtoPedido(storeno : Int, ordno : Int) : List<ProdutoPedido>{
+    val sql = "/sqlSaci/produtoPedido.sql"
+    return query(sql, ProdutoPedido::class) {
+      addParameter("storeno", storeno)
+      addParameter("ordno", ordno)
+    }
+  }
   
   companion object {
     private val db = DB("saci")

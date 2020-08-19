@@ -20,7 +20,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
     pedidos.forEach {pedido ->
       if(pedido.canPrint())
-        if(printPedido(pedido.loja, pedido.pedido, impressora))
+        if(printPedido(pedido, impressora))
           pedido.marcaDataHora(datetime)
     }
     if(pedidos.any {it.canPrint()})
@@ -28,17 +28,31 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     updateGridImprimir()
   }
   
-  private fun printPedido(storeno: Int, ordno: Int, impressora: String): Boolean {
+  private fun printPedido(pedido: PedidoEntrega, impressora: String): Boolean {
+    val storeno = pedido.loja
+    val ordno = pedido.pedido
     return try {
-      if(!QuerySaci.test)
-        Ssh("172.20.47.1", "ivaney", "ivaney").shell {
-          execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
-        }
+      if(!QuerySaci.test) {
+        if(AppConfig.userSaci?.admin == true)
+          printPdf(pedido)
+        else
+          printSaci(storeno, ordno, impressora)
+      }
       
       println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       true
     } catch(e: Throwable) {
       false
+    }
+  }
+  
+  private fun printPdf(pedido: PedidoEntrega) {
+    view.showRelatorio(pedido)
+  }
+  
+  private fun printSaci(storeno: Int, ordno: Int, impressora: String) {
+    Ssh("172.20.47.1", "ivaney", "ivaney").shell {
+      execCommand("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
     }
   }
   
@@ -164,6 +178,7 @@ interface IPedidoEntregaView: IView {
   val dataPendente: LocalDate?
   val areaPendente: String
   val rotaPendente: String
-  //  fun updateComboAreaImprimir(itens: List<String>)
-  //  fun updateComboRotaImprimir(itens: List<String>)
+  
+  //
+  fun showRelatorio(pedido: PedidoEntrega)
 }

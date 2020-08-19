@@ -1,5 +1,14 @@
 package br.com.astrosoft.framework.util
 
+import java.text.DecimalFormat
+
+private val formatNumber = DecimalFormat("#,##0.00")
+
+fun Double?.format() : String{
+  this ?: return ""
+  return formatNumber.format(this)
+}
+
 fun String?.lpad(size: Int, filler: String): String {
   var str = this ?: ""
   if(str.length > size) return str.substring(0, size)

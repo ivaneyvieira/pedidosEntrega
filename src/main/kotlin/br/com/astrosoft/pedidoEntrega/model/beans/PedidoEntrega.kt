@@ -22,7 +22,11 @@ data class PedidoEntrega(
   val dataEnt: LocalDate?,
   val horaEnt: Time?,
   val vendno: Int,
+  val vendedor: String,
   val custno: Int,
+  val cliente: String,
+  val endereco: String,
+  val bairro: String,
   val frete: Double,
   val valor: Double,
   val status: String,
@@ -69,7 +73,7 @@ data class PedidoEntrega(
     desmarcaDataHora()
   }
   
-  fun marcaDataHora(dataHora : LocalDateTime) {
+  fun marcaDataHora(dataHora: LocalDateTime) {
     saci.ativaDataHoraImpressao(loja, pedido, dataHora.toLocalDate(), dataHora.toLocalTime())
   }
   
@@ -77,11 +81,18 @@ data class PedidoEntrega(
     saci.ativaDataHoraImpressao(loja, pedido, null, null)
   }
   
-  fun canPrint(): Boolean  = dataHoraPrint == null || (AppConfig.userSaci?.admin ?: false)
+  fun sigla() = "MF"
+  fun pdv() = ""
+  
+  fun canPrint(): Boolean = dataHoraPrint == null || (AppConfig.userSaci?.admin ?: false)
+  
+  fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido)
   
   companion object {
-    fun listaPedido(): List<PedidoEntrega> = saci.listaPedido().sortedWith(compareBy<PedidoEntrega>{it.data}.thenBy{
-      it.hora})
+    fun listaPedido(): List<PedidoEntrega> = saci.listaPedido()
+      .sortedWith(compareBy<PedidoEntrega> {it.data}.thenBy {
+        it.hora
+      })
     
     fun listaPedidoImprimir(): List<PedidoEntrega> = listaPedido()
       .filter {it.paraImprimir}

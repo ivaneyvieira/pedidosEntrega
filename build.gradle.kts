@@ -79,6 +79,15 @@ dependencies {
   // test support
   testImplementation("com.github.mvysny.kaributesting:karibu-testing-v10:1.1.16")
   testImplementation("com.github.mvysny.dynatest:dynatest-engine:0.15")
+  // https://mvnrepository.com/artifact/net.sourceforge.dynamicreports/dynamicreports-core
+  implementation("net.sourceforge.dynamicreports:dynamicreports-core:6.11.1") {
+    exclude(group = "com.lowagie", module = "itext")
+  }
+  // https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts
+  implementation("net.sf.jasperreports:jasperreports-fonts:6.12.2")
+  
+  implementation("com.lowagie:itext:2.1.7")
+  implementation("javax.xml.bind:jaxb-api:2.3.1")
 }
 
 vaadin {

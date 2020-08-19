@@ -10,4 +10,7 @@ data class ProdutoPedido(
   val vlUnit: Double,
   val vlTotal: Double,
   val localizacao: String
-                        )
+                        ){
+  val descricaoReport
+  get() = "$descricao\n$refFab\n$localizacao"
+}

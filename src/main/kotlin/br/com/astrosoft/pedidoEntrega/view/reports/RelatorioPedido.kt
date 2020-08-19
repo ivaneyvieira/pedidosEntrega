@@ -12,7 +12,6 @@ import net.sf.dynamicreports.report.builder.DynamicReports.type
 import net.sf.dynamicreports.report.builder.column.ColumnBuilder
 import net.sf.dynamicreports.report.builder.component.ComponentBuilder
 import net.sf.dynamicreports.report.builder.subtotal.SubtotalBuilder
-import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.RIGHT
 import net.sf.dynamicreports.report.constant.Position
@@ -27,9 +26,8 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         this.setFixedWidth(40)
       }
   val colDescricao =
-    col.column("Descrição", ProdutoPedido::descricao.name, type.stringType())
+    col.column("Descrição", ProdutoPedido::descricaoReport.name, type.stringType())
       .apply {
-        this.setFixedWidth(150)
       }
   val colGrade =
     col.column("Grade", ProdutoPedido::grade.name, type.stringType())
@@ -53,19 +51,19 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
     col.column("Qtd", ProdutoPedido::qtd.name, type.integerType())
       .apply {
         this.setPattern("#,##0.####")
-        this.setFixedWidth(20)
+        this.setFixedWidth(40)
       }
   val colVlUnit =
     col.column("R$ Unit", ProdutoPedido::vlUnit.name, type.doubleType())
       .apply {
         this.setPattern("#,##0.00")
-        this.setFixedWidth(40)
+        this.setFixedWidth(80)
       }
   val vlTotal =
     col.column("R$ Total", ProdutoPedido::vlTotal.name, type.doubleType())
       .apply {
         this.setPattern("#,##0.00")
-        this.setFixedWidth(40)
+        this.setFixedWidth(80)
       }
   val colLocalizacao =
     col.column("Localização", ProdutoPedido::localizacao.name, type.stringType())
@@ -84,10 +82,12 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
         .setDataSource(dataSource())
         .summary(pageFooterBuilder())
-        .setSubtotalStyle(stl.style().setPadding(2)
+        .setSubtotalStyle(stl.style()
+                            .setPadding(2)
                             .setTopBorder(stl.pen1Point()))
         .pageFooter(cmp.pageNumber()
-                      .setHorizontalTextAlignment(RIGHT))
+                      .setHorizontalTextAlignment(RIGHT)
+                      .setStyle(stl.style().setFontSize(8)))
         .toPdf(outputStream)
       outputStream.toByteArray()
     } catch(e: DRException) {
@@ -105,28 +105,35 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       .add(
         cmp.horizontalList()
           .add(
-            cmp.text("ENGECOPI ${pedido.sigla()} - Romaneio de Separação Ped: ${pedido.pedido} - ${pedido.data?.format()} - ${pedido.hora.format()}")
+            cmp.text("ENGECOPI ${pedido.sigla()} - ROMANEIO DE SEPARAÇÃO PEDIDO DE ENTREGA: ${pedido.pedido} - ${
+              pedido
+                .data?.format()
+            } -${pedido.hora.format()}")
               .setStyle(Templates.boldStyle)
               ),
         cmp.horizontalList()
           .add(
-            cmp.text("${pedido.loja} ${pedido.pdv()} ${pedido.nfFat} ${pedido.dataFat.format()} ${
+            cmp.text("LJ ${pedido.loja} ${pedido.pdv()} NF ${pedido.nfFat}  DATA ${pedido.dataFat.format()}  HORA ${
               pedido.horaFat
                 .format()
-            } ${pedido.valor.format()} ${pedido.vendedor}")
+            }  VALOR ${pedido.valor.format()}  VENDEDOR ${pedido.vendedor}")
               .setStyle(Templates.boldStyle)
               ),
         cmp.horizontalList()
           .add(
-            cmp.text("${pedido.cliente} ${pedido.endereco} ${pedido.bairro} ${pedido.area} ${pedido.rota}")
+            cmp.text("CLIENTE ${pedido.cliente} ")
+              .setStyle(Templates.boldStyle)
+              ),
+          cmp.horizontalList()
+          .add(
+            cmp.text("ENDEREÇO ${pedido.endereco}  ${pedido.bairro}  ${pedido.area}  ${pedido.rota}")
               .setStyle(Templates.boldStyle)
               )
           )
   }
   
   private fun dataSource(): List<ProdutoPedido> {
-    val list = pedido.produtos()
-    return list
+    return pedido.produtos()
   }
   
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {
@@ -148,7 +155,6 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   }
   
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
-    return listOf(colCodigo, colDescricao, colGrade, colRefFab, colCodBarras, colQtd, colVlUnit, vlTotal,
-                  colLocalizacao)
+    return listOf(colCodigo, colDescricao, colGrade, colCodBarras, colQtd, colVlUnit, vlTotal)
   }
 }

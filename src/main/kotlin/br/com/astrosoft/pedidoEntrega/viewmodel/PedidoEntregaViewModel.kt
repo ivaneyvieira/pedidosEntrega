@@ -42,6 +42,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
       println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")
       true
     } catch(e: Throwable) {
+      e.printStackTrace()
       false
     }
   }

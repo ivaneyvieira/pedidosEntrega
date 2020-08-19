@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedidoEntrega.view
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
@@ -14,6 +15,7 @@ import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.framework.view.updateItens
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
+import br.com.astrosoft.pedidoEntrega.view.reports.RelatorioPedido
 import br.com.astrosoft.pedidoEntrega.viewmodel.IPedidoEntregaView
 import br.com.astrosoft.pedidoEntrega.viewmodel.PedidoEntregaViewModel
 import com.github.mvysny.karibudsl.v10.VaadinDsl
@@ -128,14 +130,14 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
             viewModel.imprimir()
           }
         }
-  
+        
         button("Confirma") {
           icon = VaadinIcon.THUMBS_UP.create()
           addClickListener {
             viewModel.confirmaPrint()
           }
         }
-  
+        
         edtPedidoImprimir = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -235,8 +237,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         this.shiftSelect()
         this.sort(listOf(
           GridSortOrder(getColumnBy(PedidoEntrega::loja), SortDirection.ASCENDING),
-                  GridSortOrder(getColumnBy(PedidoEntrega::pedido), SortDirection.DESCENDING))
-        )
+          GridSortOrder(getColumnBy(PedidoEntrega::pedido), SortDirection.DESCENDING))
+                 )
       }
       
       viewModel.updateGridImprimir()
@@ -537,20 +539,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
     addColumn {
-      /*val listDataProvider = (dataProvider as ListDataProvider)
-      listDataProvider.sortComparator
-      val query = Query<PedidoEntrega, SerializablePredicate<PedidoEntrega>>(0,
-                                                                             Int.Companion.MAX_VALUE,
-                                                                             emptyList<QuerySortOrder>(),
-                                                                             null,
-                                                                             PedicateTrue<PedidoEntrega>())
-      val lista = listDataProvider.getAll()
-      lista.indexOf(it) + 1
-      
-       */
       val lista = list(this)
-      //lista.indexOf(it) + 1
-      //val lista = (this.dataProvider as ListDataProvider).items
       lista.indexOf(it) + 1
     }.apply {
       this.textAlign = END
@@ -612,14 +601,20 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override val rotaPendente: String
     get() = edtRotaPendente.value?.toUpperCase() ?: ""
   
+  override fun showRelatorio(pedido: PedidoEntrega) {
+    val byteArray = RelatorioPedido(pedido).build()
+    showRelatorio(pedido, byteArray)
+  }
+  
+  private fun showRelatorio(pedido: PedidoEntrega, byteArray: ByteArray) {
+    val chave = "${pedido.sigla()}_${pedido.pedido}"
+    SubWindowPDF(chave, byteArray).open()
+  }
+  
   companion object {
     const val TAB_IMPRESSO: String = "Imprimir"
     const val TAB_PENDENTE: String = "Entrega Pendente"
     const val TAB_COM_NOTA: String = "Impresso com Nota"
     const val TAB_SEM_NOTA: String = "Impresso sem Nota"
   }
-}
-
-class PedicateTrue<T>: SerializablePredicate<T> {
-  override fun test(p0: T?): Boolean = true
 }

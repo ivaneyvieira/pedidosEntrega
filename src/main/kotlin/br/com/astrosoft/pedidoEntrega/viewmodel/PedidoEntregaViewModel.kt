@@ -13,18 +13,26 @@ import java.time.LocalDateTime
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
   fun imprimir() = exec {
+    val admin = AppConfig.userSaci?.admin == true
     val datetime = LocalDateTime.now()
     val pedidos =
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
-    pedidos.forEach {pedido ->
-      if(pedido.canPrint())
-        if(printPedido(pedido, impressora))
-          pedido.marcaDataHora(datetime)
+ 
+    if(admin)
+      printPdf(pedidos)
+    else {
+      pedidos.forEach {pedido ->
+        if(pedido.canPrint())
+          if(printPedido(pedido, impressora))
+            pedido.marcaDataHora(datetime)
+      }
+      if(pedidos.any {it.canPrint()})
+        if(!admin) {
+          view.showInformation("Impressão finalizada")
+        }
     }
-    if(pedidos.any {it.canPrint()})
-      view.showInformation("Impressão finalizada")
     updateGridImprimir()
   }
   
@@ -33,9 +41,6 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     val ordno = pedido.pedido
     return try {
       if(!QuerySaci.test) {
-        if(AppConfig.userSaci?.admin == true)
-          printPdf(pedido)
-        else
           printSaci(storeno, ordno, impressora)
       }
       
@@ -47,8 +52,8 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     }
   }
   
-  private fun printPdf(pedido: PedidoEntrega) {
-    view.showRelatorio(pedido)
+  private fun printPdf(pedidos: List<PedidoEntrega>) {
+    view.showRelatorio(pedidos)
   }
   
   private fun printSaci(storeno: Int, ordno: Int, impressora: String) {
@@ -181,5 +186,5 @@ interface IPedidoEntregaView: IView {
   val rotaPendente: String
   
   //
-  fun showRelatorio(pedido: PedidoEntrega)
+  fun showRelatorio(pedidos: List<PedidoEntrega>)
 }

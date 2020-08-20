@@ -601,13 +601,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override val rotaPendente: String
     get() = edtRotaPendente.value?.toUpperCase() ?: ""
   
-  override fun showRelatorio(pedido: PedidoEntrega) {
-    val byteArray = RelatorioPedido(pedido).build()
-    showRelatorio(pedido, byteArray)
+  override fun showRelatorio(pedidos: List<PedidoEntrega>) {
+    val byteArray = RelatorioPedido.processaPedidos(pedidos)
+    showRelatorio(byteArray)
   }
   
-  private fun showRelatorio(pedido: PedidoEntrega, byteArray: ByteArray) {
-    val chave = "${pedido.sigla()}_${pedido.pedido}"
+  private fun showRelatorio(byteArray: ByteArray) {
+    val chave = "PedidoEntrega"
     SubWindowPDF(chave, byteArray).open()
   }
   

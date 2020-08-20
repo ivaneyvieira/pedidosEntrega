@@ -3,6 +3,7 @@ package br.com.astrosoft.pedidoEntrega.view.reports
 import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.ProdutoPedido
+import net.sf.dynamicreports.jasper.builder.JasperReportBuilder
 import net.sf.dynamicreports.report.builder.DynamicReports.cmp
 import net.sf.dynamicreports.report.builder.DynamicReports.col
 import net.sf.dynamicreports.report.builder.DynamicReports.report
@@ -16,6 +17,10 @@ import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.RIGHT
 import net.sf.dynamicreports.report.constant.Position
 import net.sf.dynamicreports.report.exception.DRException
+import net.sf.jasperreports.engine.JRExporterParameter
+import net.sf.jasperreports.engine.export.JRPdfExporter
+import net.sf.jasperreports.export.SimpleExporterInput
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput
 import java.io.ByteArrayOutputStream
 
 class RelatorioPedido(val pedido: PedidoEntrega) {
@@ -74,26 +79,30 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   fun build(): ByteArray {
     return try {
       val outputStream = ByteArrayOutputStream()
-      val colunms = columnBuilder().toTypedArray()
-      report().title(titleBuider())
-        .setTemplate(Templates.reportTemplate)
-        .columns(* colunms)
-        .columnGrid(* colunms)
-        .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
-        .setDataSource(dataSource())
-        .summary(pageFooterBuilder())
-        .setSubtotalStyle(stl.style()
-                            .setPadding(2)
-                            .setTopBorder(stl.pen1Point()))
-        .pageFooter(cmp.pageNumber()
-                      .setHorizontalTextAlignment(RIGHT)
-                      .setStyle(stl.style().setFontSize(8)))
-        .toPdf(outputStream)
+      makeReport()?.toPdf(outputStream)
       outputStream.toByteArray()
     } catch(e: DRException) {
       e.printStackTrace()
       ByteArray(0)
     }
+  }
+  
+  fun makeReport(): JasperReportBuilder? {
+    val colunms = columnBuilder().toTypedArray()
+    return report().title(titleBuider())
+      .setTemplate(Templates.reportTemplate)
+      .columns(* colunms)
+      .columnGrid(* colunms)
+      .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
+      .setDataSource(dataSource())
+      .summary(pageFooterBuilder())
+      .setSubtotalStyle(stl.style()
+                          .setPadding(2)
+                          .setTopBorder(stl.pen1Point()))
+      .pageFooter(cmp.pageNumber()
+                    .setHorizontalTextAlignment(RIGHT)
+                    .setStyle(stl.style()
+                                .setFontSize(8)))
   }
   
   private fun pageFooterBuilder(): ComponentBuilder<*, *>? {
@@ -113,10 +122,10 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
               ),
         cmp.horizontalList()
           .add(
-            cmp.text("LJ ${pedido.loja} ${pedido.pdv()} NF ${pedido.nfFat}  DATA ${pedido.dataFat.format()}  HORA ${
+            cmp.text("LJ ${pedido.loja} ${pedido.pdv()} NF ${pedido.nfFat}  DATA ${pedido.dataFat.format()}-${
               pedido.horaFat
                 .format()
-            }  VALOR ${pedido.valor.format()}  VENDEDOR ${pedido.vendedor}")
+            }  VALOR R$ ${pedido.valor.format()}  VEND ${pedido.vendedor}")
               .setStyle(Templates.boldStyle)
               ),
         cmp.horizontalList()
@@ -124,7 +133,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
             cmp.text("CLIENTE ${pedido.cliente} ")
               .setStyle(Templates.boldStyle)
               ),
-          cmp.horizontalList()
+        cmp.horizontalList()
           .add(
             cmp.text("ENDEREÇO ${pedido.endereco}  ${pedido.bairro}  ${pedido.area}  ${pedido.rota}")
               .setStyle(Templates.boldStyle)
@@ -156,5 +165,24 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
     return listOf(colCodigo, colDescricao, colGrade, colCodBarras, colQtd, colVlUnit, vlTotal)
+  }
+  
+  companion object {
+    fun processaPedidos(list: List<PedidoEntrega>): ByteArray {
+      val reports = list.mapNotNull {pedido ->
+        RelatorioPedido(pedido).makeReport()
+      }
+      val jasperPrints = reports.map {jasperReportBuild ->
+        jasperReportBuild.toJasperPrint()
+      }
+      val exporter = JRPdfExporter()
+      val out = ByteArrayOutputStream()
+      exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
+  
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
+
+      exporter.exportReport()
+      return out.toByteArray()
+    }
   }
 }

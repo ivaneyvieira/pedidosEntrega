@@ -142,7 +142,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   }
   
   private fun dataSource(): List<ProdutoPedido> {
-    return pedido.produtos()
+    return pedido.produtos().sortedBy {it.descricao + it.grade}
   }
   
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {

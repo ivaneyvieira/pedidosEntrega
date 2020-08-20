@@ -19,9 +19,13 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
- 
-    if(admin)
+    
+    if(admin) {
       printPdf(pedidos)
+      pedidos.forEach {pedido ->
+        pedido.marcaDataHora(datetime)
+      }
+    }
     else {
       pedidos.forEach {pedido ->
         if(pedido.canPrint())
@@ -41,7 +45,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     val ordno = pedido.pedido
     return try {
       if(!QuerySaci.test) {
-          printSaci(storeno, ordno, impressora)
+        printSaci(storeno, ordno, impressora)
       }
       
       println("/u/saci/shells/printPedidos.sh $storeno $ordno $impressora")

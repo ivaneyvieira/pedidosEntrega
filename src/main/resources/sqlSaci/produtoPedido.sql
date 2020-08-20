@@ -4,6 +4,7 @@ SELECT CAST(LPAD(E.prdno * 1, 6, '0') AS CHAR) AS codigo,
        P.mfno_ref                              AS refFab,
        IFNULL(B.barcode, P.barcode)            AS barcode,
        ROUND(E.qtty / 1000)                    AS qtd,
+       P.weight                                AS peso,
        E.price / 100                           AS vlUnit,
        ROUND(E.qtty / 1000) * (E.price / 100)  AS vlTotal,
        IFNULL(L.localizacao, '')               AS localizacao

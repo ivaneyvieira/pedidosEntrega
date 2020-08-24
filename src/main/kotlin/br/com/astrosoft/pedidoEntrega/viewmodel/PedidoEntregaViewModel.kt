@@ -19,7 +19,12 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
     val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
-    
+  
+    printPdf(pedidos)
+    pedidos.forEach {pedido ->
+      pedido.marcaDataHora(datetime)
+    }
+    /*
     if(admin) {
       printPdf(pedidos)
       pedidos.forEach {pedido ->
@@ -37,6 +42,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
           view.showInformation("Impressão finalizada")
         }
     }
+     */
     updateGridImprimir()
   }
   

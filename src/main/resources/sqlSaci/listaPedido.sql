@@ -24,9 +24,13 @@ WHERE (pxa.storeno IN (1, 2, 3, 4, 5, 6))
 GROUP BY pxa.storeno, pxa.eordno;
 
 SELECT EO.storeno                                                             AS loja,
+       S.name                                                                 AS nomeLoja,
+       S.sname                                                                AS siglaLoja,
        EO.ordno                                                               AS pedido,
        MID(EO.rmkMontagem, 1, 1)                                              AS marca,
        CAST(P.date AS DATE)                                                   AS data,
+       CAST(EO.dataEntrega AS DATE)                                           AS dataEntrega,
+       EO.pdvno                                                               AS pdvno,
        SEC_TO_TIME(P.time)                                                    AS hora,
 
        IFNULL(cast(T2.nfno_venda AS CHAR), '')                                AS nfnoFat,
@@ -43,8 +47,14 @@ SELECT EO.storeno                                                             AS
        cast(CONCAT(E.no, '-', E.sname) AS CHAR)                               AS vendedor,
        ifnull(C.no, 0)                                                        AS custno,
        cast(CONCAT(LPAD(C.no * 1, 6, '0'), '-', C.name) AS CHAR)              AS cliente,
+       cast(CONCAT('(', IFNULL(CA.ddd, LEFT(C.ddd, 3)), ')',
+		   IFNULL(CA.tel, LEFT(C.tel, 10))) AS CHAR)                  AS foneCliente,
+       cast(RPAD(IFNULL(CA.city, C.city1), 20, ' ') AS CHAR)                  AS cidade,
+       cast(IFNULL(CA.state, C.state1) AS CHAR)                               AS estado,
        C.add1                                                                 AS endereco,
        C.nei1                                                                 AS bairro,
+       cast(RPAD(IFNULL(CA.addr, C.add1), 60, ' ') AS CHAR)                   AS enderecoEntrega,
+       RPAD(IFNULL(CA.nei, C.nei1), 25, ' ')                                  AS bairroEntrega,
        IFNULL(T2.fre_amt, 0) / 100                                            AS frete,
        EO.amount / 100                                                        AS valor,
        IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS status,
@@ -55,10 +65,24 @@ SELECT EO.storeno                                                             AS
        EO.userno                                                              AS userno,
        IFNULL(U.name, '')                                                     AS username,
        CAST(IF(EO.l14 = 0, NULL, EO.l14) AS DATE)                             AS dataPrint,
-       sec_to_time(IF(EO.l13 = 0, NULL, EO.l13))                              AS horaPrint
+       sec_to_time(IF(EO.l13 = 0, NULL, EO.l13))                              AS horaPrint,
+       RPAD(IFNULL(MID(O.remarks__480, 1, 80), ' '), 80, ' ')                 AS obs1,
+       RPAD(IFNULL(MID(O.remarks__480, 81, 80), ' '), 80, ' ')                AS obs2,
+       RPAD(IFNULL(MID(O.remarks__480, 161, 80), ' '), 80, ' ')               AS obs3,
+       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs4,
+       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs5,
+       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs6,
+       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs7
 FROM sqldados.eord           AS EO
+  INNER JOIN sqldados.store  AS S
+	       ON S.no = EO.storeno
   INNER JOIN T2
 	       ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
+  LEFT JOIN  sqldados.eordrk AS O
+	       ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
+
+  LEFT JOIN  sqldados.ctadd  AS CA
+	       ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
   LEFT JOIN  sqldados.users  AS U
 	       ON U.no = EO.userno
   LEFT JOIN  sqldados.custp  AS C

@@ -3,6 +3,7 @@ package br.com.astrosoft.pedidoEntrega.view.reports
 import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.ProdutoPedido
+import br.com.astrosoft.pedidoEntrega.view.reports.Templates.columnStyle
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder
 import net.sf.dynamicreports.report.builder.DynamicReports.cmp
 import net.sf.dynamicreports.report.builder.DynamicReports.col
@@ -13,11 +14,11 @@ import net.sf.dynamicreports.report.builder.DynamicReports.type
 import net.sf.dynamicreports.report.builder.column.ColumnBuilder
 import net.sf.dynamicreports.report.builder.component.ComponentBuilder
 import net.sf.dynamicreports.report.builder.subtotal.SubtotalBuilder
+import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.RIGHT
 import net.sf.dynamicreports.report.constant.Position
 import net.sf.dynamicreports.report.exception.DRException
-import net.sf.jasperreports.engine.JRExporterParameter
 import net.sf.jasperreports.engine.export.JRPdfExporter
 import net.sf.jasperreports.export.SimpleExporterInput
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput
@@ -40,17 +41,12 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         this.setHorizontalTextAlignment(LEFT)
         this.setFixedWidth(50)
       }
-  val colRefFab =
-    col.column("Ref Fab", ProdutoPedido::refFab.name, type.stringType())
-      .apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(60)
-      }
+
   val colCodBarras =
     col.column("Cod Barras", ProdutoPedido::barcode.name, type.stringType())
       .apply {
         this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(70)
+        this.setFixedWidth(80)
       }
   val colQtd =
     col.column("Qtd", ProdutoPedido::qtd.name, type.integerType())
@@ -70,16 +66,12 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         this.setPattern("#,##0.00")
         this.setFixedWidth(80)
       }
-  val colLocalizacao =
-    col.column("Localização", ProdutoPedido::localizacao.name, type.stringType())
-      .apply {
-        this.setHorizontalTextAlignment(LEFT)
-      }
+
   
   fun build(): ByteArray {
     return try {
       val outputStream = ByteArrayOutputStream()
-      makeReport()?.toPdf(outputStream)
+      makeReportPedido()?.toPdf(outputStream)
       outputStream.toByteArray()
     } catch(e: DRException) {
       e.printStackTrace()
@@ -87,7 +79,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
     }
   }
   
-  fun makeReport(): JasperReportBuilder? {
+  fun makeReportPedido(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()
     return report().title(titleBuider())
       .setTemplate(Templates.reportTemplate)
@@ -105,62 +97,180 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
                                 .setFontSize(8)))
   }
   
+  fun makeReportMinuta(): JasperReportBuilder? {
+    return report().title(titleBuiderMinuta())
+      .setTemplate(Templates.reportTemplate)
+      .setDataSource(listOf(pedido))
+  }
+  
+  private fun titleBuiderMinuta(): ComponentBuilder<*, *>? {
+    return verticalList {
+      text("MINUTA DE ENTREGA", CENTER) {
+        this.setStyle(stl.style()
+                        .setFontSize(14))
+      }
+      breakLine()
+      horizontalFlowList {
+        text(pedido.nomeLoja, LEFT, 250)
+        text("Data: ${pedido.data.format()}", CENTER)
+        text("Previsão Entrega: ${pedido.dataEntrega.format()}", CENTER, 150)
+        text("Ped. ${pedido.pedido}/${pedido.pdvno}", RIGHT)
+      }
+      breakLine()
+      horizontalFlowList {
+        text("Vendedor: ${pedido.vendedor}", LEFT)
+        text("Valor do Pedido: ${pedido.valor.format()}", RIGHT)
+      }
+      breakLine()
+      horizontalFlowList {
+        text("Cliente: ${pedido.cliente}", LEFT)
+        text("Fone: ${pedido.foneCliente}", RIGHT)
+      }
+      horizontalFlowList {
+        text("Bairro: ${pedido.bairro}", LEFT)
+        text("Cidade: ${pedido.cidade} - ${pedido.estado}", RIGHT)
+      }
+      breakLine()
+      text("Entrega: ${pedido.enderecoEntrega}", LEFT)
+      horizontalFlowList {
+        text("Bairro: ${pedido.bairroEntrega}", LEFT)
+        text("Área: ${pedido.area}", CENTER)
+        text("Rota: ${pedido.rota}", RIGHT)
+      }
+      breakLine()
+      text("Observação Vendedor")
+      horizontalFlowList {
+        verticalList {
+          text(pedido.obs1)
+          text(pedido.obs2)
+          text(pedido.obs3)
+          text(pedido.obs4)
+          text(pedido.obs5)
+          text(pedido.obs6)
+          text(pedido.obs7)
+        }
+      }
+      breakLine()
+      val coluna1 = 150
+      val coluna2 = 150
+      horizontalFlowList {
+        text("", LEFT, coluna1)
+        text("Início:", RIGHT)
+        text("________/________/________", CENTER)
+        text("________:________", CENTER, coluna2)
+      }
+      horizontalFlowList {
+        text("", LEFT, coluna1)
+        text("", LEFT)
+        text("Data", CENTER)
+        text("Hora", CENTER, coluna2)
+      }
+      breakLine()
+      horizontalFlowList {
+        text("_______________________________", CENTER, coluna1)
+        text("Concluído:", RIGHT)
+        text("________/________/________", CENTER)
+        text("________:________", CENTER, coluna2)
+      }
+      horizontalFlowList {
+        text("Separador", CENTER, coluna1)
+        text("", LEFT)
+        text("Data", CENTER)
+        text("Hora", CENTER, coluna2)
+      }
+      breakLine()
+      
+      horizontalFlowList {
+        text("Observações motorista", LEFT)
+        text("Hora Chegada:  ___________________", RIGHT)
+      }
+      breakLine()
+      breakLine()
+      breakLine()
+      horizontalFlowList {
+        text("Hora Saida:    ___________________", RIGHT)
+      }
+      breakLine()
+      breakLine()
+      breakLine()
+      horizontalFlowList {
+        text("Ocorrencias de Faltas", LEFT)
+        text("Quilometragem:  ___________________", RIGHT)
+      }
+      breakLine()
+      breakLine()
+      breakLine()
+      horizontalFlowList {
+        text("Motorista:    ___________________", RIGHT)
+      }
+      breakLine()
+      breakLine()
+      breakLine()
+      horizontalFlowList {
+        text("Data Recebimento", LEFT, 150)
+        text("Identificacao e Assinatura ao Receber", CENTER)
+        text("Nota Fiscal:   ___________________", RIGHT, 200)
+      }
+      breakLine()
+      horizontalFlowList {
+        text("______/______/______", LEFT, 150)
+        text("________________________________________________", CENTER)
+        text("Reserva:   ___________________", RIGHT, 200)
+      }
+    }
+  }
+  
   private fun pageFooterBuilder(): ComponentBuilder<*, *>? {
     return cmp.verticalList()
   }
   
   private fun titleBuider(): ComponentBuilder<*, *>? {
-    return cmp.verticalList()
-      .add(
-        cmp.horizontalList()
-          .add(
-            cmp.text("ENGECOPI ${pedido.sigla()} - ROMANEIO DE SEPARAÇÃO PEDIDO DE ENTREGA: ${pedido.pedido} - ${
-              pedido
-                .data?.format()
-            } -${pedido.hora.format()}")
-              .setStyle(Templates.boldStyle)
-              ),
-        cmp.horizontalList()
-          .add(
-            cmp.text("LJ ${pedido.loja} ${pedido.pdv()} NF ${pedido.nfFat}  DATA ${pedido.dataFat.format()}-${
-              pedido.horaFat
-                .format()
-            }  VALOR R$ ${pedido.valor.format()}  VEND ${pedido.vendedor}")
-              .setStyle(Templates.boldStyle)
-              ),
-        cmp.horizontalList()
-          .add(
-            cmp.text("CLIENTE ${pedido.cliente} ")
-              .setStyle(Templates.boldStyle)
-              ),
-        cmp.horizontalList()
-          .add(
-            cmp.text("ENDEREÇO ${pedido.endereco}  ${pedido.bairro}  ${pedido.area}  ${pedido.rota}")
-              .setStyle(Templates.boldStyle)
-              )
-          )
+    return verticalList {
+      horizontalFlowList {
+        text("ENGECOPI ${pedido.siglaLoja}", LEFT)
+        text("ROMANEIO DE SEPARAÇÃO PEDIDO DE ENTREGA: ${pedido.pedido}", CENTER, 300)
+        text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
+      }
+      horizontalFlowList {
+        text("LJ ${pedido.loja}", LEFT, 25)
+        text("${pedido.pdvno}", CENTER, 18)
+        text("NF ${pedido.nfFat}", CENTER, 80)
+        text("DATA ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
+        text("VALOR R$ ${pedido.valor.format()}", CENTER)
+        text("VEND ${pedido.vendedor.replace(" +".toRegex(), " ")}", RIGHT, 220)
+      }
+      horizontalFlowList {
+        text("CLIENTE ${pedido.cliente}", LEFT)
+      }
+      horizontalFlowList {
+        text("ENDEREÇO ${pedido.endereco}", LEFT, 300)
+        text(pedido.bairro, CENTER)
+        text(pedido.area, CENTER)
+        text(pedido.rota, RIGHT)
+      }
+    }
   }
   
   private fun dataSource(): List<ProdutoPedido> {
-    return pedido.produtos().sortedBy {it.descricao + it.grade}
+    return pedido.produtos()
+      .sortedBy {it.descricao + it.grade}
   }
   
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {
-    listOf(
+    val style = stl.style(columnStyle)
+      .setTopBorder(stl.pen1Point())
+    return listOf(
       sbt.text("", colCodigo),
       sbt.text("", colDescricao),
       sbt.text("", colGrade),
-      sbt.text("", colRefFab),
       sbt.text("", colCodBarras),
       sbt.text("", colQtd),
       sbt.text("", colVlUnit),
       sbt.sum(vlTotal)
         .setLabel("Total R$")
-        .setLabelStyle(stl.style()
-                         .setTopBorder(stl.pen1Point()))
-        .setLabelPosition(Position.LEFT),
-      sbt.text("", colLocalizacao))
-    return emptyList()
+      .setLabelStyle(style)
+        .setLabelPosition(Position.LEFT)
+        .setStyle(style))
   }
   
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
@@ -169,18 +279,20 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   
   companion object {
     fun processaPedidos(list: List<PedidoEntrega>): ByteArray {
-      val reports = list.mapNotNull {pedido ->
-        RelatorioPedido(pedido).makeReport()
+      val reports = list.flatMap {pedido ->
+        val report = RelatorioPedido(pedido)
+        listOf(report.makeReportPedido(), report.makeReportMinuta())
       }
+        .filterNotNull()
       val jasperPrints = reports.map {jasperReportBuild ->
         jasperReportBuild.toJasperPrint()
       }
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-  
+      
       exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-
+      
       exporter.exportReport()
       return out.toByteArray()
     }

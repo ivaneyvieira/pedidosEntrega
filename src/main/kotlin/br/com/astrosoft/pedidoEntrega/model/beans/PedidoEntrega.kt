@@ -9,9 +9,13 @@ import java.time.LocalTime
 
 data class PedidoEntrega(
   val loja: Int,
+  val nomeLoja: String,
+  val siglaLoja: String,
   val pedido: Int,
   val marca: String,
   val data: LocalDate?,
+  val dataEntrega: LocalDate?,
+  val pdvno: Int,
   val hora: Time?,
   val nfnoFat: String,
   val nfseFat: String,
@@ -25,8 +29,13 @@ data class PedidoEntrega(
   val vendedor: String,
   val custno: Int,
   val cliente: String,
+  val foneCliente: String,
   val endereco: String,
   val bairro: String,
+  val cidade: String,
+  val estado: String,
+  val enderecoEntrega: String,
+  val bairroEntrega: String,
   val frete: Double,
   val valor: Double,
   val status: String,
@@ -37,7 +46,14 @@ data class PedidoEntrega(
   val userno: Int,
   val username: String,
   val dataPrint: LocalDate?,
-  val horaPrint: LocalTime?
+  val horaPrint: LocalTime?,
+  val obs1: String,
+  val obs2: String,
+  val obs3: String,
+  val obs4: String,
+  val obs5: String,
+  val obs6: String,
+  val obs7: String
                         ) {
   val dataHoraPrint
     get() = if(dataPrint == null || horaPrint == null) null
@@ -80,9 +96,6 @@ data class PedidoEntrega(
   private fun desmarcaDataHora() {
     saci.ativaDataHoraImpressao(loja, pedido, null, null)
   }
-  
-  fun sigla() = "MF"
-  fun pdv() = ""
   
   fun canPrint(): Boolean = dataHoraPrint == null || (AppConfig.userSaci?.admin ?: false)
   

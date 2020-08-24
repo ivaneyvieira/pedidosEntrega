@@ -14,12 +14,13 @@ import java.io.InputStream
 
 class SubWindowPDF(chave: String, bytesBoletos: ByteArray): Dialog() {
   init {
-    width = "1200px"
-    height = "500px"
+    width = "100%"
+    height = "100%"
     val timeNumber = System.currentTimeMillis()
     val resourcePDF = StreamResource("${chave}_${timeNumber}.pdf", ConverteByte(bytesBoletos))
     //val buttonWrapper = FileDownloadWrapper(resourcePDF)
     verticalLayout {
+      isPadding = false
       horizontalLayout {
         add(Anchor(resourcePDF, "Download"))
         button("Fechar") {

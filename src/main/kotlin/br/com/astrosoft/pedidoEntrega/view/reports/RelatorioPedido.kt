@@ -105,16 +105,10 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   
   private fun titleBuiderMinuta(): ComponentBuilder<*, *>? {
     return verticalList {
-      text("MINUTA DE ENTREGA", CENTER) {
-        this.setStyle(stl.style()
-                        .setFontSize(14))
-      }
-      breakLine()
       horizontalFlowList {
-        text(pedido.nomeLoja, LEFT, 250)
-        text("Data: ${pedido.data.format()}", CENTER)
-        text("Previsão Entrega: ${pedido.dataEntrega.format()}", CENTER, 150)
-        text("Ped. ${pedido.pedido}/${pedido.pdvno}", RIGHT)
+        text("ENGECOPI ${pedido.siglaLoja}", LEFT, 100)
+        text("MINUTA DE ENTREGA - PEDIDO ${pedido.pedido}", CENTER)
+        text("${pedido.data.format()}-${pedido.hora.format()}", RIGHT, 100)
       }
       breakLine()
       horizontalFlowList {
@@ -156,8 +150,8 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       horizontalFlowList {
         text("", LEFT, coluna1)
         text("Início:", RIGHT)
-        text("________/________/________", CENTER)
-        text("________:________", CENTER, coluna2)
+        text("_______/_______/_______", CENTER)
+        text("______:______", CENTER, coluna2)
       }
       horizontalFlowList {
         text("", LEFT, coluna1)
@@ -167,10 +161,10 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       }
       breakLine()
       horizontalFlowList {
-        text("_______________________________", CENTER, coluna1)
+        text("_______________________", CENTER, coluna1)
         text("Concluído:", RIGHT)
-        text("________/________/________", CENTER)
-        text("________:________", CENTER, coluna2)
+        text("_______/_______/_______", CENTER)
+        text("______:______", CENTER, coluna2)
       }
       horizontalFlowList {
         text("Separador", CENTER, coluna1)
@@ -187,16 +181,19 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       breakLine()
       breakLine()
       breakLine()
+      breakLine()
       horizontalFlowList {
         text("Hora Saida:    ___________________", RIGHT)
       }
       breakLine()
       breakLine()
       breakLine()
+      breakLine()
       horizontalFlowList {
-        text("Ocorrencias de Faltas", LEFT)
+        text("Ocorrências de Faltas", LEFT)
         text("Quilometragem:  ___________________", RIGHT)
       }
+      breakLine()
       breakLine()
       breakLine()
       breakLine()
@@ -206,9 +203,10 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       breakLine()
       breakLine()
       breakLine()
+      breakLine()
       horizontalFlowList {
         text("Data Recebimento", LEFT, 150)
-        text("Identificacao e Assinatura ao Receber", CENTER)
+        text("Identificação e Assinatura ao Receber", CENTER)
         text("Nota Fiscal:   ___________________", RIGHT, 200)
       }
       breakLine()
@@ -232,9 +230,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
       }
       horizontalFlowList {
-        text("LJ ${pedido.loja}", LEFT, 25)
-        text("${pedido.pdvno}", CENTER, 18)
-        text("NF ${pedido.nfFat}", CENTER, 80)
+        text("NF ${pedido.nfFat}", LEFT, 80)
         text("DATA ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
         text("VALOR R$ ${pedido.valor.format()}", CENTER)
         text("VEND ${pedido.vendedor.replace(" +".toRegex(), " ")}", RIGHT, 220)
@@ -243,10 +239,8 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         text("CLIENTE ${pedido.cliente}", LEFT)
       }
       horizontalFlowList {
-        text("ENDEREÇO ${pedido.endereco}", LEFT, 300)
-        text(pedido.bairro, CENTER)
-        text(pedido.area, CENTER)
-        text(pedido.rota, RIGHT)
+        text(pedido.endereco, LEFT, 300)
+        text("${pedido.bairro}       ${pedido.area}       ${pedido.rota}", RIGHT)
       }
     }
   }

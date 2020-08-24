@@ -239,7 +239,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
         text("CLIENTE ${pedido.cliente}", LEFT)
       }
       horizontalFlowList {
-        text("${pedido.endereco}   ${pedido.bairro}   ${pedido.area}   ${pedido.rota}", RIGHT)
+        text("${pedido.endereco}   ${pedido.bairro}   ${pedido.area}   ${pedido.rota}", LEFT)
       }
     }
   }

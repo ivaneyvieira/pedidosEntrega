@@ -12,39 +12,23 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntregaView>(view) {
-  fun imprimir() = exec {
-    val admin = AppConfig.userSaci?.admin == true
+  fun imprimirPedidoMinuta() = exec {
     val datetime = LocalDateTime.now()
     val pedidos =
       view.itensSelecionadoImprimir()
         .ifEmpty {fail("Não há pedido selecionado")}
-    val impressora = AppConfig.userSaci?.impressora ?: fail("O usuário não possui impresseora")
-  
-    printPdf(pedidos)
+    printPedidoMinutaPdf(pedidos)
     pedidos.forEach {pedido ->
       pedido.marcaDataHora(datetime)
     }
-    /*
-    if(admin) {
-      printPdf(pedidos)
-      pedidos.forEach {pedido ->
-        pedido.marcaDataHora(datetime)
-      }
-    }
-    else {
-      pedidos.forEach {pedido ->
-        if(pedido.canPrint())
-          if(printPedido(pedido, impressora))
-            pedido.marcaDataHora(datetime)
-      }
-      if(pedidos.any {it.canPrint()})
-        if(!admin) {
-          view.showInformation("Impressão finalizada")
-        }
-    }
-     */
     updateGridImprimir()
   }
+  
+  fun imprimirPedidos(pedidos: List<PedidoEntrega>) = exec {
+    printPedidoPdf(pedidos)
+    updateGridImprimir()
+  }
+  
   
   private fun printPedido(pedido: PedidoEntrega, impressora: String): Boolean {
     val storeno = pedido.loja
@@ -62,8 +46,12 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     }
   }
   
-  private fun printPdf(pedidos: List<PedidoEntrega>) {
-    view.showRelatorio(pedidos)
+  private fun printPedidoPdf(pedidos: List<PedidoEntrega>) {
+    view.showRelatorioPedido(pedidos)
+  }
+  
+  private fun printPedidoMinutaPdf(pedidos: List<PedidoEntrega>) {
+    view.showRelatorioPedidoMinuta(pedidos)
   }
   
   private fun printSaci(storeno: Int, ordno: Int, impressora: String) {
@@ -196,5 +184,7 @@ interface IPedidoEntregaView: IView {
   val rotaPendente: String
   
   //
-  fun showRelatorio(pedidos: List<PedidoEntrega>)
+  fun showRelatorioPedidoMinuta(pedidos: List<PedidoEntrega>)
+
+  fun showRelatorioPedido(pedidos: List<PedidoEntrega>)
 }

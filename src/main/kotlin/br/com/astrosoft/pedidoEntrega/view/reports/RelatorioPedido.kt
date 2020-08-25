@@ -271,7 +271,7 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
   }
   
   companion object {
-    fun processaPedidos(list: List<PedidoEntrega>): ByteArray {
+    fun processaPedidosMinuta(list: List<PedidoEntrega>): ByteArray {
       val reports = list.flatMap {pedido ->
         val report = RelatorioPedido(pedido)
         listOf(report.makeReportPedido(), report.makeReportMinuta())
@@ -283,9 +283,28 @@ class RelatorioPedido(val pedido: PedidoEntrega) {
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-      
+    
       exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-      
+    
+      exporter.exportReport()
+      return out.toByteArray()
+    }
+
+    fun processaPedidos(list: List<PedidoEntrega>): ByteArray {
+      val reports = list.flatMap {pedido ->
+        val report = RelatorioPedido(pedido)
+        listOf(report.makeReportPedido())
+      }
+        .filterNotNull()
+      val jasperPrints = reports.map {jasperReportBuild ->
+        jasperReportBuild.toJasperPrint()
+      }
+      val exporter = JRPdfExporter()
+      val out = ByteArrayOutputStream()
+      exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
+    
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
+    
       exporter.exportReport()
       return out.toByteArray()
     }

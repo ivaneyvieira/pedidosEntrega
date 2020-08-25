@@ -129,13 +129,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
             viewModel.imprimirPedidoMinuta()
           }
         }
-  
-        button("Visualizar") {
-          icon = VaadinIcon.EYE.create()
-          addClickListener {
-            viewModel.imprimirPedidos(itensSelecionadoImprimir())
+        if(AppConfig.userSaci?.admin == true)
+          button("Visualizar") {
+            icon = VaadinIcon.EYE.create()
+            addClickListener {
+              viewModel.imprimirPedidos(itensSelecionadoImprimir())
+            }
           }
-        }
         
         button("Confirma") {
           icon = VaadinIcon.THUMBS_UP.create()
@@ -265,12 +265,13 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
               viewModel.desmarcaSemNota()
             }
           }
-        button("Visualizar") {
-          icon = VaadinIcon.EYE.create()
-          addClickListener {
-            viewModel.imprimirPedidos(itensSelecionadoImpressoSemNota())
+        if(AppConfig.userSaci?.admin == true)
+          button("Visualizar") {
+            icon = VaadinIcon.EYE.create()
+            addClickListener {
+              viewModel.imprimirPedidos(itensSelecionadoImpressoSemNota())
+            }
           }
-        }
         edtPedidoImpressoSemNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -472,7 +473,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
               viewModel.desmarcaComNota()
             }
           }
-
+        
         edtPedidoImpressoComNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true

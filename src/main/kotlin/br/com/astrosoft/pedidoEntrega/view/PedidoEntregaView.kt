@@ -45,7 +45,6 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.provider.SortDirection
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
-import com.vaadin.flow.function.SerializablePredicate
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import java.time.LocalDate
@@ -127,7 +126,14 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         button("Imprimir") {
           icon = PRINT.create()
           addClickListener {
-            viewModel.imprimir()
+            viewModel.imprimirPedidoMinuta()
+          }
+        }
+  
+        button("Visualizar") {
+          icon = VaadinIcon.EYE.create()
+          addClickListener {
+            viewModel.imprimirPedidos(itensSelecionadoImprimir())
           }
         }
         
@@ -259,6 +265,12 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
               viewModel.desmarcaSemNota()
             }
           }
+        button("Visualizar") {
+          icon = VaadinIcon.EYE.create()
+          addClickListener {
+            viewModel.imprimirPedidos(itensSelecionadoImpressoSemNota())
+          }
+        }
         edtPedidoImpressoSemNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -460,6 +472,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
               viewModel.desmarcaComNota()
             }
           }
+
         edtPedidoImpressoComNota = textField("Numero Pedido") {
           this.valueChangeMode = TIMEOUT
           this.isAutofocus = true
@@ -601,7 +614,12 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override val rotaPendente: String
     get() = edtRotaPendente.value?.toUpperCase() ?: ""
   
-  override fun showRelatorio(pedidos: List<PedidoEntrega>) {
+  override fun showRelatorioPedidoMinuta(pedidos: List<PedidoEntrega>) {
+    val byteArray = RelatorioPedido.processaPedidosMinuta(pedidos)
+    showRelatorio(byteArray)
+  }
+  
+  override fun showRelatorioPedido(pedidos: List<PedidoEntrega>) {
     val byteArray = RelatorioPedido.processaPedidos(pedidos)
     showRelatorio(byteArray)
   }

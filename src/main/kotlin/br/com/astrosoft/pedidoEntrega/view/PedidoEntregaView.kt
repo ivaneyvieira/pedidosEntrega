@@ -318,17 +318,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnTime(PedidoEntrega::horaFat) {
           this.setHeader("Hora")
         }
-        
-        addColumnString(PedidoEntrega::nfEnt) {
-          this.setHeader("NF Ent")
-        }
-        addColumnLocalDate(PedidoEntrega::dataEnt) {
-          this.setHeader("Data")
-        }
-        addColumnTime(PedidoEntrega::horaEnt) {
-          this.setHeader("Hora")
-        }
-        
+
         addColumnInt(PedidoEntrega::vendno) {
           this.setHeader("Vendedor")
         }
@@ -344,6 +334,17 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::obs) {
           this.setHeader("Obs")
         }
+  
+        addColumnString(PedidoEntrega::nfEnt) {
+          this.setHeader("NF Ent")
+        }
+        addColumnLocalDate(PedidoEntrega::dataEnt) {
+          this.setHeader("Data")
+        }
+        addColumnTime(PedidoEntrega::horaEnt) {
+          this.setHeader("Hora")
+        }
+  
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }

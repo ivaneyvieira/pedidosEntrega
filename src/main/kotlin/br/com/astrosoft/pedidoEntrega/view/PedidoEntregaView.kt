@@ -13,6 +13,7 @@ import br.com.astrosoft.framework.view.list
 import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.framework.view.updateItens
+import br.com.astrosoft.pedidoEntrega.model.beans.Entregador
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.view.reports.RelatorioPedido
@@ -62,15 +63,19 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   private lateinit var edtDataPendente: DatePicker
   private lateinit var edtPedidoImpressoSemNota: TextField
   private lateinit var edtPedidoImpressoComNota: TextField
+  private lateinit var edtEntregadorDateI : DatePicker
+  private lateinit var edtEntregadorDateF : DatePicker
   private lateinit var gridPedidosEntregaImpressoComNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImpressoSemNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaPendente: Grid<PedidoEntrega>
+  private lateinit var gridEntregador: Grid<Entregador>
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   private val dataProviderPedidoImprimir = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderPedidoPendente = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderPedidoImpressoSemNota = ListDataProvider<PedidoEntrega>(mutableListOf())
   private val dataProviderPedidoImpressoComNota = ListDataProvider<PedidoEntrega>(mutableListOf())
+  private val dataProviderEntregador = ListDataProvider<Entregador>(mutableListOf())
   
   override fun isAccept(user: UserSaci) = true
   
@@ -109,6 +114,15 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
       }.apply {
         val button = Button(TAB_COM_NOTA) {
           viewModel.updateGridImpressoComNota()
+        }
+        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+        this.addComponentAsFirst(button)
+      }
+      tab {
+        painelEntregador()
+      }.apply {
+        val button = Button(TAB_ENTREGADOR) {
+          viewModel.updateGridEntregador()
         }
         button.addThemeVariants(ButtonVariant.LUMO_SMALL)
         this.addComponentAsFirst(button)
@@ -552,6 +566,60 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     }
   }
   
+  fun HasComponents.painelEntregador(): VerticalLayout {
+    return verticalLayout {
+      this.setSizeFull()
+      isMargin = false
+      isPadding = false
+      
+      horizontalLayout {
+        setWidthFull()
+        edtEntregadorDateI = datePicker("Data Incial") {
+          localePtBr()
+          isClearButtonVisible = true
+          value = LocalDate.now()
+          addValueChangeListener {
+            viewModel.updateGridEntregador()
+          }
+        }
+        edtEntregadorDateF = datePicker("Data Final") {
+          localePtBr()
+          isClearButtonVisible = true
+          value = LocalDate.now()
+          addValueChangeListener {
+            viewModel.updateGridEntregador()
+          }
+        }
+      }
+  
+      gridEntregador = grid(dataProvider = dataProviderEntregador) {
+        this.isExpand = true
+        isMultiSort = true
+        addThemeVariants(LUMO_COMPACT)
+        setSelectionMode(SelectionMode.MULTI)
+        
+        addColumnString(Entregador::funcaoName) {
+          this.setHeader("Função")
+        }
+        addColumnString(Entregador::nome) {
+          this.setHeader("Nome")
+        }
+        addColumnInt(Entregador::qtdEnt) {
+          this.setHeader("Qtd Ent")
+        }
+        addColumnInt(Entregador::pisoCxs) {
+          this.setHeader("Piso Cxs")
+        }
+        addColumnDouble(Entregador::pisoPeso) {
+          this.setHeader("Piso Peso")
+        }
+        addColumnDouble(Entregador::valor) {
+          this.setHeader("Valor")
+        }
+      }
+    }
+  }
+  
   private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {
     addColumn {
       val lista = list(this)
@@ -581,6 +649,11 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   override fun updateGridImpressoSemNota(itens: List<PedidoEntrega>) {
     gridPedidosEntregaImpressoSemNota.deselectAll()
     dataProviderPedidoImpressoSemNota.updateItens(itens)
+  }
+  
+  override fun updateGridEntregador(itens: List<Entregador>) {
+    gridEntregador.deselectAll()
+    dataProviderEntregador.updateItens(itens)
   }
   
   override fun itensSelecionadoImprimir(): List<PedidoEntrega> {
@@ -615,6 +688,10 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     get() = edtAreaPendente.value?.toUpperCase() ?: ""
   override val rotaPendente: String
     get() = edtRotaPendente.value?.toUpperCase() ?: ""
+  override val dateI: LocalDate
+    get() = edtEntregadorDateI.value ?: LocalDate.now()
+  override val dateF: LocalDate
+    get() = edtEntregadorDateF.value ?: LocalDate.now()
   
   override fun showRelatorioPedidoMinuta(pedidos: List<PedidoEntrega>) {
     val byteArray = RelatorioPedido.processaPedidosMinuta(pedidos)
@@ -636,5 +713,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     const val TAB_PENDENTE: String = "Entrega Pendente"
     const val TAB_COM_NOTA: String = "Impresso com Nota"
     const val TAB_SEM_NOTA: String = "Impresso sem Nota"
+    const val TAB_ENTREGADOR: String = "Desempenho Entrega"
   }
 }

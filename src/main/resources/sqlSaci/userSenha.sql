@@ -9,12 +9,14 @@ SELECT U.no,
 			  CHAR(ascii(SUBSTRING(pswd, 6, 1)) + ascii(' ') - ascii(')')),
 			  CHAR(ascii(SUBSTRING(pswd, 7, 1)) + ascii(' ') - ascii(')')),
 			  CHAR(ascii(SUBSTRING(pswd, 8, 1)) + ascii(' ') - ascii('-'))) AS CHAR),
-	      '') AS senha,
-       bits2      AS bitAcesso,
-       U.prntno   AS prntno,
-       P.name     AS impressora
-FROM sqldados.users        AS U
-  LEFT JOIN sqldados.prntr AS P
+	      '')             AS senha,
+       IFNULL(A.bitAcesso, 0) AS bitAcesso,
+       U.prntno               AS prntno,
+       P.name                 AS impressora
+FROM sqldados.users          AS U
+  LEFT JOIN sqldados.prntr   AS P
 	      ON P.no = U.prntno
+  LEFT JOIN sqldados.userApp AS A
+	      ON A.userno = U.no AND A.appName = 'pedidosEntrega'
 WHERE login = :login
    OR :login = 'TODOS'

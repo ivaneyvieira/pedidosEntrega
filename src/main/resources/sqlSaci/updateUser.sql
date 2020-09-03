@@ -1,3 +1,5 @@
-UPDATE sqldados.abastecimentoLoc AS L INNER JOIN sqldados.users AS U USING (no)
-SET bits2 = :bitAcesso
-WHERE login = :login
+DO @NO:=(SELECT MAX(no) FROM sqldados.users WHERE login = :login);
+
+INSERT  INTO sqldados.userApp(userno, appName, bitAcesso)
+VALUES(@NO, 'pedidosEntrega', :bitAcesso)
+ON DUPLICATE KEY UPDATE bitAcesso = :bitAcesso

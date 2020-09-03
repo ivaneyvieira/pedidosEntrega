@@ -6,6 +6,7 @@ import br.com.astrosoft.pedidoEntrega.viewmodel.UsuarioViewModel
 import br.com.astrosoft.framework.view.ViewLayout
 import com.github.mvysny.karibudsl.v10.alignSelf
 import com.github.mvysny.karibudsl.v10.button
+import com.github.mvysny.karibudsl.v10.checkBox
 import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.hr
@@ -120,6 +121,24 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrud
             isReadOnly = true
             binder.bind(this, UserSaci::impressora.name)
           }
+        if(operation in listOf(ADD, READ, DELETE, UPDATE)) {
+          checkBox("Imprimir") {
+            binder.bind(this, UserSaci::imprimir.name)
+          }
+          checkBox("Impresso sem nota") {
+            binder.bind(this, UserSaci::impressoSemNota.name)
+          }
+          checkBox("Entrega Pendente") {
+            binder.bind(this, UserSaci::pendente.name)
+          }
+          checkBox("Impressor com Nota") {
+            binder.bind(this, UserSaci::impressoComNota.name)
+          }
+          checkBox("Desempenho Entrega") {
+            binder.bind(this, UserSaci::entregador.name)
+          }
+  
+        }
       }
       hr()
       horizontalLayout {

@@ -63,8 +63,8 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   private lateinit var edtDataPendente: DatePicker
   private lateinit var edtPedidoImpressoSemNota: TextField
   private lateinit var edtPedidoImpressoComNota: TextField
-  private lateinit var edtEntregadorDateI : DatePicker
-  private lateinit var edtEntregadorDateF : DatePicker
+  private lateinit var edtEntregadorDateI: DatePicker
+  private lateinit var edtEntregadorDateF: DatePicker
   private lateinit var gridPedidosEntregaImpressoComNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImpressoSemNota: Grid<PedidoEntrega>
   private lateinit var gridPedidosEntregaImprimir: Grid<PedidoEntrega>
@@ -81,52 +81,58 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   
   init {
     tabSheet {
+      val user = AppConfig.userSaci
       setSizeFull()
-      tab {
-        painelImprimir()
-      }.apply {
-        val button = Button(TAB_IMPRESSO) {
-          viewModel.updateGridImprimir()
+      if(user?.imprimir == true)
+        tab {
+          painelImprimir()
+        }.apply {
+          val button = Button(TAB_IMPRESSO) {
+            viewModel.updateGridImprimir()
+          }
+          button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+          this.addComponentAsFirst(button)
         }
-        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-        this.addComponentAsFirst(button)
-      }
-      tab {
-        painelImpressoSemNota()
-      }.apply {
-        val button = Button(TAB_SEM_NOTA) {
-          viewModel.updateGridImpressoSemNota()
+      if(user?.impressoSemNota == true)
+        tab {
+          painelImpressoSemNota()
+        }.apply {
+          val button = Button(TAB_SEM_NOTA) {
+            viewModel.updateGridImpressoSemNota()
+          }
+          button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+          this.addComponentAsFirst(button)
         }
-        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-        this.addComponentAsFirst(button)
-      }
-      tab {
-        painelPendente()
-      }.apply {
-        val button = Button(TAB_PENDENTE) {
-          viewModel.updateGridPendente()
+      if(user?.pendente == true)
+        tab {
+          painelPendente()
+        }.apply {
+          val button = Button(TAB_PENDENTE) {
+            viewModel.updateGridPendente()
+          }
+          button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+          this.addComponentAsFirst(button)
         }
-        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-        this.addComponentAsFirst(button)
-      }
-      tab {
-        painelImpressoComNota()
-      }.apply {
-        val button = Button(TAB_COM_NOTA) {
-          viewModel.updateGridImpressoComNota()
+      if(user?.impressoComNota == true)
+        tab {
+          painelImpressoComNota()
+        }.apply {
+          val button = Button(TAB_COM_NOTA) {
+            viewModel.updateGridImpressoComNota()
+          }
+          button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+          this.addComponentAsFirst(button)
         }
-        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-        this.addComponentAsFirst(button)
-      }
-      tab {
-        painelEntregador()
-      }.apply {
-        val button = Button(TAB_ENTREGADOR) {
-          viewModel.updateGridEntregador()
+      if(user?.entregador == true)
+        tab {
+          painelEntregador()
+        }.apply {
+          val button = Button(TAB_ENTREGADOR) {
+            viewModel.updateGridEntregador()
+          }
+          button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+          this.addComponentAsFirst(button)
         }
-        button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-        this.addComponentAsFirst(button)
-      }
     }
   }
   
@@ -332,7 +338,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnTime(PedidoEntrega::horaFat) {
           this.setHeader("Hora")
         }
-
+        
         addColumnInt(PedidoEntrega::vendno) {
           this.setHeader("Vendedor")
         }
@@ -348,7 +354,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(PedidoEntrega::obs) {
           this.setHeader("Obs")
         }
-  
+        
         addColumnString(PedidoEntrega::nfEnt) {
           this.setHeader("NF Ent")
         }
@@ -358,7 +364,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnTime(PedidoEntrega::horaEnt) {
           this.setHeader("Hora")
         }
-  
+        
         addColumnString(PedidoEntrega::username) {
           this.setHeader("Usuário")
         }
@@ -591,7 +597,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           }
         }
       }
-  
+      
       gridEntregador = grid(dataProvider = dataProviderEntregador) {
         this.isExpand = true
         isMultiSort = true

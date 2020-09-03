@@ -1,18 +1,24 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val vaadinonkotlin_version = "1.0.2"
-val vaadin10_version = "14.3.4"
-val kotlin_version = "1.3.72"
-val spring_boot_version = "2.1.0.RELEASE"
+import Build_gradle.Defs.vaadin10_version
+import Build_gradle.Defs.vaadinonkotlin_version
+
+object Defs {
+  const val vaadinonkotlin_version = "1.0.2"
+  const val vaadin10_version = "14.3.4"
+  const val kotlin_version = "1.4.0"
+  const val spring_boot_version = "2.2.6.RELEASE"
+  const val vaadin_plugin = "0.8.0"
+  //const val gretty_plugin = "3.0.1"
+}
 
 plugins {
-  id("org.springframework.boot") version "2.2.6.RELEASE"
+  id("org.springframework.boot") version  "2.2.6.RELEASE"
   id("io.spring.dependency-management") version "1.0.9.RELEASE"
-  kotlin("jvm") version "1.3.71"
-  id("org.gretty") version "3.0.1"
+  kotlin("jvm") version "1.4.0"
+  id("org.gretty") version "3.0.3"
   war
-  id("com.vaadin") version "0.7.0"
-  kotlin("plugin.spring") version "1.3.71"
+  id("com.vaadin") version "0.8.0"
+  kotlin("plugin.spring") version "1.4.0"
 }
 
 defaultTasks("clean", "vaadinBuildFrontend", "build")
@@ -31,10 +37,9 @@ gretty {
 }
 val staging by configurations.creating
 
-tasks.withType<KotlinCompile> {
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
-
 group = "pedidoEntrega"
 version = "1.0"
 
@@ -44,10 +49,10 @@ dependencies {
   implementation("org.springframework.session:spring-session-core")
   providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
   // Vaadin-on-Kotlin dependency, includes Vaadin
-  implementation("com.github.mvysny.karibudsl:karibu-dsl:$vaadinonkotlin_version")
+  implementation("com.github.mvysny.karibudsl:karibu-dsl:${vaadinonkotlin_version}")
   // Vaadin 14
-  implementation("com.vaadin:vaadin-core:$vaadin10_version")
-  implementation("com.vaadin:vaadin-spring-boot-starter:$vaadin10_version")
+  implementation("com.vaadin:vaadin-core:${vaadin10_version}")
+  implementation("com.vaadin:vaadin-spring-boot-starter:${vaadin10_version}")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
   
   implementation("com.zaxxer:HikariCP:3.4.1")
@@ -96,7 +101,7 @@ vaadin {
 
 dependencyManagement {
   imports {
-    mavenBom("com.vaadin:vaadin-bom:$vaadin10_version")
+    mavenBom("com.vaadin:vaadin-bom:${vaadin10_version}")
   }
 }
 

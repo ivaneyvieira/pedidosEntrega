@@ -1,12 +1,12 @@
 package br.com.astrosoft.pedidoEntrega.viewmodel
 
-import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.util.Ssh
 import br.com.astrosoft.framework.util.execCommand
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedidoEntrega.model.QuerySaci
+import br.com.astrosoft.pedidoEntrega.model.beans.Entregador
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -28,7 +28,6 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     printPedidoPdf(pedidos)
     updateGridImprimir()
   }
-  
   
   private fun printPedido(pedido: PedidoEntrega, impressora: String): Boolean {
     val storeno = pedido.loja
@@ -76,6 +75,10 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
     view.updateGridImpressoSemNota(listPedidosEntregaImpressoSemNota())
   }
   
+  fun updateGridEntregador() {
+    view.updateGridEntregador(listEntregador())
+  }
+  
   private fun listPedidosEntregaImprimir(): List<PedidoEntrega> {
     val numPedido = view.pedidoImprimir
     val data = view.dataImprimir
@@ -120,6 +123,13 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView): ViewModel<IPedidoEntrega
       }
   }
   
+  private fun listEntregador(): List<Entregador> {
+    val dateI = view.dateI
+    val dateF = view.dateF
+    return Entregador.findEntregador(dateI, dateF)
+  }
+  
+  
   fun desmarcaSemNota() = exec {
     val pedidos =
       view.itensSelecionadoImpressoSemNota()
@@ -163,6 +173,7 @@ interface IPedidoEntregaView: IView {
   fun updateGridImpressoSemNota(itens: List<PedidoEntrega>)
   fun updateGridImpressoComNota(itens: List<PedidoEntrega>)
   fun updateGridPendente(itens: List<PedidoEntrega>)
+  fun updateGridEntregador(itens: List<Entregador>)
   
   fun itensSelecionadoImprimir(): List<PedidoEntrega>
   fun itensSelecionadoImpressoComNota(): List<PedidoEntrega>
@@ -184,7 +195,11 @@ interface IPedidoEntregaView: IView {
   val rotaPendente: String
   
   //
+  val dateI: LocalDate
+  val dateF: LocalDate
+  
+  //
   fun showRelatorioPedidoMinuta(pedidos: List<PedidoEntrega>)
-
+  
   fun showRelatorioPedido(pedidos: List<PedidoEntrega>)
 }

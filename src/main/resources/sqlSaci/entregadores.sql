@@ -42,7 +42,7 @@ CREATE TEMPORARY TABLE T_METRICAS (
 SELECT storeno,
        pdvno,
        xano,
-       COUNT(*)                                                      AS qtdEnt,
+       COUNT(DISTINCT xano)                                          AS qtdEnt,
        SUM(if(P.groupno = 010000, I.qtty / 1000, 0.000))             AS pisoCxs,
        SUM(if(P.groupno = 010000, (I.qtty / 1000) * P.weight, 0.00)) AS pisoPeso,
        SUM((I.price / 100) * (I.qtty / 1000))                        AS valor

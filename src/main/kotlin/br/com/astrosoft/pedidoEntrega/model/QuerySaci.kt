@@ -5,6 +5,7 @@ import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
 import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedidoEntrega.model.beans.Entregador
+import br.com.astrosoft.pedidoEntrega.model.beans.EntregadorNotas
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.ProdutoPedido
 import java.time.LocalDate
@@ -71,6 +72,15 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     return query(sql, Entregador::class) {
       addOptionalParameter("dateI", dateI.toSaciDate())
       addOptionalParameter("dateF", dateF.toSaciDate())
+    }
+  }
+  
+  fun findEntregadoresNotas(dateI : LocalDate, dateF : LocalDate, empno : Int) : List<EntregadorNotas>{
+    val sql = "/sqlSaci/entregadoresNotas.sql"
+    return query(sql, EntregadorNotas::class) {
+      addOptionalParameter("dateI", dateI.toSaciDate())
+      addOptionalParameter("dateF", dateF.toSaciDate())
+      addOptionalParameter("empno", empno)
     }
   }
   

@@ -12,6 +12,8 @@ import com.github.mvysny.karibudsl.v10.em
 import com.github.mvysny.karibudsl.v10.formLayout
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
+import com.github.mvysny.karibudsl.v10.onLeftClick
+import com.github.mvysny.karibudsl.v10.tooltip
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.ComponentEvent
 import com.vaadin.flow.component.ComponentEventListener
@@ -24,6 +26,7 @@ import com.vaadin.flow.component.grid.ColumnTextAlign.CENTER
 import com.vaadin.flow.component.grid.ColumnTextAlign.END
 import com.vaadin.flow.component.grid.ColumnTextAlign.START
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.icon.Icon
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
@@ -138,6 +141,26 @@ abstract class ViewLayout<VM: ViewModel<*>>: VerticalLayout(), IView, BeforeLeav
 
 fun (@VaadinDsl TabSheet).selectedChange(onEvent: (event: SelectedChangeEvent) -> Unit) {
   addSelectedChangeListener(ComponentEventListener<SelectedChangeEvent> {event -> onEvent(event)})
+}
+
+fun <T> (@VaadinDsl Grid<T>).addColumnButton(iconButton: VaadinIcon,
+                                             tooltip: String? = null,
+                                             execButton: (T) -> Unit = {},
+                                             block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
+  return addComponentColumn {bean ->
+    Icon(iconButton).apply {
+      this.style.set("cursor", "pointer");
+      if(tooltip != null)
+        this.tooltip = tooltip
+      onLeftClick {
+        execButton(bean)
+      }
+    }
+  }.apply {
+    this.width = "4em"
+    this.center()
+    this.block()
+  }
 }
 
 fun <T> (@VaadinDsl Grid<T>).addColumnString(

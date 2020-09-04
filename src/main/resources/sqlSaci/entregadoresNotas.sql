@@ -40,14 +40,16 @@ DROP TABLE IF EXISTS T_METRICAS;
 CREATE TEMPORARY TABLE T_METRICAS (
   PRIMARY KEY (storeno, pdvno, xano, prdno, grade)
 )
-SELECT storeno,
-       pdvno,
+SELECT N.storeno,
+       N.pdvno,
        xano,
        prdno,
        grade,
        CAST(N.date AS DATE)                                          AS date,
        N.nfno,
        N.nfse,
+       E.ordno                                                       AS numPedido,
+       CAST(E.date AS DATE)                                          AS datePedido,
        COUNT(DISTINCT xano)                                          AS qtdEnt,
        SUM(if(P.groupno = 010000, I.qtty / 1000, 0.000))             AS pisoCxs,
        SUM(if(P.groupno = 010000, (I.qtty / 1000) * P.weight, 0.00)) AS pisoPeso,
@@ -57,6 +59,8 @@ FROM sqldados.nfr            AS N
 	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.nfrprd AS I
 	       USING (storeno, pdvno, xano)
+  INNER JOIN sqldados.eord   AS E
+	       ON E.ordno = N.auxLong1 AND E.storeno = N.storeno
   INNER JOIN sqldados.prd    AS P
 	       ON P.no = I.prdno
 GROUP BY N.storeno, N.pdvno, N.xano, I.nfno, I.grade;
@@ -72,6 +76,8 @@ SELECT storenoNfr,
        M.storeno,
        pdvno,
        xano,
+       numPedido,
+       datePedido,
        M.date,
        M.nfno,
        M.nfse,
@@ -101,6 +107,8 @@ SELECT funcaoName                            AS funcaoName,
        TRIM(MID(P.name, 1, 37))              AS descricao,
        grade,
        CAST(CONCAT(nfno, '/', nfse) AS CHAR) AS nota,
+       numPedido,
+       datePedido,
        ROUND(pisoCxs)                        AS pisoCxs,
        pisoPeso                              AS pisoPeso,
        valor                                 AS valor

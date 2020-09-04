@@ -636,15 +636,24 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}") {
       val gridDetail = Grid(EntregadorNotas::class.java, false)
       gridDetail.apply {
-        isMultiSort = true
-        setItems(entregador.findEntregadoresNotas(dateI, dateF))
-        addColumnInt(EntregadorNotas::loja) {
+        isMultiSort = false
+        val itens =
+          entregador.findEntregadoresNotas(dateI, dateF)
+            .groupByNota()
+        setItems(itens)
+        addColumnInt(EntregadorNotas::lojaCol) {
           setHeader("Loja")
         }
-        addColumnString(EntregadorNotas::nota) {
+        addColumnInt(EntregadorNotas::numPedidoCol) {
+          setHeader("Pedido")
+        }
+        addColumnLocalDate(EntregadorNotas::datePedidoCol) {
+          setHeader("Data Pedido")
+        }
+        addColumnString(EntregadorNotas::notaCol) {
           setHeader("Nota")
         }
-        addColumnLocalDate(EntregadorNotas::date) {
+        addColumnLocalDate(EntregadorNotas::dateCol) {
           setHeader("Data")
         }
         addColumnString(EntregadorNotas::prdno) {
@@ -665,11 +674,11 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnDouble(EntregadorNotas::valor) {
           setHeader("Valor")
         }
-        val listSort = GridSortOrder.asc(getColumnBy(EntregadorNotas::loja))
-          .thenAsc(getColumnBy(EntregadorNotas::nota))
-          .thenAsc(getColumnBy(EntregadorNotas::prdno))
-          .thenAsc(getColumnBy(EntregadorNotas::grade)).build()
-        this.sort(listSort)
+        //   val listSort = GridSortOrder.asc(getColumnBy(EntregadorNotas::loja))
+        //     .thenAsc(getColumnBy(EntregadorNotas::nota))
+        //    .thenAsc(getColumnBy(EntregadorNotas::prdno))
+        //   .thenAsc(getColumnBy(EntregadorNotas::grade)).build()
+        // this.sort(listSort)
       }
     }
     form.open()
@@ -770,4 +779,43 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     const val TAB_SEM_NOTA: String = "Impresso sem Nota"
     const val TAB_ENTREGADOR: String = "Desempenho Entrega"
   }
+}
+
+private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
+  val group = this.groupBy {entregadorNota ->
+    entregadorNota.groupByNota()
+  }.entries.map {entry ->
+    EntregadorNotas(funcaoName = "",
+                    nome = "",
+                    date = null,
+                    empno = 0,
+                    loja = entry.key.loja,
+                    nota = entry.key.nota,
+                    numPedido = entry.key.numPedido,
+                    datePedido = entry.key.datePedido,
+                    prdno = "",
+                    grade = "",
+                    descricao = "Total parcial",
+                    pisoCxs = entry.value.sumBy {it.pisoCxs},
+                    pisoPeso = entry.value.sumByDouble {it.pisoPeso},
+                    valor = entry.value.sumByDouble {it.valor}
+                   )
+  }
+  val totalGeral =EntregadorNotas(funcaoName = "",
+                                  nome = "",
+                                  date = null,
+                                  empno = 0,
+                                  loja = 999,
+                                  nota = "",
+                                  numPedido = 0,
+                                  datePedido = null,
+                                  prdno = "",
+                                  grade = "",
+                                  descricao = "Total geral",
+                                  pisoCxs = this.sumBy {it.pisoCxs},
+                                  pisoPeso = this.sumByDouble {it.pisoPeso},
+                                  valor = this.sumByDouble {it.valor}
+                                 )
+  val joinList = group + this + totalGeral
+  return joinList.sortedWith(compareBy({it.loja}, {it.nota}, {it.numPedido}, {it.datePedido}, {if(it.prdno == "") "ZZZZZZ" else it.prdno} ))
 }

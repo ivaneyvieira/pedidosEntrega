@@ -1,8 +1,10 @@
 package br.com.astrosoft.pedidoEntrega.view
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
+import br.com.astrosoft.framework.view.addColumnButton
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
@@ -14,6 +16,7 @@ import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.framework.view.updateItens
 import br.com.astrosoft.pedidoEntrega.model.beans.Entregador
+import br.com.astrosoft.pedidoEntrega.model.beans.EntregadorNotas
 import br.com.astrosoft.pedidoEntrega.model.beans.PedidoEntrega
 import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
 import br.com.astrosoft.pedidoEntrega.view.reports.RelatorioPedido
@@ -602,7 +605,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         this.isExpand = true
         isMultiSort = true
         addThemeVariants(LUMO_COMPACT)
-        setSelectionMode(SelectionMode.MULTI)
+        addColumnButton(VaadinIcon.TABLE, "Notas", execButton = {entregador ->
+          showDialogDetail(entregador)
+        })
         
         addColumnString(Entregador::funcaoName) {
           this.setHeader("Função")
@@ -624,6 +629,50 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         }
       }
     }
+  }
+  
+  private fun showDialogDetail(entregador: Entregador?) {
+    entregador ?: return
+    val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}") {
+      val gridDetail = Grid(EntregadorNotas::class.java, false)
+      gridDetail.apply {
+        isMultiSort = true
+        setItems(entregador.findEntregadoresNotas(dateI, dateF))
+        addColumnInt(EntregadorNotas::loja) {
+          setHeader("Loja")
+        }
+        addColumnString(EntregadorNotas::nota) {
+          setHeader("Nota")
+        }
+        addColumnLocalDate(EntregadorNotas::date) {
+          setHeader("Data")
+        }
+        addColumnString(EntregadorNotas::prdno) {
+          setHeader("Código")
+        }
+        addColumnString(EntregadorNotas::descricao) {
+          setHeader("Descrição")
+        }
+        addColumnString(EntregadorNotas::grade) {
+          setHeader("Grade")
+        }
+        addColumnInt(EntregadorNotas::pisoCxs) {
+          setHeader("Piso CXS")
+        }
+        addColumnDouble(EntregadorNotas::pisoPeso) {
+          setHeader("Piso Peso")
+        }
+        addColumnDouble(EntregadorNotas::valor) {
+          setHeader("Valor")
+        }
+        val listSort = GridSortOrder.asc(getColumnBy(EntregadorNotas::loja))
+          .thenAsc(getColumnBy(EntregadorNotas::nota))
+          .thenAsc(getColumnBy(EntregadorNotas::prdno))
+          .thenAsc(getColumnBy(EntregadorNotas::grade)).build()
+        this.sort(listSort)
+      }
+    }
+    form.open()
   }
   
   private fun @VaadinDsl Grid<PedidoEntrega>.addColumnSeq(label: String) {

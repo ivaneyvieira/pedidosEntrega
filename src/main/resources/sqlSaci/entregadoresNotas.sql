@@ -21,19 +21,12 @@ CREATE TEMPORARY TABLE T_CARGA (
 )
 SELECT storenoNfr AS storeno,
        pdvnoNfr   AS pdvno,
-       xanoNfr    AS xano,
-       CASE statusCarga
-	 WHEN 0
-	   THEN 'Carga Pendente'
-	 WHEN 1
-	   THEN 'Saida Carga (transito)'
-	 WHEN 2
-	   THEN 'Retorno Concluido'
-	 WHEN 3
-	   THEN 'Retorno Erro (nao utilizado)'
-       END        AS descricaoStatus
-FROM sqldados.awnfr
+       xanoNfr    AS xano
+FROM sqldados.awnfrh AS A
+  INNER JOIN T_EMP   AS E
+	       ON E.empno = A.auxShort4
 WHERE date BETWEEN @DI AND @DF
+  AND status = 1
 GROUP BY storeno, pdvno, xano;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -96,7 +89,9 @@ FROM sqldados.awnfrh    AS A
   INNER JOIN T_METRICAS AS M
 	       ON A.storenoNfr = M.storeno AND A.pdvnoNfr = M.pdvno AND A.xanoNfr = M.xano
   INNER JOIN T_EMP      AS E
-	       ON E.empno = A.auxShort4;
+	       ON E.empno = A.auxShort4
+WHERE A.date BETWEEN @DI AND @DF
+  AND status = 1;
 
 SELECT funcaoName                            AS funcaoName,
        sname                                 AS nome,

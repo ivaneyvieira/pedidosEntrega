@@ -41,6 +41,7 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
+import com.vaadin.flow.component.grid.GridVariant.LUMO_ROW_STRIPES
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
@@ -636,6 +637,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}") {
       val gridDetail = Grid(EntregadorNotas::class.java, false)
       gridDetail.apply {
+        addThemeVariants(LUMO_COMPACT)
         isMultiSort = false
         val itens =
           entregador.findEntregadoresNotas(dateI, dateF)
@@ -674,11 +676,6 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnDouble(EntregadorNotas::valor) {
           setHeader("Valor")
         }
-        //   val listSort = GridSortOrder.asc(getColumnBy(EntregadorNotas::loja))
-        //     .thenAsc(getColumnBy(EntregadorNotas::nota))
-        //    .thenAsc(getColumnBy(EntregadorNotas::prdno))
-        //   .thenAsc(getColumnBy(EntregadorNotas::grade)).build()
-        // this.sort(listSort)
       }
     }
     form.open()

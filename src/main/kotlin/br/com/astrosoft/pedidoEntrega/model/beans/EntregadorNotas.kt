@@ -34,8 +34,12 @@ data class EntregadorNotas(
   val carganoCol
     get() = if(funcaoName == "") null else cargano
   
-  fun groupByNota() = EntregadorNotasGroup(loja, nota, numPedido, datePedido)
+  fun groupByNota() = EntregadorNotasGroup(loja, nota, numPedido, datePedido, valorNota, valorFrete)
 }
 
-data class EntregadorNotasGroup(val loja: Int, val nota: String,
-                                val numPedido: Int, val datePedido: LocalDate?)
+data class EntregadorNotasGroup(val loja: Int,
+                                val nota: String,
+                                val numPedido: Int,
+                                val datePedido: LocalDate?,
+                                val valorNota: Double,
+                                val valorFrete: Double)

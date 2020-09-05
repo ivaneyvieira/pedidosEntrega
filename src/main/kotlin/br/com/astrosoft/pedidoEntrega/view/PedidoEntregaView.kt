@@ -800,7 +800,7 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                     datePedido = entry.key.datePedido,
                     prdno = "",
                     grade = "",
-                    descricao = "Total parcial + frete: ${entry.value.firstOrNull()?.valorFrete.format()}",
+                    descricao = "Total parcial + Frete: ${entry.value.firstOrNull()?.valorFrete.format()}",
                     pisoCxs = entry.value.sumBy {it.pisoCxs},
                     pisoPeso = entry.value.sumByDouble {it.pisoPeso},
                     valor = entry.value.sumByDouble {it.valor},
@@ -819,12 +819,12 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                                    datePedido = null,
                                    prdno = "",
                                    grade = "",
-                                   descricao = "Total geral + Frete: ${this.sumByDouble {it.valorFrete}.format()}",
+                                   descricao = "Total geral + Frete: ${group.sumByDouble {it.valorFrete}.format()}",
                                    pisoCxs = this.sumBy {it.pisoCxs},
                                    pisoPeso = this.sumByDouble {it.pisoPeso},
                                    valor = this.sumByDouble {it.valor},
-                                   valorNota = this.sumByDouble {it.valorNota},
-                                   valorFrete = this.sumByDouble {it.valorFrete}
+                                   valorNota = group.sumByDouble {it.valorNota},
+                                   valorFrete = group.sumByDouble {it.valorFrete}
                                   )
   val joinList = group + this + totalGeral
   return joinList.sortedWith(compareBy({it.loja},

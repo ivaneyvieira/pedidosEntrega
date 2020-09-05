@@ -38,15 +38,20 @@ SELECT storeno,
        COUNT(DISTINCT xano)                                          AS qtdEnt,
        SUM(if(P.groupno = 010000, I.qtty / 1000, 0.000))             AS pisoCxs,
        SUM(if(P.groupno = 010000, (I.qtty / 1000) * P.weight, 0.00)) AS pisoPeso,
-       SUM((I.price / 100) * (I.qtty / 1000))                        AS valor
+       SUM((I.price / 100) * (I.qtty / 1000))                        AS valor,
+       nf.grossamt / 100                                             AS valorNota,
+       nf.fre_amt / 100                                              AS valorFrete
 FROM sqldados.nfr            AS N
   INNER JOIN T_CARGA
+	       USING (storeno, pdvno, xano)
+  INNER JOIN sqldados.nf
 	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.nfrprd AS I
 	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.prd    AS P
 	       ON P.no = I.prdno
 GROUP BY N.storeno, N.pdvno, N.xano;
+
 
 DROP TABLE IF EXISTS T_MESTRE;
 CREATE TEMPORARY TABLE T_MESTRE
@@ -63,6 +68,8 @@ SELECT storenoNfr,
        pisoCxs,
        pisoPeso,
        valor,
+       valorFrete,
+       valorNota,
        E.empno,
        sname,
        name,
@@ -82,7 +89,9 @@ SELECT funcaoName,
        SUM(ROUND(qtdEnt))  AS qtdEnt,
        SUM(ROUND(pisoCxs)) AS pisoCxs,
        SUM(pisoPeso)       AS pisoPeso,
-       SUM(valor)          AS valor
+       SUM(valor)          AS valor,
+       SUM(valorNota)      AS valorNota,
+       SUM(valorFrete)     AS valorFrete
 FROM T_MESTRE
 GROUP BY empno
 

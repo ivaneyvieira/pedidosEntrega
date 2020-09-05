@@ -46,11 +46,15 @@ SELECT N.storeno,
        COUNT(DISTINCT xano)                                          AS qtdEnt,
        SUM(if(P.groupno = 010000, I.qtty / 1000, 0.000))             AS pisoCxs,
        SUM(if(P.groupno = 010000, (I.qtty / 1000) * P.weight, 0.00)) AS pisoPeso,
-       SUM((I.price / 100) * (I.qtty / 1000))                        AS valor
+       SUM((I.price / 100) * (I.qtty / 1000))                        AS valor,
+       nf.grossamt / 100                                             AS valorNota,
+       nf.fre_amt / 100                                              AS valorFrete
 FROM sqldados.nfr            AS N
   INNER JOIN T_CARGA
 	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.nfrprd AS I
+	       USING (storeno, pdvno, xano)
+  INNER JOIN sqldados.nf
 	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.eord   AS E
 	       ON E.ordno = N.auxLong1 AND E.storeno = N.storeno
@@ -81,6 +85,8 @@ SELECT cargano,
        pisoCxs,
        pisoPeso,
        valor,
+       valorNota,
+       valorFrete,
        E.empno,
        sname,
        name,
@@ -108,7 +114,9 @@ SELECT cargano,
        datePedido,
        ROUND(pisoCxs)                        AS pisoCxs,
        pisoPeso                              AS pisoPeso,
-       valor                                 AS valor
+       valor                                 AS valor,
+       valorNota,
+       valorFrete
 FROM T_MESTRE             AS M
   INNER JOIN sqldados.prd AS P
 	       ON P.no = M.prdno

@@ -3,6 +3,7 @@ package br.com.astrosoft.pedidoEntrega.model.beans
 import java.time.LocalDate
 
 data class EntregadorNotas(
+  val cargano : Int,
   val funcaoName: String,
   val nome: String,
   val date: LocalDate?,
@@ -28,6 +29,8 @@ data class EntregadorNotas(
     get() = if(funcaoName == "") null else datePedido
   val dateCol
     get() = if(funcaoName == "") null else date
+  val carganoCol
+    get() = if(funcaoName == "") null else cargano
   
   fun groupByNota() = EntregadorNotasGroup(loja, nota, numPedido, datePedido)
 }

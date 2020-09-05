@@ -60,7 +60,8 @@ GROUP BY N.storeno, N.pdvno, N.xano, I.nfno, I.grade;
 
 DROP TABLE IF EXISTS T_MESTRE;
 CREATE TEMPORARY TABLE T_MESTRE
-SELECT storenoNfr,
+SELECT cargano,
+       storenoNfr,
        pdvnoNfr,
        xanoNfr,
        status,
@@ -93,7 +94,8 @@ FROM sqldados.awnfrh    AS A
 WHERE A.date BETWEEN @DI AND @DF
   AND status = 1;
 
-SELECT funcaoName                            AS funcaoName,
+SELECT cargano,
+       funcaoName                            AS funcaoName,
        sname                                 AS nome,
        date                                  AS date,
        M.empno                               AS empno,

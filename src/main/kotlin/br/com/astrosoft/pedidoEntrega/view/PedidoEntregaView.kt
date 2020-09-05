@@ -41,7 +41,6 @@ import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
-import com.vaadin.flow.component.grid.GridVariant.LUMO_ROW_STRIPES
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
@@ -613,6 +612,9 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnString(Entregador::funcaoName) {
           this.setHeader("Função")
         }
+        addColumnInt(Entregador::empno) {
+          this.setHeader("Número")
+        }
         addColumnString(Entregador::nome) {
           this.setHeader("Nome")
         }
@@ -643,6 +645,10 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
           entregador.findEntregadoresNotas(dateI, dateF)
             .groupByNota()
         setItems(itens)
+        //
+        addColumnInt(EntregadorNotas::carganoCol) {
+          setHeader("Carga")
+        }
         addColumnInt(EntregadorNotas::lojaCol) {
           setHeader("Loja")
         }
@@ -782,7 +788,8 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
   val group = this.groupBy {entregadorNota ->
     entregadorNota.groupByNota()
   }.entries.map {entry ->
-    EntregadorNotas(funcaoName = "",
+    EntregadorNotas(cargano = 0,
+                    funcaoName = "",
                     nome = "",
                     date = null,
                     empno = 0,
@@ -798,21 +805,26 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                     valor = entry.value.sumByDouble {it.valor}
                    )
   }
-  val totalGeral =EntregadorNotas(funcaoName = "",
-                                  nome = "",
-                                  date = null,
-                                  empno = 0,
-                                  loja = 999,
-                                  nota = "",
-                                  numPedido = 0,
-                                  datePedido = null,
-                                  prdno = "",
-                                  grade = "",
-                                  descricao = "Total geral",
-                                  pisoCxs = this.sumBy {it.pisoCxs},
-                                  pisoPeso = this.sumByDouble {it.pisoPeso},
-                                  valor = this.sumByDouble {it.valor}
-                                 )
+  val totalGeral = EntregadorNotas(cargano = 0,
+                                   funcaoName = "",
+                                   nome = "",
+                                   date = null,
+                                   empno = 0,
+                                   loja = 999,
+                                   nota = "",
+                                   numPedido = 0,
+                                   datePedido = null,
+                                   prdno = "",
+                                   grade = "",
+                                   descricao = "Total geral",
+                                   pisoCxs = this.sumBy {it.pisoCxs},
+                                   pisoPeso = this.sumByDouble {it.pisoPeso},
+                                   valor = this.sumByDouble {it.valor}
+                                  )
   val joinList = group + this + totalGeral
-  return joinList.sortedWith(compareBy({it.loja}, {it.nota}, {it.numPedido}, {it.datePedido}, {if(it.prdno == "") "ZZZZZZ" else it.prdno} ))
+  return joinList.sortedWith(compareBy({it.loja},
+                                       {it.nota},
+                                       {it.numPedido},
+                                       {it.datePedido},
+                                       {if(it.prdno == "") "ZZZZZZ" else it.prdno}))
 }

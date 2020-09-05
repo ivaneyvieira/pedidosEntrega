@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedidoEntrega.view
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
@@ -627,7 +628,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
         addColumnDouble(Entregador::pisoPeso) {
           this.setHeader("Piso Peso")
         }
-        addColumnDouble(Entregador::valor) {
+        addColumnDouble(Entregador::valorNota) {
           this.setHeader("Valor")
         }
       }
@@ -799,10 +800,12 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                     datePedido = entry.key.datePedido,
                     prdno = "",
                     grade = "",
-                    descricao = "Total parcial",
+                    descricao = "Total parcial + frete: ${entry.value.firstOrNull()?.valorFrete.format()}",
                     pisoCxs = entry.value.sumBy {it.pisoCxs},
                     pisoPeso = entry.value.sumByDouble {it.pisoPeso},
-                    valor = entry.value.sumByDouble {it.valor}
+                    valor = entry.value.sumByDouble {it.valor},
+                    valorNota = entry.value.firstOrNull()?.valorNota ?: 0.00,
+                    valorFrete = entry.value.firstOrNull()?.valorFrete ?: 0.00
                    )
   }
   val totalGeral = EntregadorNotas(cargano = 0,
@@ -816,10 +819,12 @@ private fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                                    datePedido = null,
                                    prdno = "",
                                    grade = "",
-                                   descricao = "Total geral",
+                                   descricao = "Total geral + Frete: ${this.sumByDouble {it.valorFrete}.format()}",
                                    pisoCxs = this.sumBy {it.pisoCxs},
                                    pisoPeso = this.sumByDouble {it.pisoPeso},
-                                   valor = this.sumByDouble {it.valor}
+                                   valor = this.sumByDouble {it.valor},
+                                   valorNota = this.sumByDouble {it.valorNota},
+                                   valorFrete = this.sumByDouble {it.valorFrete}
                                   )
   val joinList = group + this + totalGeral
   return joinList.sortedWith(compareBy({it.loja},

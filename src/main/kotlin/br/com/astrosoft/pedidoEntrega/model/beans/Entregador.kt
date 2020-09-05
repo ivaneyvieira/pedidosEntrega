@@ -10,7 +10,9 @@ data class Entregador(
   val qtdEnt: Int,
   val pisoCxs: Int,
   val pisoPeso: Double,
-  val valor: Double
+  val valor: Double,
+  val valorNota : Double,
+  val valorFrete : Double
                      ) {
   fun findEntregadoresNotas(dateI: LocalDate, dateF: LocalDate) = saci.findEntregadoresNotas(dateI, dateF, empno)
   

@@ -3,7 +3,7 @@ package br.com.astrosoft.pedidoEntrega.model.beans
 import java.time.LocalDate
 
 data class EntregadorNotas(
-  val cargano : Int,
+  val cargano: Int,
   val funcaoName: String,
   val nome: String,
   val date: LocalDate?,
@@ -17,7 +17,9 @@ data class EntregadorNotas(
   val descricao: String,
   val pisoCxs: Int,
   val pisoPeso: Double,
-  val valor: Double
+  val valor: Double,
+  val valorNota: Double,
+  val valorFrete: Double
                           ): Any() {
   val lojaCol
     get() = if(funcaoName == "") null else loja

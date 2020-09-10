@@ -1,6 +1,6 @@
 package br.com.astrosoft.framework.viewmodel
 
-import br.com.astrosoft.pedidoEntrega.model.QuerySaci
+import br.com.astrosoft.pedido.model.QuerySaci
 import br.com.astrosoft.framework.util.CupsUtils
 import br.com.astrosoft.framework.util.lpad
 import br.com.astrosoft.framework.util.rpad
@@ -136,13 +136,13 @@ abstract class PrintText<T> {
       .append(0x1b.toChar())
       .append(0x45.toChar())
       .append(0x00.toChar())
-      .appendln()
+      .appendLine()
     return stringBuffer.toString()
   }
   
   private fun StringBuilder.line(line: String): StringBuilder {
     this.append(line)
-      .appendln()
+      .appendLine()
     return this
   }
   

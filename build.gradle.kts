@@ -40,7 +40,7 @@ val staging by configurations.creating
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
   kotlinOptions.jvmTarget = "1.8"
 }
-group = "pedidoEntrega"
+group = "pedido"
 version = "1.0"
 
 dependencies {
@@ -79,8 +79,8 @@ dependencies {
   implementation("org.vaadin.crudui:crudui:4.1.0")
   //compile("com.flowingcode.addons.applayout:app-layout-addon:2.0.2")
   implementation(kotlin("stdlib-jdk8"))
+  
   implementation(kotlin("reflect"))
-  //compile("org.jetbrains.kotlin:kotlin-reflect")
   // test support
   testImplementation("com.github.mvysny.kaributesting:karibu-testing-v10:1.1.16")
   testImplementation("com.github.mvysny.dynatest:dynatest-engine:0.15")

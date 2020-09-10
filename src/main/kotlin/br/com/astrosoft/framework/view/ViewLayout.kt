@@ -3,7 +3,7 @@ package br.com.astrosoft.framework.view
 import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
-import br.com.astrosoft.pedidoEntrega.model.beans.UserSaci
+import br.com.astrosoft.pedido.model.beans.UserSaci
 import com.github.mvysny.karibudsl.v10.KFormLayout
 import com.github.mvysny.karibudsl.v10.TabSheet
 import com.github.mvysny.karibudsl.v10.VaadinDsl
@@ -143,7 +143,7 @@ fun (@VaadinDsl TabSheet).selectedChange(onEvent: (event: SelectedChangeEvent) -
   addSelectedChangeListener(ComponentEventListener<SelectedChangeEvent> {event -> onEvent(event)})
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnButton(iconButton: VaadinIcon,
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnButton(iconButton: VaadinIcon,
                                              tooltip: String? = null,
                                              execButton: (T) -> Unit = {},
                                              block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
@@ -163,10 +163,21 @@ fun <T> (@VaadinDsl Grid<T>).addColumnButton(iconButton: VaadinIcon,
   }
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnString(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnSeq(label: String): Grid.Column<T> {
+  return addColumn {
+    val lista = list(this)
+    lista.indexOf(it) + 1
+  }.apply {
+    this.textAlign = END
+    isAutoWidth = true
+    setHeader(label)
+  }
+}
+
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnString(
   property: KProperty1<T, String?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                            ): Grid.Column<T> {
+                                                 ): Grid.Column<T> {
   val column = this.addColumnFor(property)
   column.isAutoWidth = true
   column.left()
@@ -174,10 +185,10 @@ fun <T> (@VaadinDsl Grid<T>).addColumnString(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnBool(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnBool(
   property: KProperty1<T, Boolean?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                          ): Grid.Column<T> {
+                                               ): Grid.Column<T> {
   val column = this.addComponentColumn {bean ->
     val boleanValue = property.get(bean) ?: false
     if(boleanValue) VaadinIcon.CHECK_CIRCLE_O.create()
@@ -189,7 +200,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnBool(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnLocalDate(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDate(
   property: KProperty1<T, LocalDate?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                                ): Grid.Column<T> {
@@ -207,7 +218,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnLocalDate(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnDate(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnDate(
   property: KProperty1<T, Date?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
@@ -224,7 +235,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDate(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnLocalTime(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalTime(
   property: KProperty1<T, LocalTime?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                                ): Grid.Column<T> {
@@ -239,7 +250,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnLocalTime(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnTime(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnTime(
   property: KProperty1<T, Time?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                           ): Grid.Column<T> {
@@ -259,7 +270,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnTime(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T, LocalDateTime?>,
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T, LocalDateTime?>,
                                                     block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
   val column = this.addColumnFor(property, renderer = LocalDateTimeRenderer(property, "dd/MM/yyyy hh:mm:ss"))
   //column.width = "8em"
@@ -278,7 +289,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T, Loca
 
 private val formatNumber = DecimalFormat("#,##0.00")
 
-fun <T> (@VaadinDsl Grid<T>).addColumnDouble(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnDouble(
   property: KProperty1<T, Double?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                             ): Grid.Column<T> {
@@ -290,7 +301,7 @@ fun <T> (@VaadinDsl Grid<T>).addColumnDouble(
   return column
 }
 
-fun <T> (@VaadinDsl Grid<T>).addColumnInt(
+fun <T: Any> (@VaadinDsl Grid<T>).addColumnInt(
   property: KProperty1<T, Int?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
                                          ): Grid.Column<T> {
@@ -301,15 +312,15 @@ fun <T> (@VaadinDsl Grid<T>).addColumnInt(
   return column
 }
 
-fun <T> (@VaadinDsl Grid.Column<T>).right() {
+fun <T: Any> (@VaadinDsl Grid.Column<T>).right() {
   this.textAlign = END
 }
 
-fun <T> (@VaadinDsl Grid.Column<T>).left() {
+fun <T: Any> (@VaadinDsl Grid.Column<T>).left() {
   this.textAlign = START
 }
 
-fun <T> (@VaadinDsl Grid.Column<T>).center() {
+fun <T: Any> (@VaadinDsl Grid.Column<T>).center() {
   this.textAlign = CENTER
 }
 
@@ -351,7 +362,7 @@ fun DatePicker.localePtBr() {
 
 fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {
   this.items.clear()
-//  this.items.addAll(itens.sortedBy {it.hashCode()})
+  //  this.items.addAll(itens.sortedBy {it.hashCode()})
   this.items.addAll(itens)
   this.refreshAll()
 }

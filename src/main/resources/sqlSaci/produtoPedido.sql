@@ -1,3 +1,5 @@
+DO @TIPO := :tipo;
+
 SELECT CAST(LPAD(E.prdno * 1, 6, '0') AS CHAR) AS codigo,
        TRIM(MID(P.name, 1, 37))                AS descricao,
        E.grade                                 AS grade,
@@ -15,7 +17,11 @@ FROM sqldados.eoprd          AS E
 	       USING (prdno, grade)
   LEFT JOIN  sqldados.prdloc AS L
 	       ON L.prdno = E.prdno AND L.grade = E.grade AND L.storeno = 4
+  LEFT JOIN  sqldados.eoprdf AS O
+	       ON (O.storeno = E.storeno AND O.ordno = E.ordno AND O.prdno = E.prdno AND
+		   O.grade = E.grade)
 WHERE E.storeno = :storeno
   AND E.ordno = :ordno
+  AND (((@TIPO = 'R') AND (O.bits & POW(2, 1))) OR
+       ((@TIPO = 'E') AND (NOT O.bits & POW(2, 1))))
 GROUP BY E.storeno, E.ordno, E.prdno, E.grade
-ORDER BY E.storeno, E.ordno, E.prdno, E.grade

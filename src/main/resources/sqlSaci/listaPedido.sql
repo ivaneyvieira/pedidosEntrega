@@ -1,3 +1,5 @@
+DO @TIPO := :tipo;
+
 DROP TEMPORARY TABLE IF EXISTS T2;
 CREATE TEMPORARY TABLE T2 (
   PRIMARY KEY (storeno, ordno)
@@ -29,7 +31,7 @@ SELECT EO.storeno                                                             AS
        EO.ordno                                                               AS pedido,
        MID(EO.rmkMontagem, 1, 1)                                              AS marca,
        CAST(P.date AS DATE)                                                   AS data,
-       CAST(EO.dataEntrega AS DATE)                                           AS dataEntrega,
+       CAST(IF(EO.dataEntrega = 0, NULL, EO.dataEntrega) AS DATE)             AS dataEntrega,
        EO.pdvno                                                               AS pdvno,
        SEC_TO_TIME(P.time)                                                    AS hora,
 
@@ -72,7 +74,8 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs4,
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs5,
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs6,
-       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs7
+       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs7,
+       IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS tipo
 FROM sqldados.eord           AS EO
   INNER JOIN sqldados.store  AS S
 	       ON S.no = EO.storeno
@@ -115,7 +118,8 @@ FROM sqldados.eord           AS EO
   LEFT JOIN  sqldados.eordrk AS OBS
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE (EO.storeno IN (1, 2, 3, 4, 5, 6))
-  AND ((NOT eoprdf.bits & POW(2, 1)))
+  AND (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
+       ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
   AND EO.status NOT IN (3, 5)
   AND (EO.date >= 20200101)
   AND (nff.status <> 1 OR nff.status IS NULL)

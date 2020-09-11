@@ -61,7 +61,7 @@ fun Grid<Pedido>.pedidoVendno() = addColumnInt(Pedido::vendno) {
 fun Grid<Pedido>.pedidoFrete() = addColumnDouble(Pedido::frete) {
   this.setHeader("R$ Frete")
 }
-fun Grid<Pedido>.pedidoValor() = addColumnDouble(Pedido::valor) {
+fun Grid<Pedido>.pedidoValor() = addColumnDouble(Pedido::valorComFrete) {
   this.setHeader("R$ Nota")
 }
 fun Grid<Pedido>.pedidoCustno() = addColumnInt(Pedido::custno) {

@@ -47,7 +47,7 @@ SELECT EO.storeno                                                             AS
        IFNULL(T2.nfse_entrega, '')                                            AS nfseEnt,
        if(T2.data_entrega = 0, NULL, cast(T2.data_entrega AS DATE))           AS dataEnt,
        sec_to_time(nfe2.auxLong4)                                             AS horaEnt,
-       (nfe.grossamt / 100)                                                   AS valorEnt,
+       (EO.amount / 100)                                                      AS valorEnt,
 
        IFNULL(E.no, 0)                                                        AS vendno,
        cast(CONCAT(E.no, '-', E.sname) AS CHAR)                               AS vendedor,

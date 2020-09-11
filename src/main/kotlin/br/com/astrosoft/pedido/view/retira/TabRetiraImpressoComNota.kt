@@ -27,6 +27,7 @@ import br.com.astrosoft.pedido.viewmodel.retira.PedidoRetiraImpressoComNotaViewM
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
@@ -65,6 +66,7 @@ class TabRetiraImpressoComNota(val viewModel: PedidoRetiraImpressoComNotaViewMod
   }
   
   override fun Grid<Pedido>.gridPanel() {
+    setSelectionMode(SelectionMode.MULTI)
     pedidoLoja()
     pedidoPedido()
     pedidoData()

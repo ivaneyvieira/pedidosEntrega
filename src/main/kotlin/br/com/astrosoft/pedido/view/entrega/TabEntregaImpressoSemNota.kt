@@ -29,6 +29,7 @@ import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSemNotaVie
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.EYE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -74,6 +75,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
   }
   
   override fun Grid<Pedido>.gridPanel() {
+    setSelectionMode(SelectionMode.MULTI)
     pedidoNum()
     pedidoLoja()
     pedidoPedido()

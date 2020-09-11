@@ -33,6 +33,7 @@ import com.github.mvysny.karibudsl.v10.getColumnBy
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.component.icon.VaadinIcon.EYE
 import com.vaadin.flow.component.icon.VaadinIcon.PRINT
@@ -118,6 +119,7 @@ class TabRetiraImprimir(val viewModel: PedidoRetiraImprimirViewModel): TabPanelG
   }
   
   override fun Grid<Pedido>.gridPanel() {
+    setSelectionMode(SelectionMode.MULTI)
     pedidoNum()
     pedidoLoja()
     pedidoPedido()

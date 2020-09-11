@@ -83,7 +83,7 @@ data class Pedido(
   val pedidoPendente: Boolean
     get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
   val valorComFrete
-    get() = valorFat + frete
+    get() = valorFat
   
   fun marcaImpresso() {
     saci.ativaMarca(loja, pedido, "S")

@@ -1,4 +1,6 @@
 DO @TIPO := :tipo;
+DO @DATA1 := IF(@TIPO = 'R', 20170701, 20200101);
+DO @DATA2 := IF(@TIPO = 'R', 20170701, 20200518);
 
 DROP TEMPORARY TABLE IF EXISTS T2;
 CREATE TEMPORARY TABLE T2 (
@@ -21,7 +23,7 @@ FROM sqlpdv.pxa
   LEFT JOIN sqlpdv.pxanf
 	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)
 WHERE (pxa.storeno IN (1, 2, 3, 4, 5, 6))
-  AND (pxa.date >= 20200518)
+  AND (pxa.date >= @DATA2)
   AND pxa.cfo IN (5922, 6922, 5117, 6117)
 GROUP BY pxa.storeno, pxa.eordno;
 
@@ -121,6 +123,6 @@ WHERE (EO.storeno IN (1, 2, 3, 4, 5, 6))
   AND (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
        ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
   AND EO.status NOT IN (3, 5)
-  AND (EO.date >= 20200101)
+  AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
 GROUP BY EO.storeno, EO.ordno

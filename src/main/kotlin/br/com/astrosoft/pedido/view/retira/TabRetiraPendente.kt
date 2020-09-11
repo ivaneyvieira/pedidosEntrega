@@ -39,7 +39,7 @@ class TabRetiraPendente(val viewModel: PedidoRetiraPendenteViewModel): TabPanelG
   private lateinit var edtRotaPendente: TextField
   private lateinit var edtAreaPendente: TextField
   private lateinit var edtDataPendente: DatePicker
-  override val label = "Entrega Pendente"
+  override val label = "Retira Pendente"
   
   override fun updateComponent() {
     viewModel.updateGridPendente()

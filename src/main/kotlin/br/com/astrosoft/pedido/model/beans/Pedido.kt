@@ -82,6 +82,8 @@ data class Pedido(
     get() = (nfnoEnt != "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
   val pedidoPendente: Boolean
     get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
+  val valorComFrete
+    get() = valorFat + frete
   
   fun marcaImpresso() {
     saci.ativaMarca(loja, pedido, "S")
@@ -105,25 +107,26 @@ data class Pedido(
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
   
   companion object {
-    fun listaPedido(tipo : ETipoPedido): List<Pedido> = saci.listaPedido(tipo)
+    fun listaPedido(tipo: ETipoPedido): List<Pedido> = saci.listaPedido(tipo)
       .sortedWith(compareBy<Pedido> {it.data}.thenBy {
         it.hora
       })
     
-    fun listaPedidoImprimir(tipo : ETipoPedido): List<Pedido> = listaPedido(tipo)
+    fun listaPedidoImprimir(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
       .filter {it.paraImprimir}
     
-    fun listaPedidoImpressoSemNota(tipo : ETipoPedido): List<Pedido> = listaPedido(tipo)
+    fun listaPedidoImpressoSemNota(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
       .filter {it.impressoSemNota}
     
-    fun listaPedidoImpressoComNota(tipo : ETipoPedido): List<Pedido> = listaPedido(tipo)
+    fun listaPedidoImpressoComNota(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
       .filter {it.impressoComNota}
     
-    fun listaPedidoPendente(tipo : ETipoPedido): List<Pedido> = listaPedido(tipo)
+    fun listaPedidoPendente(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
       .filter {it.pedidoPendente}
   }
 }
 
-enum class ETipoPedido(val sigla : String){
-  ENTREGA("E"), RETIRA("R")
+enum class ETipoPedido(val sigla: String) {
+  ENTREGA("E"),
+  RETIRA("R")
 }

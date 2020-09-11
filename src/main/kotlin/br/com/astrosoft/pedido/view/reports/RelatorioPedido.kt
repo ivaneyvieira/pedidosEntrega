@@ -113,7 +113,7 @@ class RelatorioPedido(val pedido: Pedido) {
       breakLine()
       horizontalFlowList {
         text("Vendedor: ${pedido.vendedor}", LEFT)
-        text("Valor do Pedido: ${pedido.valorEnt.format()}", RIGHT)
+        text("Valor do Pedido: ${pedido.valorComFrete.format()}", RIGHT)
       }
       breakLine()
       horizontalFlowList {
@@ -232,7 +232,7 @@ class RelatorioPedido(val pedido: Pedido) {
       horizontalFlowList {
         text("NF ${pedido.nfFat}", LEFT, 80)
         text("DATA ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
-        text("VALOR R$ ${pedido.valorEnt.format()}", CENTER)
+        text("VALOR R$ ${pedido.valorComFrete.format()}", CENTER)
         text("VEND ${pedido.vendedor.replace(" +".toRegex(), " ")}", RIGHT, 220)
       }
       horizontalFlowList {

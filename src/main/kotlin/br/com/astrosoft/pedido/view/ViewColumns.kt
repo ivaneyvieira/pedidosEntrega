@@ -8,6 +8,7 @@ import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.addColumnString
 import br.com.astrosoft.framework.view.addColumnTime
 import br.com.astrosoft.pedido.model.beans.Entregador
+import br.com.astrosoft.pedido.model.beans.EntregadorNotas
 import br.com.astrosoft.pedido.model.beans.Pedido
 import com.vaadin.flow.component.grid.Grid
 
@@ -97,4 +98,41 @@ fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso
 }
 fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNota) {
   this.setHeader("Valor")
+}
+//
+fun Grid<EntregadorNotas>.entregadorNotasCarganoCol() = addColumnInt(EntregadorNotas::carganoCol) {
+  setHeader("Carga")
+}
+fun Grid<EntregadorNotas>.entregadorNotasLojaCol() = addColumnInt(EntregadorNotas::lojaCol) {
+  setHeader("Loja")
+}
+fun Grid<EntregadorNotas>.entregadorNotasNumPedidoCol() = addColumnInt(EntregadorNotas::numPedidoCol) {
+  setHeader("Pedido")
+}
+fun Grid<EntregadorNotas>.entregadorNotasDatePedidoCol() = addColumnLocalDate(EntregadorNotas::datePedidoCol) {
+  setHeader("Data Pedido")
+}
+fun Grid<EntregadorNotas>.entregadorNotasNotaCol() = addColumnString(EntregadorNotas::notaCol) {
+  setHeader("Nota")
+}
+fun Grid<EntregadorNotas>.entregadorNotasDateCol() = addColumnLocalDate(EntregadorNotas::dateCol) {
+  setHeader("Data")
+}
+fun Grid<EntregadorNotas>.entregadorNotasPrdno() = addColumnString(EntregadorNotas::prdnoCol) {
+  setHeader("Código")
+}
+fun Grid<EntregadorNotas>.entregadorNotasDescricao() = addColumnString(EntregadorNotas::descricao) {
+  setHeader("Descrição")
+}
+fun Grid<EntregadorNotas>.entregadorNotasGrade() = addColumnString(EntregadorNotas::grade) {
+  setHeader("Grade")
+}
+fun Grid<EntregadorNotas>.entregadorNotasPisoCxs() = addColumnInt(EntregadorNotas::pisoCxs) {
+  setHeader("Piso CXS")
+}
+fun Grid<EntregadorNotas>.entregadorNotasPisoPeso() = addColumnDouble(EntregadorNotas::pisoPeso) {
+  setHeader("Piso Peso")
+}
+fun Grid<EntregadorNotas>.entregadorNotasValor() = addColumnDouble(EntregadorNotas::valor) {
+  setHeader("Valor")
 }

@@ -3,7 +3,7 @@ package br.com.astrosoft.pedido.model.beans
 import br.com.astrosoft.framework.util.format
 import java.time.LocalDate
 
-class EntregadorNotas(
+data class EntregadorNotas(
   val cargano: Int,
   val funcaoName: String,
   val nome: String,
@@ -36,16 +36,37 @@ class EntregadorNotas(
     get() = if(funcaoName == "") null else cargano
   val prdnoCol
     get() = if(funcaoName == "") null else prdno
+  var classFormat: Int = 0
   
   fun groupByNota() = EntregadorNotasGroup(loja, nota, numPedido, datePedido, valorNota, valorFrete)
 }
 
-data class EntregadorNotasGroup(val loja: Int,
+class EntregadorNotasGroup(val loja: Int,
                                 val nota: String,
                                 val numPedido: Int,
                                 val datePedido: LocalDate?,
                                 val valorNota: Double,
-                                val valorFrete: Double)
+                                val valorFrete: Double){
+  override fun equals(other: Any?): Boolean {
+    if(this === other) return true
+    if(javaClass != other?.javaClass) return false
+    
+    other as EntregadorNotasGroup
+    
+    if(loja != other.loja) return false
+    if(nota != other.nota) return false
+    if(numPedido != other.numPedido) return false
+    
+    return true
+  }
+  
+  override fun hashCode(): Int {
+    var result = loja
+    result = 31 * result + nota.hashCode()
+    result = 31 * result + numPedido
+    return result
+  }
+}
 
 fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
   val groupBy = this.groupBy {entregadorNota ->
@@ -123,4 +144,17 @@ fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                                        {it.numPedido},
                                        {it.datePedido},
                                        {it.prdno}))
+}
+
+fun List<EntregadorNotas>.classificaLinhas(): List<EntregadorNotas> {
+  var chave: EntregadorNotasGroup? = null
+  var classe = 0
+  this.forEach {bean ->
+    if(chave != bean.groupByNota()) {
+      classe = if(classe == 0)        1      else 0
+    }
+    bean.classFormat = classe
+    chave = bean.groupByNota()
+  }
+  return this
 }

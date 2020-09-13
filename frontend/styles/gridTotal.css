@@ -1,0 +1,8 @@
+[part~="cell"].destaque1 {
+    background: hsla(214, 90%, 52%, 0.4);
+}
+
+[part~="cell"].destaque2 {
+    background: hsla(214, 90%, 52%, 0.1);
+}
+

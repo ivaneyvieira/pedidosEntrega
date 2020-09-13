@@ -102,37 +102,49 @@ fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNo
 //
 fun Grid<EntregadorNotas>.entregadorNotasCarganoCol() = addColumnInt(EntregadorNotas::carganoCol) {
   setHeader("Carga")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasLojaCol() = addColumnInt(EntregadorNotas::lojaCol) {
   setHeader("Loja")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasNumPedidoCol() = addColumnInt(EntregadorNotas::numPedidoCol) {
   setHeader("Pedido")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasDatePedidoCol() = addColumnLocalDate(EntregadorNotas::datePedidoCol) {
   setHeader("Data Pedido")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasNotaCol() = addColumnString(EntregadorNotas::notaCol) {
   setHeader("Nota")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasDateCol() = addColumnLocalDate(EntregadorNotas::dateCol) {
   setHeader("Data")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasPrdno() = addColumnString(EntregadorNotas::prdnoCol) {
   setHeader("Código")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasDescricao() = addColumnString(EntregadorNotas::descricao) {
   setHeader("Descrição")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasGrade() = addColumnString(EntregadorNotas::grade) {
   setHeader("Grade")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasPisoCxs() = addColumnInt(EntregadorNotas::pisoCxs) {
   setHeader("Piso CXS")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasPisoPeso() = addColumnDouble(EntregadorNotas::pisoPeso) {
   setHeader("Piso Peso")
+  isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasValor() = addColumnDouble(EntregadorNotas::valor) {
   setHeader("Valor")
+  isSortable = false
 }

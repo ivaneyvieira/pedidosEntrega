@@ -1,5 +1,6 @@
 DO @DI := :dateI;
 DO @DF := :dateF;
+DO @ST := 1;
 
 DROP TABLE IF EXISTS T_EMP;
 CREATE TEMPORARY TABLE T_EMP (
@@ -25,7 +26,7 @@ FROM sqldados.awnfrh AS A
   INNER JOIN T_EMP   AS E
 	       ON E.empno = A.auxShort4
 WHERE date BETWEEN @DI AND @DF
-  AND status = 1
+  AND status = @ST
 GROUP BY storeno, pdvno, xano;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -81,7 +82,7 @@ FROM sqldados.awnfrh    AS A
   INNER JOIN T_EMP      AS E
 	       ON E.empno = A.auxShort4
 WHERE date BETWEEN @DI AND @DF
-  AND status = 1;
+  AND status = @ST;
 
 SELECT funcaoName,
        sname               AS nome,

@@ -1,12 +1,13 @@
 package br.com.astrosoft.pedido.view.entrega
 
-
 import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.addColumnButton
 import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.pedido.model.beans.Entregador
 import br.com.astrosoft.pedido.model.beans.EntregadorNotas
+import br.com.astrosoft.pedido.model.beans.EntregadorNotasGroup
+import br.com.astrosoft.pedido.model.beans.classificaLinhas
 import br.com.astrosoft.pedido.model.beans.groupByNota
 import br.com.astrosoft.pedido.view.entregadorEmpno
 import br.com.astrosoft.pedido.view.entregadorFuncaoName
@@ -31,12 +32,14 @@ import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregador
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
 import com.github.mvysny.karibudsl.v10.datePicker
 import com.vaadin.flow.component.datepicker.DatePicker
+import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.TABLE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import java.time.LocalDate
 
+@CssImport(value = "./styles/gridTotal.css", themeFor = "vaadin-grid")
 class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entregador>(), IPedidoEntregador {
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
@@ -54,9 +57,9 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     return gridDetail.apply {
       addThemeVariants(LUMO_COMPACT)
       isMultiSort = false
-      val itens =
-        entregador.findEntregadoresNotas(dateI, dateF)
-          .groupByNota()
+      val itens = entregador.findEntregadoresNotas(dateI, dateF)
+        .groupByNota()
+        .classificaLinhas()
       setItems(itens)
       //
       entregadorNotasCarganoCol()
@@ -71,6 +74,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()
+      
+      setClassNameGenerator {
+        if(it.classFormat == 0) "destaque1" else "destaque2"
+      }
     }
   }
   
@@ -84,6 +91,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     get() = edtEntregadorDateI.value ?: LocalDate.now()
   override val dateF: LocalDate
     get() = edtEntregadorDateF.value ?: LocalDate.now()
+  
   override fun classPanel() = Entregador::class
   
   override fun HorizontalLayout.toolBarConfig() {

@@ -22,11 +22,12 @@ CREATE TEMPORARY TABLE T_CARGA (
 SELECT storenoNfr AS storeno,
        pdvnoNfr   AS pdvno,
        xanoNfr    AS xano
-FROM sqldados.awnfrh AS A
-  INNER JOIN T_EMP   AS E
-	       ON E.empno = A.auxShort4
-WHERE date BETWEEN @DI AND @DF
-  AND status = @ST
+FROM sqldados.awnfrh        AS A
+  INNER JOIN sqldados.awnfr AS C
+	       USING (storeno, cargano, storenoNfr, pdvnoNfr, xanoNfr)
+WHERE A.date BETWEEN @DI AND @DF
+  AND A.status = @ST
+  AND A.auxShort4 > 0
 GROUP BY storeno, pdvno, xano;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -53,15 +54,14 @@ FROM sqldados.nfr            AS N
 	       ON P.no = I.prdno
 GROUP BY N.storeno, N.pdvno, N.xano;
 
-
 DROP TABLE IF EXISTS T_MESTRE;
 CREATE TEMPORARY TABLE T_MESTRE
 SELECT storenoNfr,
        pdvnoNfr,
        xanoNfr,
-       status,
+       A.status,
        placa,
-       auxShort4 AS motorista,
+       A.auxShort4 AS motorista,
        M.storeno,
        pdvno,
        xano,
@@ -77,12 +77,14 @@ SELECT storenoNfr,
        funcao,
        funcaoName
 FROM sqldados.awnfrh    AS A
+  INNER JOIN sqldados.awnfr AS C
+	       USING (storeno, cargano, storenoNfr, pdvnoNfr, xanoNfr)
   INNER JOIN T_METRICAS AS M
 	       ON A.storenoNfr = M.storeno AND A.pdvnoNfr = M.pdvno AND A.xanoNfr = M.xano
   INNER JOIN T_EMP      AS E
 	       ON E.empno = A.auxShort4
-WHERE date BETWEEN @DI AND @DF
-  AND status = @ST;
+WHERE A.date BETWEEN @DI AND @DF
+  AND A.status = @ST;
 
 SELECT funcaoName,
        sname               AS nome,

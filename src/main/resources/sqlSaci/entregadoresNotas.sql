@@ -1,6 +1,7 @@
 DO @DI := :dateI;
 DO @DF := :dateF;
 DO @EMPNO := :empno;
+DO @ST := 1;
 
 DROP TABLE IF EXISTS T_EMP;
 CREATE TEMPORARY TABLE T_EMP (
@@ -13,7 +14,8 @@ SELECT E.no   AS empno,
        F.name AS funcaoName
 FROM sqldados.emp            AS E
   INNER JOIN sqldados.empfnc AS F
-	       ON F.no = E.funcao;
+	       ON F.no = E.funcao
+WHERE E.no = @EMPNO;
 
 DROP TABLE IF EXISTS T_CARGA;
 CREATE TEMPORARY TABLE T_CARGA (
@@ -22,11 +24,12 @@ CREATE TEMPORARY TABLE T_CARGA (
 SELECT storenoNfr AS storeno,
        pdvnoNfr   AS pdvno,
        xanoNfr    AS xano
-FROM sqldados.awnfrh AS A
-  INNER JOIN T_EMP   AS E
-	       ON E.empno = A.auxShort4
-WHERE date BETWEEN @DI AND @DF
-  AND status = 1
+FROM sqldados.awnfrh        AS A
+  INNER JOIN sqldados.awnfr AS C
+	       USING (storeno, cargano, storenoNfr, pdvnoNfr, xanoNfr)
+WHERE A.date BETWEEN @DI AND @DF
+  AND A.status = @ST
+  AND A.auxShort4 = @EMPNO
 GROUP BY storeno, pdvno, xano;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -60,7 +63,7 @@ FROM sqldados.nfr            AS N
 	       ON E.ordno = N.auxLong1 AND E.storeno = N.storeno
   INNER JOIN sqldados.prd    AS P
 	       ON P.no = I.prdno
-GROUP BY N.storeno, N.pdvno, N.xano, I.nfno, I.grade;
+GROUP BY N.storeno, N.pdvno, N.xano, I.prdno, I.grade;
 
 DROP TABLE IF EXISTS T_MESTRE;
 CREATE TEMPORARY TABLE T_MESTRE
@@ -68,9 +71,9 @@ SELECT cargano,
        storenoNfr,
        pdvnoNfr,
        xanoNfr,
-       status,
+       A.status,
        placa,
-       auxShort4 AS motorista,
+       A.auxShort4 AS motorista,
        M.storeno,
        pdvno,
        xano,
@@ -93,12 +96,14 @@ SELECT cargano,
        funcao,
        funcaoName
 FROM sqldados.awnfrh    AS A
+  INNER JOIN sqldados.awnfr AS C
+	       USING (storeno, cargano, storenoNfr, pdvnoNfr, xanoNfr)
   INNER JOIN T_METRICAS AS M
 	       ON A.storenoNfr = M.storeno AND A.pdvnoNfr = M.pdvno AND A.xanoNfr = M.xano
   INNER JOIN T_EMP      AS E
 	       ON E.empno = A.auxShort4
 WHERE A.date BETWEEN @DI AND @DF
-  AND status = 1;
+  AND A.status = @ST;
 
 SELECT cargano,
        funcaoName                            AS funcaoName,

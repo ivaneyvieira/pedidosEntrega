@@ -140,8 +140,8 @@ fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
                                   )
   val joinList = group + this + totalGeral
   return joinList.sortedWith(compareBy({it.loja},
-                                       {it.nota},
                                        {it.numPedido},
+                                       {it.nota},
                                        {it.datePedido},
                                        {it.prdno}))
 }

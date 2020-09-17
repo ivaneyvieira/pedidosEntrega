@@ -6,9 +6,9 @@ import br.com.astrosoft.framework.view.addColumnButton
 import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.pedido.model.beans.Entregador
 import br.com.astrosoft.pedido.model.beans.EntregadorNotas
-import br.com.astrosoft.pedido.model.beans.EntregadorNotasGroup
 import br.com.astrosoft.pedido.model.beans.classificaLinhas
 import br.com.astrosoft.pedido.model.beans.groupByNota
+import br.com.astrosoft.pedido.model.beans.groupByPedido
 import br.com.astrosoft.pedido.view.entregadorEmpno
 import br.com.astrosoft.pedido.view.entregadorFuncaoName
 import br.com.astrosoft.pedido.view.entregadorNome
@@ -31,9 +31,11 @@ import br.com.astrosoft.pedido.view.entregadorValorNota
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregador
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
 import com.github.mvysny.karibudsl.v10.datePicker
+import com.github.mvysny.karibudsl.v10.getAll
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.grid.Grid
+import com.vaadin.flow.component.grid.Grid.Column
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.icon.VaadinIcon.TABLE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -44,15 +46,23 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
   
-  private fun showDialogDetail(entregador: Entregador?) {
+  private fun showDialogDetailProduto(entregador: Entregador?) {
     entregador ?: return
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}") {
-      createGridDetail(entregador)
+      createGridDetailProdutos(entregador)
     }
     form.open()
   }
   
-  private fun createGridDetail(entregador: Entregador): Grid<EntregadorNotas> {
+  private fun showDialogDetailPedido(entregador: Entregador?) {
+    entregador ?: return
+    val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}") {
+      createGridDetailPedidos(entregador)
+    }
+    form.open()
+  }
+  
+  private fun createGridDetailProdutos(entregador: Entregador): Grid<EntregadorNotas> {
     val gridDetail = Grid(EntregadorNotas::class.java, false)
     return gridDetail.apply {
       addThemeVariants(LUMO_COMPACT)
@@ -78,6 +88,27 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       setClassNameGenerator {
         if(it.classFormat == 0) "destaque1" else "destaque2"
       }
+    }
+  }
+  
+  private fun createGridDetailPedidos(entregador: Entregador): Grid<EntregadorNotas> {
+    val gridDetail = Grid(EntregadorNotas::class.java, false)
+    return gridDetail.apply {
+      addThemeVariants(LUMO_COMPACT)
+      isMultiSort = false
+      val itens = entregador.findEntregadoresNotas(dateI, dateF)
+        .groupByPedido()
+      setItems(itens)
+      //
+      entregadorNotasCarganoCol()
+      entregadorNotasLojaCol()
+      entregadorNotasNumPedidoCol()
+      entregadorNotasDatePedidoCol()
+      entregadorNotasNotaCol()
+      entregadorNotasDateCol()
+      entregadorNotasPisoCxs()
+      entregadorNotasPisoPeso()
+      entregadorNotasValor()
     }
   }
   
@@ -114,8 +145,11 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   }
   
   override fun Grid<Entregador>.gridPanel() {
-    addColumnButton(TABLE, "Notas", execButton = {entregador ->
-      showDialogDetail(entregador)
+    addColumnButton(TABLE, "Pedidos", execButton = {entregador ->
+      showDialogDetailPedido(entregador)
+    })
+    addColumnButton(TABLE, "Produtos", execButton = {entregador ->
+      showDialogDetailProduto(entregador)
     })
     entregadorFuncaoName()
     entregadorEmpno()
@@ -126,4 +160,5 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     entregadorValorNota()
   }
 }
+
 

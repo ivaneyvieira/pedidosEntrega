@@ -3,10 +3,16 @@ package br.com.astrosoft.framework.util
 import java.text.DecimalFormat
 
 private val formatNumber = DecimalFormat("#,##0.00")
+private val formatInteger = DecimalFormat("#,##0")
 
 fun Double?.format() : String{
   this ?: return ""
   return formatNumber.format(this)
+}
+
+fun Int?.format() : String{
+  this ?: return ""
+  return formatInteger.format(this)
 }
 
 fun String?.lpad(size: Int, filler: String): String {

@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedido.view
 
+import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
@@ -10,6 +11,8 @@ import br.com.astrosoft.framework.view.addColumnTime
 import br.com.astrosoft.pedido.model.beans.Entregador
 import br.com.astrosoft.pedido.model.beans.EntregadorNotas
 import br.com.astrosoft.pedido.model.beans.Pedido
+import com.github.mvysny.karibudsl.v10.getAll
+import com.vaadin.flow.component.charts.model.Label
 import com.vaadin.flow.component.grid.Grid
 
 fun Grid<Pedido>.pedidoNum() = addColumnSeq("Num")
@@ -89,15 +92,39 @@ fun Grid<Entregador>.entregadorNome() = addColumnString(Entregador::nome) {
 }
 fun Grid<Entregador>.entregadorQtdEnt() = addColumnInt(Entregador::qtdEnt) {
   this.setHeader("Qtd Ent")
+  this.grid.dataProvider.addDataProviderListener {
+    val total = this.grid.dataProvider.getAll().mapNotNull{
+      it as? Entregador
+    }.sumBy {it.qtdEnt}
+    this.setFooter(total.format())
+  }
 }
 fun Grid<Entregador>.entregadorPisoCxs() = addColumnInt(Entregador::pisoCxs) {
   this.setHeader("Piso Cxs")
+  this.grid.dataProvider.addDataProviderListener {
+    val total = this.grid.dataProvider.getAll().mapNotNull{
+      it as? Entregador
+    }.sumBy {it.pisoCxs}
+    this.setFooter(total.format())
+  }
 }
 fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso) {
   this.setHeader("Piso Peso")
+  this.grid.dataProvider.addDataProviderListener {
+    val total = this.grid.dataProvider.getAll().mapNotNull{
+      it as? Entregador
+    }.sumByDouble {it.pisoPeso}
+    this.setFooter(total.format())
+  }
 }
 fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNota) {
   this.setHeader("Valor")
+  this.grid.dataProvider.addDataProviderListener {
+    val total = this.grid.dataProvider.getAll().mapNotNull{
+      it as? Entregador
+    }.sumByDouble {it.valorNota}
+    this.setFooter(total.format())
+  }
 }
 //
 fun Grid<EntregadorNotas>.entregadorNotasCarganoCol() = addColumnInt(EntregadorNotas::carganoCol) {

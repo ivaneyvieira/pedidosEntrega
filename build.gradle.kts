@@ -77,6 +77,9 @@ dependencies {
   //  compile("org.webjars.bowergithub.vaadin:vaadin-combo-box:4.2.7")
   //compile("com.github.appreciated:app-layout-addon:4.0.0.rc4")
   implementation("org.vaadin.crudui:crudui:4.1.0")
+  implementation("org.vaadin.stefan:lazy-download-button:1.0.0")
+  implementation("com.github.nwillc:poink:0.4.6")
+  implementation("com.flowingcode.addons:font-awesome-iron-iconset:2.1.2")
   //compile("com.flowingcode.addons.applayout:app-layout-addon:2.0.2")
   implementation(kotlin("stdlib-jdk8"))
   

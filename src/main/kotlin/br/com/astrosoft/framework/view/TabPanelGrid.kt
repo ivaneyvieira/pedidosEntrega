@@ -11,7 +11,7 @@ import kotlin.reflect.KClass
 
 abstract class TabPanelGrid<T: Any>: TabPanel<VerticalLayout> {
   private val dataProviderPanel = ListDataProvider<T>(mutableListOf())
-  private var gridPanel: Grid<T> = Grid(classPanel().java, false)
+  protected val gridPanel: Grid<T> = Grid(classPanel().java, false)
   protected abstract fun classPanel(): KClass<T>
   protected abstract fun HorizontalLayout.toolBarConfig()
   protected abstract fun Grid<T>.gridPanel()

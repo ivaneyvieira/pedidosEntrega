@@ -66,18 +66,6 @@ class RelatorioPedido(val pedido: Pedido) {
         this.setPattern("#,##0.00")
         this.setFixedWidth(80)
       }
-
-  
-  fun build(): ByteArray {
-    return try {
-      val outputStream = ByteArrayOutputStream()
-      makeReportPedido()?.toPdf(outputStream)
-      outputStream.toByteArray()
-    } catch(e: DRException) {
-      e.printStackTrace()
-      ByteArray(0)
-    }
-  }
   
   fun makeReportPedido(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()

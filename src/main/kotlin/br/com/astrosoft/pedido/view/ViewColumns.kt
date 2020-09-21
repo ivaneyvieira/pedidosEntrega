@@ -115,6 +115,7 @@ fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso
       it as? Entregador
     }.sumByDouble {it.pisoPeso}
     this.setFooter(total.format())
+    
   }
 }
 fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNota) {

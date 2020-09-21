@@ -6,3 +6,20 @@
     background: hsla(214, 90%, 52%, 0.1);
 }
 
+[part~="cell"].destaque1L {
+    background: hsla(214, 90%, 52%, 0.4);
+    font-size: 120%;
+    font-weight: bold;
+}
+
+[part~="cell"].destaque2L {
+    background: hsla(214, 90%, 52%, 0.1);
+    font-size: 120%;
+    font-weight: bold;
+}
+
+
+[part~="footer-cell"] {
+    font-size: 120%;
+    font-weight: bold;
+}

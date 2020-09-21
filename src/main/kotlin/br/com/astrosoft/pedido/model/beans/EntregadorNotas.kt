@@ -90,8 +90,25 @@ fun List<EntregadorNotas>.groupByPedido(): List<EntregadorNotas> {
     entregadorNota.groupByNota()
   }.entries
   val resumoPedido = resumoPedido(groupBy)
-  
-  return resumoPedido.sortedWith(compareBy({it.loja},
+  val totalGeral = EntregadorNotas(cargano = 0,
+                                   funcaoName = "",
+                                   nome = "",
+                                   date = null,
+                                   empno = 0,
+                                   loja = 999,
+                                   nota = "",
+                                   numPedido = 0,
+                                   datePedido = null,
+                                   prdno = "",
+                                   grade = "",
+                                   descricao = "Total geral",
+                                   pisoCxs = resumoPedido.sumBy {it.pisoCxs ?: 0},
+                                   pisoPeso = resumoPedido.sumByDouble {it.pisoPeso ?: 0.00},
+                                   valor = resumoPedido.sumByDouble {it.valor ?: 0.00},
+                                   valorNota = resumoPedido.sumByDouble {it.valorNota},
+                                   valorFrete = resumoPedido.sumByDouble {it.valorFrete}
+                                  )
+  return (resumoPedido + totalGeral).sortedWith(compareBy({it.loja},
                                        {it.numPedido},
                                        {it.nota},
                                        {it.datePedido},

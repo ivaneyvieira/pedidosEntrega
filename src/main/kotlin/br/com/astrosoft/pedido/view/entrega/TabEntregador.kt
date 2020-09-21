@@ -34,6 +34,7 @@ import br.com.astrosoft.pedido.view.entregadorQtdEnt
 import br.com.astrosoft.pedido.view.entregadorValorNota
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregador
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregador.Companion
+import br.com.astrosoft.pedido.view.reports.RelatorioEntregadorPedido
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregador
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome
@@ -75,9 +76,11 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   
   private fun showDialogDetailPedido(entregador: Entregador?) {
     entregador ?: return
-    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF)
+    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF).groupByPedido()
+      .classificaLinhas()
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {
       buttonDownloadPedidos(entregadorList)
+      buttonPdfPedido(entregadorList)
     }) {
       createGridDetailPedidos(entregadorList)
     }
@@ -121,10 +124,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     return gridDetail.apply {
       addThemeVariants(LUMO_COMPACT)
       isMultiSort = false
-      val itens = entregadorList
-        .groupByPedido()
-        .classificaLinhas()
-      setItems(itens)
+      setItems(entregadorList)
       //
       entregadorNotasCarganoCol()
       entregadorNotasLojaCol()
@@ -238,8 +238,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
                                     {
                                       val planilha = PlanilhaPedidos()
                                       val bytes =
-                                        planilha.grava(lista.groupByPedido()
-                                                         .classificaLinhas())
+                                        planilha.grava(lista)
                                       ByteArrayInputStream(bytes)
                                     }
                                    )
@@ -247,6 +246,19 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
     add(button)
+  }
+  
+  private fun HasComponents.buttonPdfPedido(lista: List<EntregadorNotas>) {
+    button{
+      addThemeVariants(LUMO_SMALL)
+      text = "Relatório"
+      tooltip = "Visualiza relatório"
+      icon = EYE.create()
+      onLeftClick {
+        val bytes = RelatorioEntregadorPedido.processaRelatorio(lista, dateI, dateF)
+        showRelatorio("Pedido", bytes)
+      }
+    }
   }
   
   private fun HasComponents.buttonDownloadProdutos(lista: List<EntregadorNotas>) {

@@ -37,6 +37,10 @@ data class EntregadorNotas(
     get() = if(funcaoName == "") null else cargano
   val prdnoCol
     get() = if(funcaoName == "") null else prdno
+  val dateStr
+    get() = date.format()
+  val datePedidoStr
+    get() = datePedido.format()
   var classFormat: Int = 0
   
   fun groupByNota() = EntregadorNotasGroup(loja, nota, numPedido, datePedido, valorNota, valorFrete)

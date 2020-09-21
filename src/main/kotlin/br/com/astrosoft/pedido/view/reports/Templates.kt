@@ -5,7 +5,6 @@ import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
 import net.sf.dynamicreports.report.constant.VerticalTextAlignment.MIDDLE
 import java.awt.Color
-import java.util.*
 
 object Templates {
   val rootStyle = DynamicReports.stl.style()
@@ -32,7 +31,6 @@ object Templates {
     DynamicReports.stl.style(boldStyle)
   val reportTemplate =
     DynamicReports.template()
-      .setLocale(Locale.UK)
       .setColumnStyle(columnStyle)
       .setColumnTitleStyle(columnTitleStyle)
       .setGroupStyle(groupStyle)

@@ -35,7 +35,7 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("0")
-      this.setFixedWidth(50)
+      this.setFixedWidth(30)
     }
   val entregadorNotasNumPedidoCol= col.column("Pedido", EntregadorNotas::numPedidoCol.name, type.integerType())
     .apply {
@@ -46,7 +46,7 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
   val entregadorNotasDatePedidoCol= col.column("Data Pedido", EntregadorNotas::datePedidoStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
+      this.setFixedWidth(80)
     }
   val entregadorNotasNotaCol= col.column("Nota", EntregadorNotas::notaCol.name, type.stringType())
     .apply {
@@ -56,25 +56,24 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
   val entregadorNotasDateCol= col.column("Data", EntregadorNotas::dateStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
+      this.setFixedWidth(80)
     }
   val entregadorNotasPisoCxs= col.column("Piso Cxs", EntregadorNotas::pisoCxs.name, type.integerType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("#,##0")
-      this.setFixedWidth(50)
     }
   val entregadorNotasPisoPeso= col.column("Piso Peso", EntregadorNotas::pisoPeso.name, type.doubleType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("#,##0.00")
-      this.setFixedWidth(50)
+      this.setFixedWidth(80)
     }
   val entregadorNotasValor= col.column("Valor", EntregadorNotas::valor.name, type.doubleType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("#,##0.00")
-      this.setFixedWidth(50)
+      this.setFixedWidth(80)
     }
   
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {

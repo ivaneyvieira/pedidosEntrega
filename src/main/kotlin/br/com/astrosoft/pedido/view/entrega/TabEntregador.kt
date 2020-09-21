@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.view.entrega
 
 import br.com.astrosoft.framework.view.SubWindowForm
+import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.addColumnButton
 import br.com.astrosoft.framework.view.localePtBr
@@ -31,10 +32,15 @@ import br.com.astrosoft.pedido.view.entregadorPisoCxs
 import br.com.astrosoft.pedido.view.entregadorPisoPeso
 import br.com.astrosoft.pedido.view.entregadorQtdEnt
 import br.com.astrosoft.pedido.view.entregadorValorNota
+import br.com.astrosoft.pedido.view.reports.RelatorioEntregador
+import br.com.astrosoft.pedido.view.reports.RelatorioEntregador.Companion
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregador
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome
+import com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.FILE_EXCEL
+import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
+import com.github.mvysny.karibudsl.v10.onLeftClick
 import com.github.mvysny.karibudsl.v10.tooltip
 import com.vaadin.flow.component.HasComponents
 import com.vaadin.flow.component.button.ButtonVariant.LUMO_SMALL
@@ -42,6 +48,7 @@ import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.dependency.CssImport
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
+import com.vaadin.flow.component.icon.VaadinIcon.EYE
 import com.vaadin.flow.component.icon.VaadinIcon.TABLE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import org.vaadin.stefan.LazyDownloadButton
@@ -101,7 +108,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasValor()
       
       setClassNameGenerator {
-        if(it.classFormat == 0) "destaque1" else "destaque2"
+        if(it.funcaoName == "")
+          if(it.classFormat == 0) "destaque1L" else "destaque2L"
+        else
+          if(it.classFormat == 0) "destaque1" else "destaque2"
       }
     }
   }
@@ -125,6 +135,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()
+      setClassNameGenerator {
+        if(it.funcaoName == "")
+           "destaque1L" else "destaque1"
+      }
     }
   }
   
@@ -142,7 +156,8 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   override fun classPanel() = Entregador::class
   
   override fun HorizontalLayout.toolBarConfig() {
-    buttonDownloadEntregador()
+    buttonXlsxEntregador()
+    buttonPdfEntregador()
     edtEntregadorDateI = datePicker("Data Inicial") {
       localePtBr()
       isClearButtonVisible = true
@@ -164,9 +179,13 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   override fun Grid<Entregador>.gridPanel() {
     addColumnButton(TABLE, "Pedidos", execButton = {entregador ->
       showDialogDetailPedido(entregador)
+    }, block = {
+      setHeader("Pedidos")
     })
     addColumnButton(TABLE, "Produtos", execButton = {entregador ->
       showDialogDetailProduto(entregador)
+    }, block = {
+      setHeader("Produtos")
     })
     entregadorFuncaoName()
     entregadorEmpno()
@@ -177,19 +196,18 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     entregadorValorNota()
   }
   
-  private fun filename(name: String): String {
+  private fun filename(name: String, ext : String): String {
     val sdf = DateTimeFormatter.ofPattern("yyMMddHHmmss")
     val textTime =
       LocalDateTime.now()
         .format(sdf)
-    val filename = "$name$textTime.xlsx"
+    val filename = "$name$textTime.$ext"
     return filename
   }
   
-  private fun HasComponents.buttonDownloadEntregador() {
-    val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(),
-                                    {filename("Entregador")},
-                                    {
+  private fun HasComponents.buttonXlsxEntregador() {
+    val button = LazyDownloadButton(FILE_EXCEL.create(),
+                                    {filename("Entregador", "xlsx")}, {
                                       val planilha = PlanilhaEntregador()
                                       val bytes = planilha.grava(listBeans)
                                       ByteArrayInputStream(bytes)
@@ -201,9 +219,22 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     add(button)
   }
   
+  private fun HasComponents.buttonPdfEntregador() {
+    button{
+      addThemeVariants(LUMO_SMALL)
+      text = "Relatório"
+      tooltip = "Visualiza relatório"
+      icon = EYE.create()
+      onLeftClick {
+        val bytes = RelatorioEntregador.processaEntregadores(listBeans, dateI, dateF)
+        showRelatorio("Entregador", bytes)
+      }
+    }
+  }
+  
   private fun HasComponents.buttonDownloadPedidos(lista: List<EntregadorNotas>) {
     val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(),
-                                    {filename("Pedidos")},
+                                    {filename("Pedidos", "xlsx")},
                                     {
                                       val planilha = PlanilhaPedidos()
                                       val bytes =
@@ -220,7 +251,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   
   private fun HasComponents.buttonDownloadProdutos(lista: List<EntregadorNotas>) {
     val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(),
-                                    {filename("Produtos")},
+                                    {filename("Produtos", "xlsx")},
                                     {
                                       val planilha = PlanilhaProduto()
                                       val bytes = planilha.grava(lista.groupByNota()
@@ -232,6 +263,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
     add(button)
+  }
+  
+  private fun showRelatorio(chave : String, byteArray: ByteArray) {
+    SubWindowPDF(chave, byteArray).open()
   }
 }
 

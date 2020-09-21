@@ -144,9 +144,9 @@ fun (@VaadinDsl TabSheet).selectedChange(onEvent: (event: SelectedChangeEvent) -
 }
 
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnButton(iconButton: VaadinIcon,
-                                             tooltip: String? = null,
-                                             execButton: (T) -> Unit = {},
-                                             block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
+                                                  tooltip: String? = null,
+                                                  execButton: (T) -> Unit = {},
+                                                  block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
   return addComponentColumn {bean ->
     Icon(iconButton).apply {
       this.style.set("cursor", "pointer");
@@ -171,6 +171,7 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnSeq(label: String): Grid.Column<T> {
     this.textAlign = END
     isAutoWidth = true
     setHeader(label)
+    this.key = label
   }
 }
 
@@ -180,6 +181,8 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnString(
                                                  ): Grid.Column<T> {
   val column = this.addColumnFor(property)
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.left()
   column.block()
   return column
@@ -195,6 +198,8 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnBool(
     else VaadinIcon.CIRCLE_THIN.create()
   }
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.center()
   column.block()
   return column
@@ -203,10 +208,12 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnBool(
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDate(
   property: KProperty1<T, LocalDate?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                               ): Grid.Column<T> {
+                                                    ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  renderer = LocalDateRenderer(property, "dd/MM/yyyy"))
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.left()
   column.setComparator {a, b ->
     val dataA = property.get(a) ?: LocalDate.of(1900, 1, 1)
@@ -221,13 +228,15 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDate(
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnDate(
   property: KProperty1<T, Date?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                          ): Grid.Column<T> {
+                                               ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  renderer = TextRenderer {bean ->
                                    val date = property.get(bean)
                                    date.format()
                                  })
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.left()
   
   column.block()
@@ -238,13 +247,15 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnDate(
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalTime(
   property: KProperty1<T, LocalTime?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                               ): Grid.Column<T> {
+                                                    ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  TextRenderer {bean ->
                                    val hora = property.get(bean)
                                    hora.format()
                                  })
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.left()
   column.block()
   return column
@@ -253,13 +264,15 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalTime(
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnTime(
   property: KProperty1<T, Time?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                          ): Grid.Column<T> {
+                                               ): Grid.Column<T> {
   val column = this.addColumnFor(property,
                                  TextRenderer {bean ->
                                    val hora = property.get(bean)
                                    hora.format()
                                  })
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.left()
   column.setComparator {a, b ->
     val dataA = property.get(a) ?: Time(0)
@@ -271,9 +284,11 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnTime(
 }
 
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T, LocalDateTime?>,
-                                                    block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
+                                                         block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}): Grid.Column<T> {
   val column = this.addColumnFor(property, renderer = LocalDateTimeRenderer(property, "dd/MM/yyyy hh:mm:ss"))
   //column.width = "8em"
+  if(column.key == null)
+    column.key = property.name
   column.isAutoWidth = true
   column.left()
   column.setComparator {a, b ->
@@ -287,15 +302,15 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnLocalDateTime(property: KProperty1<T,
   return column
 }
 
-private val formatNumber = DecimalFormat("#,##0.00")
-
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnDouble(
   property: KProperty1<T, Double?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                            ): Grid.Column<T> {
+                                                 ): Grid.Column<T> {
   val column = this.addColumnFor(property,
-                                 renderer = NumberRenderer(property, formatNumber))
+                                 renderer = NumberRenderer(property, DecimalFormat("#,##0.00")))
   column.isAutoWidth = true
+  if(column.key == null)
+    column.key = property.name
   column.right()
   column.block()
   return column
@@ -304,8 +319,10 @@ fun <T: Any> (@VaadinDsl Grid<T>).addColumnDouble(
 fun <T: Any> (@VaadinDsl Grid<T>).addColumnInt(
   property: KProperty1<T, Int?>,
   block: (@VaadinDsl Grid.Column<T>).() -> Unit = {}
-                                         ): Grid.Column<T> {
+                                              ): Grid.Column<T> {
   val column = this.addColumnFor(property)
+  if(column.key == null)
+    column.key = property.name
   column.isAutoWidth = true
   column.right()
   column.block()

@@ -80,6 +80,7 @@ dependencies {
   implementation("org.vaadin.stefan:lazy-download-button:1.0.0")
   implementation("com.github.nwillc:poink:0.4.6")
   implementation("com.flowingcode.addons:font-awesome-iron-iconset:2.1.2")
+  implementation("org.vaadin.haijian:exporter:3.0.1")
   //compile("com.flowingcode.addons.applayout:app-layout-addon:2.0.2")
   implementation(kotlin("stdlib-jdk8"))
   

@@ -2,10 +2,6 @@ DO @DI := :dateI;
 DO @DF := :dateF;
 DO @EMPNO := :empno;
 
-DO @DI := 20200921;
-DO @DF := 20200921;
-DO @EMPNO := 4501;
-
 DROP TABLE IF EXISTS T_EMP;
 CREATE TEMPORARY TABLE T_EMP (
   PRIMARY KEY (empno)

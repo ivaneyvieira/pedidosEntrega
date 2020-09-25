@@ -89,6 +89,7 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
   }
   
   private fun titleBuider(): ComponentBuilder<*, *>? {
+    val entregador = entregadores.firstOrNull()
     return verticalList {
       horizontalFlowList {
         text("ENGECOPI", LEFT)
@@ -103,6 +104,7 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
       }
       horizontalFlowList {
         text("Perído: ${dataInicial.format()} - ${dataFinal.format()}")
+        text("${entregador?.funcaoName} ${entregador?.empno}-${entregador?.nome}")
       }
     }
   }
@@ -115,9 +117,9 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
     val style = stl.style(columnStyle)
       .setTopBorder(stl.pen1Point())
     return listOf(
-      //sbt.sum(entregadorNotasPisoCxs),
-     // sbt.sum(entregadorNotasPisoPeso),
-     // sbt.sum(entregadorNotasValor)
+      sbt.sum(entregadorNotasPisoCxs),
+      sbt.sum(entregadorNotasPisoPeso),
+      sbt.sum(entregadorNotasValor)
                  )
   }
   

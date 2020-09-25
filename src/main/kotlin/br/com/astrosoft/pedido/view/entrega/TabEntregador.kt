@@ -33,7 +33,6 @@ import br.com.astrosoft.pedido.view.entregadorPisoPeso
 import br.com.astrosoft.pedido.view.entregadorQtdEnt
 import br.com.astrosoft.pedido.view.entregadorValorNota
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregador
-import br.com.astrosoft.pedido.view.reports.RelatorioEntregador.Companion
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregadorPedido
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregador
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
@@ -76,11 +75,13 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   
   private fun showDialogDetailPedido(entregador: Entregador?) {
     entregador ?: return
-    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF).groupByPedido()
-      .classificaLinhas()
+    val entregadorList =
+      entregador.findEntregadoresNotas(dateI, dateF)
+        .groupByPedido()
+        .classificaLinhas()
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {
       buttonDownloadPedidos(entregadorList)
-      buttonPdfPedido(entregadorList)
+      buttonPdfPedido(entregadorList.filter {it.funcaoName != ""})
     }) {
       createGridDetailPedidos(entregadorList)
     }
@@ -137,7 +138,8 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasValor()
       setClassNameGenerator {
         if(it.funcaoName == "")
-           "destaque1L" else "destaque1"
+          "destaque1L"
+        else "destaque1"
       }
     }
   }
@@ -196,7 +198,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     entregadorValorNota()
   }
   
-  private fun filename(name: String, ext : String): String {
+  private fun filename(name: String, ext: String): String {
     val sdf = DateTimeFormatter.ofPattern("yyMMddHHmmss")
     val textTime =
       LocalDateTime.now()
@@ -220,7 +222,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   }
   
   private fun HasComponents.buttonPdfEntregador() {
-    button{
+    button {
       addThemeVariants(LUMO_SMALL)
       text = "Relatório"
       tooltip = "Visualiza relatório"
@@ -249,7 +251,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   }
   
   private fun HasComponents.buttonPdfPedido(lista: List<EntregadorNotas>) {
-    button{
+    button {
       addThemeVariants(LUMO_SMALL)
       text = "Relatório"
       tooltip = "Visualiza relatório"
@@ -277,7 +279,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
     add(button)
   }
   
-  private fun showRelatorio(chave : String, byteArray: ByteArray) {
+  private fun showRelatorio(chave: String, byteArray: ByteArray) {
     SubWindowPDF(chave, byteArray).open()
   }
 }

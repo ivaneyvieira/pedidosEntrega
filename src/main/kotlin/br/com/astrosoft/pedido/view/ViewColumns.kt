@@ -144,12 +144,20 @@ fun Grid<EntregadorNotas>.entregadorNotasDatePedidoCol() = addColumnLocalDate(En
   setHeader("Data Pedido")
   isSortable = false
 }
-fun Grid<EntregadorNotas>.entregadorNotasNotaCol() = addColumnString(EntregadorNotas::notaCol) {
-  setHeader("Nota")
+fun Grid<EntregadorNotas>.entregadorNotasNotaFatCol() = addColumnString(EntregadorNotas::notaFatCol) {
+  setHeader("Nota Fat")
   isSortable = false
 }
-fun Grid<EntregadorNotas>.entregadorNotasDateCol() = addColumnLocalDate(EntregadorNotas::dateCol) {
-  setHeader("Data")
+fun Grid<EntregadorNotas>.entregadorNotasDateFatCol() = addColumnLocalDate(EntregadorNotas::dateFatCol) {
+  setHeader("Data Fat")
+  isSortable = false
+}
+fun Grid<EntregadorNotas>.entregadorNotasNotaEntCol() = addColumnString(EntregadorNotas::notaEntCol) {
+  setHeader("Nota Ent")
+  isSortable = false
+}
+fun Grid<EntregadorNotas>.entregadorNotasDateEntCol() = addColumnLocalDate(EntregadorNotas::dateEntCol) {
+  setHeader("Data Ent")
   isSortable = false
 }
 fun Grid<EntregadorNotas>.entregadorNotasPrdno() = addColumnString(EntregadorNotas::prdnoCol) {

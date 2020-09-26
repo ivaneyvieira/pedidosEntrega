@@ -43,20 +43,30 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
       this.setPattern("0")
       this.setFixedWidth(50)
     }
-  val entregadorNotasDatePedidoCol= col.column("Data Pedido", EntregadorNotas::datePedidoStr.name, type.stringType())
+  val entregadorNotasDatePedidoCol= col.column("Data Ped", EntregadorNotas::datePedidoStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(80)
+      this.setFixedWidth(50)
     }
-  val entregadorNotasNotaCol= col.column("Nota", EntregadorNotas::notaCol.name, type.stringType())
+  val entregadorNotasNotaFatCol= col.column("Nota Fat", EntregadorNotas::notaFatCol.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(LEFT)
       this.setFixedWidth(50)
     }
-  val entregadorNotasDateCol= col.column("Data", EntregadorNotas::dateStr.name, type.stringType())
+  val entregadorNotasDateFatCol= col.column("Data Fat", EntregadorNotas::dateFatStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(80)
+      this.setFixedWidth(50)
+    }
+  val entregadorNotasNotaEntCol= col.column("Nota Ent", EntregadorNotas::notaEntCol.name, type.stringType())
+    .apply {
+      this.setHorizontalTextAlignment(LEFT)
+      this.setFixedWidth(50)
+    }
+  val entregadorNotasDateEntCol= col.column("Data Ent", EntregadorNotas::dateEntStr.name, type.stringType())
+    .apply {
+      this.setHorizontalTextAlignment(RIGHT)
+      this.setFixedWidth(50)
     }
   val entregadorNotasPisoCxs= col.column("Piso Cxs", EntregadorNotas::pisoCxs.name, type.integerType())
     .apply {
@@ -67,13 +77,13 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("#,##0.00")
-      this.setFixedWidth(80)
+      this.setFixedWidth(60)
     }
   val entregadorNotasValor= col.column("Valor", EntregadorNotas::valor.name, type.doubleType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
       this.setPattern("#,##0.00")
-      this.setFixedWidth(80)
+      this.setFixedWidth(60)
     }
   
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
@@ -81,8 +91,10 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
                   entregadorNotasLojaCol,
                   entregadorNotasNumPedidoCol,
                   entregadorNotasDatePedidoCol,
-                  entregadorNotasNotaCol,
-                  entregadorNotasDateCol,
+                  entregadorNotasNotaFatCol,
+                  entregadorNotasDateFatCol,
+                  entregadorNotasNotaEntCol,
+                  entregadorNotasDateEntCol,
                   entregadorNotasPisoCxs,
                   entregadorNotasPisoPeso,
                   entregadorNotasValor)

@@ -43,19 +43,22 @@ CREATE TEMPORARY TABLE T_NOTAS (
   KEY (storeno, pdvno, xano),
   PRIMARY KEY (storenoEnt, nfnoEnt, nfseEnt)
 )
-SELECT DISTINCT A.cargano    AS cargano,
-		A.storenoNfr AS storeno,
-		A.pdvnoNfr   AS pdvno,
-		A.xanoNfr    AS xano,
-		A.ordno      AS ordno,
-		O.date       AS datePedido,
-		A.nfno       AS nfnoFat,
-		A.nfse       AS nfseFat,
-		F.nfStoreno  AS storenoEnt,
-		F.nfNfno     AS nfnoEnt,
-		F.nfNfse     AS nfseEnt,
+SELECT DISTINCT A.cargano                                            AS cargano,
+		A.storenoNfr                                         AS storeno,
+		A.pdvnoNfr                                           AS pdvno,
+		A.xanoNfr                                            AS xano,
+		A.ordno                                              AS ordno,
+		O.date                                               AS datePedido,
+		A.nfno                                               AS nfnoFat,
+		A.nfse                                               AS nfseFat,
+		CAST(IF(N.issuedate = 0, NULL, N.issuedate) AS DATE) AS dateFat,
+		F.nfStoreno                                          AS storenoEnt,
+		F.nfNfno                                             AS nfnoEnt,
+		F.nfNfse                                             AS nfseEnt,
 		C.empno
 FROM sqldados.awnfr          AS A
+  LEFT JOIN  sqldados.nf     AS N
+	       ON A.storenoNfr = N.storeno AND A.nfno = N.nfno AND A.nfse = N.nfse
   INNER JOIN T_CARGA         AS C
 	       ON A.storenoNfr = C.storeno AND A.pdvnoNfr = C.pdvno AND A.xanoNfr = C.xano
   INNER JOIN sqldados.eord   AS O
@@ -72,9 +75,16 @@ SELECT C.storeno,
        C.xano,
        X.prdno,
        X.grade,
-       CAST(N.issuedate AS DATE)                                        AS date,
-       N.nfno,
-       N.nfse,
+
+       C.nfnoFat                                                        AS nfnoFat,
+       C.nfseFat                                                        AS nfseFat,
+       C.dateFat                                                        AS dateFat,
+
+       N.storeno                                                        AS storenoEnt,
+       N.nfno                                                           AS nfnoEnt,
+       N.nfse                                                           AS nfseEnt,
+       CAST(N.issuedate AS DATE)                                        AS dateEnt,
+
        C.ordno                                                          AS numPedido,
        CAST(C.datePedido AS DATE)                                       AS datePedido,
        COUNT(DISTINCT C.xano)                                           AS qtdEnt,
@@ -107,9 +117,16 @@ SELECT cargano,
        M.xano,
        numPedido,
        datePedido,
-       M.date,
-       M.nfno,
-       M.nfse,
+
+       M.nfnoFat,
+       M.nfseFat,
+       M.dateFat,
+
+       M.storenoEnt,
+       M.dateEnt,
+       M.nfnoEnt,
+       M.nfseEnt,
+
        prdno,
        grade,
        qtdEnt,
@@ -135,20 +152,22 @@ FROM sqldados.awnfrh        AS A
 	       ON E.empno = CG.empno;
 
 SELECT cargano,
-       funcaoName                            AS funcaoName,
-       sname                                 AS nome,
-       date                                  AS date,
-       M.empno                               AS empno,
-       storeno                               AS loja,
-       prdno,
-       TRIM(MID(P.name, 1, 37))              AS descricao,
-       grade,
-       CAST(CONCAT(nfno, '/', nfse) AS CHAR) AS nota,
+       funcaoName                                                   AS funcaoName,
+       sname                                                        AS nome,
+       M.empno                                                      AS empno,
+       storeno                                                      AS loja,
+       prdno                                                        AS prdno,
+       TRIM(MID(P.name, 1, 37))                                     AS descricao,
+       grade                                                        AS grade,
+       CAST(CONCAT(nfnoFat, '/', nfseFat) AS CHAR)                  AS notaFat,
+       dateFat                                                      AS dateFat,
+       CAST(CONCAT(storenoEnt, '-', nfnoEnt, '/', nfseEnt) AS CHAR) AS notaEnt,
+       dateEnt                                                      AS dateEnt,
        numPedido,
        datePedido,
-       ROUND(pisoCxs)                        AS pisoCxs,
-       pisoPeso                              AS pisoPeso,
-       valor                                 AS valor,
+       ROUND(pisoCxs)                                               AS pisoCxs,
+       pisoPeso                                                     AS pisoPeso,
+       valor                                                        AS valor,
        valorNota,
        valorFrete
 FROM T_MESTRE             AS M

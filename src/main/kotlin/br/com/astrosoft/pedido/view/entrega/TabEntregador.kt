@@ -17,12 +17,14 @@ import br.com.astrosoft.pedido.view.entregadorEmpno
 import br.com.astrosoft.pedido.view.entregadorFuncaoName
 import br.com.astrosoft.pedido.view.entregadorNome
 import br.com.astrosoft.pedido.view.entregadorNotasCarganoCol
-import br.com.astrosoft.pedido.view.entregadorNotasDateCol
+import br.com.astrosoft.pedido.view.entregadorNotasDateEntCol
+import br.com.astrosoft.pedido.view.entregadorNotasDateFatCol
 import br.com.astrosoft.pedido.view.entregadorNotasDatePedidoCol
 import br.com.astrosoft.pedido.view.entregadorNotasDescricao
 import br.com.astrosoft.pedido.view.entregadorNotasGrade
 import br.com.astrosoft.pedido.view.entregadorNotasLojaCol
-import br.com.astrosoft.pedido.view.entregadorNotasNotaCol
+import br.com.astrosoft.pedido.view.entregadorNotasNotaEntCol
+import br.com.astrosoft.pedido.view.entregadorNotasNotaFatCol
 import br.com.astrosoft.pedido.view.entregadorNotasNumPedidoCol
 import br.com.astrosoft.pedido.view.entregadorNotasPisoCxs
 import br.com.astrosoft.pedido.view.entregadorNotasPisoPeso
@@ -102,8 +104,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasLojaCol()
       entregadorNotasNumPedidoCol()
       entregadorNotasDatePedidoCol()
-      entregadorNotasNotaCol()
-      entregadorNotasDateCol()
+      entregadorNotasNotaFatCol()
+      entregadorNotasDateFatCol()
+      entregadorNotasNotaEntCol()
+      entregadorNotasDateEntCol()
       entregadorNotasPrdno()
       entregadorNotasDescricao()
       entregadorNotasGrade()
@@ -131,8 +135,10 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasLojaCol()
       entregadorNotasNumPedidoCol()
       entregadorNotasDatePedidoCol()
-      entregadorNotasNotaCol()
-      entregadorNotasDateCol()
+      entregadorNotasNotaFatCol()
+      entregadorNotasDateFatCol()
+      entregadorNotasNotaEntCol()
+      entregadorNotasDateEntCol()
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()

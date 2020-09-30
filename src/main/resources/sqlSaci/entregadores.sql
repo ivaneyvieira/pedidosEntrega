@@ -1,5 +1,6 @@
 DO @DI := :dateI;
 DO @DF := :dateF;
+DO @COLETA := 4499;
 
 DROP TABLE IF EXISTS T_EMP;
 CREATE TEMPORARY TABLE T_EMP (
@@ -124,6 +125,7 @@ SELECT funcaoName,
        SUM(valorNota)      AS valorNota,
        SUM(valorFrete)     AS valorFrete
 FROM T_MESTRE
+WHERE empno <> @COLETA
 GROUP BY empno
 
 

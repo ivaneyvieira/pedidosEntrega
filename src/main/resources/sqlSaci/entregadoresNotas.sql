@@ -1,6 +1,7 @@
 DO @DI := :dateI;
 DO @DF := :dateF;
 DO @EMPNO := :empno;
+DO @COLETA := 4499;
 
 DROP TABLE IF EXISTS T_EMP;
 CREATE TEMPORARY TABLE T_EMP (
@@ -14,7 +15,8 @@ SELECT E.no   AS empno,
 FROM sqldados.emp            AS E
   INNER JOIN sqldados.empfnc AS F
 	       ON F.no = E.funcao
-WHERE E.no = @EMPNO;
+WHERE E.no = @EMPNO
+  AND E.no <> @COLETA;
 
 DROP TABLE IF EXISTS T_CARGA;
 CREATE TEMPORARY TABLE T_CARGA (
@@ -36,7 +38,8 @@ WHERE A.date BETWEEN @DI AND @DF
   AND A.status IN (1, 13)
   AND A.auxShort4 > 0
 GROUP BY storeno, pdvno, xano
-HAVING empno = @EMPNO;
+HAVING empno = @EMPNO
+   AND empno <> @COLETA;
 
 DROP TABLE IF EXISTS T_NOTAS;
 CREATE TEMPORARY TABLE T_NOTAS (
@@ -174,5 +177,6 @@ FROM T_MESTRE             AS M
   INNER JOIN sqldados.prd AS P
 	       ON P.no = M.prdno
 WHERE M.empno = @EMPNO
+  AND M.empno <> @COLETA;
 
 

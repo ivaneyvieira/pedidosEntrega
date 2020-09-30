@@ -60,7 +60,6 @@ dependencies {
   // currently we are logging through the SLF4J API to LogBack. See src/main/resources/logback.xml file for the logger configuration
   implementation("ch.qos.logback:logback-classic:1.2.3")
   implementation("org.slf4j:slf4j-api:1.7.30")
-  //implementation("org.slf4j:slf4j-simple:1.7.30")
   implementation("org.sql2o:sql2o:1.6.0")
   implementation("mysql:mysql-connector-java:5.1.48")
   implementation("com.zaxxer:HikariCP:3.4.1")

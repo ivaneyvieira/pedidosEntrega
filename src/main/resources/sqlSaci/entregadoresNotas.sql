@@ -177,6 +177,6 @@ FROM T_MESTRE             AS M
   INNER JOIN sqldados.prd AS P
 	       ON P.no = M.prdno
 WHERE M.empno = @EMPNO
-  AND M.empno <> @COLETA;
+  AND M.empno <> @COLETA
 
 

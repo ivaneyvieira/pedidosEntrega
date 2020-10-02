@@ -36,6 +36,20 @@ WHERE A.date BETWEEN @DI AND @DF
   AND A.auxShort4 > 0
 GROUP BY storeno, pdvno, xano;
 
+DROP TABLE IF EXISTS T_DATA_NOTA;
+CREATE TEMPORARY TABLE T_DATA_NOTA (
+  PRIMARY KEY (storeno, pdvno, xano)
+)
+SELECT storenoNfr AS storeno,
+       pdvnoNfr   AS pdvno,
+       xanoNfr    AS xano,
+       A.date
+FROM sqldados.awnfrh AS A
+  INNER JOIN T_CARGA AS T
+	       ON T.storeno = A.storenoNfr AND T.pdvno = A.pdvnoNfr AND T.xano = A.xanoNfr
+WHERE status = 15
+GROUP BY storenoNfr, pdvnoNfr, xanoNfr;
+
 DROP TABLE IF EXISTS T_NOTAS;
 CREATE TEMPORARY TABLE T_NOTAS (
   KEY (storeno, pdvno, xano),
@@ -75,12 +89,15 @@ SELECT C.storeno,
        N.fre_amt / 100                                                  AS valorFrete,
        C.empno
 FROM T_NOTAS                AS C
+  LEFT JOIN  T_DATA_NOTA    AS D
+	       USING (storeno, pdvno, xano)
   INNER JOIN sqldados.nf    AS N
 	       ON C.storenoEnt = N.storeno AND C.nfnoEnt = N.nfno AND C.nfseEnt = N.nfse
   INNER JOIN sqldados.xaprd AS X
 	       ON X.storeno = N.storeno AND X.pdvno = N.pdvno AND X.xano = N.xano
   INNER JOIN sqldados.prd   AS P
 	       ON P.no = X.prdno
+WHERE IFNULL(N.issuedate, 0) BETWEEN D.date AND @DF
 GROUP BY C.storeno, C.pdvno, C.xano;
 
 DROP TABLE IF EXISTS T_MESTRE;

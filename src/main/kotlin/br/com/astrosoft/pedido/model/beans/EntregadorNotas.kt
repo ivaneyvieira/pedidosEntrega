@@ -16,6 +16,7 @@ data class EntregadorNotas(
   val dateEnt: LocalDate?,
   val numPedido: Int,
   val datePedido: LocalDate?,
+  val entrega: LocalDate?,
   val prdno: String,
   val grade: String,
   val descricao: String,
@@ -35,6 +36,8 @@ data class EntregadorNotas(
     get() = if(funcaoName == "") null else notaEnt
   val dateEntCol
     get() = if(funcaoName == "") null else dateEnt
+  val entregaCol
+    get() = if(funcaoName == "") null else entrega
   val numPedidoCol
     get() = if(funcaoName == "") null else numPedido
   val datePedidoCol
@@ -47,6 +50,8 @@ data class EntregadorNotas(
     get() = dateFat.format()
   val dateEntStr
     get() = dateEnt.format()
+  val entregaStr
+    get() = entrega.format()
   val datePedidoStr
     get() = datePedido.format()
   var classFormat: Int = 0
@@ -108,6 +113,7 @@ fun List<EntregadorNotas>.groupByPedido(): List<EntregadorNotas> {
                                    funcaoName = "",
                                    nome = "",
                                    dateEnt = null,
+                                   entrega = null,
                                    empno = 0,
                                    loja = 999,
                                    notaEnt = "",
@@ -140,6 +146,7 @@ private fun resumoPedido(groupBy: Set<Entry<EntregadorNotasGroup, List<Entregado
                     funcaoName = value.firstOrNull()?.funcaoName ?: "",
                     nome = value.firstOrNull()?.nome ?: "",
                     dateEnt = value.firstOrNull()?.dateEnt,
+                    entrega = value.firstOrNull()?.entrega,
                     notaFat = value.firstOrNull()?.notaFat ?: "",
                     dateFat = value.firstOrNull()?.dateFat,
                     empno = value.firstOrNull()?.empno ?: 0,
@@ -167,6 +174,7 @@ private fun grupoFrete(groupBy: Set<Entry<EntregadorNotasGroup, List<EntregadorN
                     funcaoName = "",
                     nome = "",
                     dateEnt = null,
+                    entrega = null,
                     empno = 0,
                     loja = key.loja,
                     notaFat = "",
@@ -192,6 +200,7 @@ private fun totalGeral(group: List<EntregadorNotas>): EntregadorNotas {
                                    funcaoName = "",
                                    nome = "",
                                    dateEnt = null,
+                                   entrega = null,
                                    empno = 0,
                                    loja = 999,
                                    notaEnt = "",
@@ -223,6 +232,7 @@ private fun totalParcial(groupBy: Set<Entry<EntregadorNotasGroup, List<Entregado
                     funcaoName = "",
                     nome = "",
                     dateEnt = null,
+                    entrega = null,
                     notaFat = "",
                     dateFat = null,
                     empno = 0,

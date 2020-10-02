@@ -21,6 +21,7 @@ import br.com.astrosoft.pedido.view.entregadorNotasDateEntCol
 import br.com.astrosoft.pedido.view.entregadorNotasDateFatCol
 import br.com.astrosoft.pedido.view.entregadorNotasDatePedidoCol
 import br.com.astrosoft.pedido.view.entregadorNotasDescricao
+import br.com.astrosoft.pedido.view.entregadorNotasEntregaCol
 import br.com.astrosoft.pedido.view.entregadorNotasGrade
 import br.com.astrosoft.pedido.view.entregadorNotasLojaCol
 import br.com.astrosoft.pedido.view.entregadorNotasNotaEntCol
@@ -108,6 +109,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasDateFatCol()
       entregadorNotasNotaEntCol()
       entregadorNotasDateEntCol()
+      entregadorNotasEntregaCol()
       entregadorNotasPrdno()
       entregadorNotasDescricao()
       entregadorNotasGrade()
@@ -139,6 +141,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasDateFatCol()
       entregadorNotasNotaEntCol()
       entregadorNotasDateEntCol()
+      entregadorNotasEntregaCol()
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()

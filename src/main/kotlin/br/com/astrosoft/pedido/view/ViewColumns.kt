@@ -160,6 +160,10 @@ fun Grid<EntregadorNotas>.entregadorNotasDateEntCol() = addColumnLocalDate(Entre
   setHeader("Data Ent")
   isSortable = false
 }
+fun Grid<EntregadorNotas>.entregadorNotasEntregaCol() = addColumnLocalDate(EntregadorNotas::entregaCol) {
+  setHeader("Entrega")
+  isSortable = false
+}
 fun Grid<EntregadorNotas>.entregadorNotasPrdno() = addColumnString(EntregadorNotas::prdnoCol) {
   setHeader("Código")
   isSortable = false

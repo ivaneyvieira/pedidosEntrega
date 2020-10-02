@@ -56,17 +56,22 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
   val entregadorNotasDateFatCol= col.column("Data Fat", EntregadorNotas::dateFatStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
+      this.setFixedWidth(40)
     }
   val entregadorNotasNotaEntCol= col.column("Nota Ent", EntregadorNotas::notaEntCol.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(LEFT)
       this.setFixedWidth(50)
     }
+  val entregadorNotasEntregaCol= col.column("Entrega", EntregadorNotas::entregaStr.name, type.stringType())
+    .apply {
+      this.setHorizontalTextAlignment(RIGHT)
+      this.setFixedWidth(40)
+    }
   val entregadorNotasDateEntCol= col.column("Data Ent", EntregadorNotas::dateEntStr.name, type.stringType())
     .apply {
       this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(50)
+      this.setFixedWidth(40)
     }
   val entregadorNotasPisoCxs= col.column("Piso Cxs", EntregadorNotas::pisoCxs.name, type.integerType())
     .apply {
@@ -95,6 +100,7 @@ class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>, val dat
                   entregadorNotasDateFatCol,
                   entregadorNotasNotaEntCol,
                   entregadorNotasDateEntCol,
+                  entregadorNotasEntregaCol,
                   entregadorNotasPisoCxs,
                   entregadorNotasPisoPeso,
                   entregadorNotasValor)

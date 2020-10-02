@@ -16,6 +16,7 @@ class PlanilhaProduto {
     CampoString("Data Pedido") {ent -> ent.datePedidoCol.format()},
     CampoString("Nota Ent") {ent -> ent.notaEntCol?: ""},
     CampoString("Data Ent") {ent -> ent.dateEntCol.format()},
+    CampoString("Entrega") {ent -> ent.entregaCol.format()},
 
     CampoString("Código") {ent -> ent.prdnoCol?: ""},
     CampoString("Descrição") {ent -> ent.descricao},

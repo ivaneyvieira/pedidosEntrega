@@ -18,6 +18,7 @@ class PlanilhaPedidos {
     CampoString("Data Fat") {ent -> ent.dateFatCol.format()},
     CampoString("Nota Ent") {ent -> ent.notaEntCol?: ""},
     CampoString("Data Ent") {ent -> ent.dateEntCol.format()},
+    CampoString("Entrega") {ent -> ent.entregaCol.format()},
     CampoInt("Piso Cxs") {ent -> ent.pisoCxs ?: 0},
     CampoNumber("Piso Peso") {ent -> ent.pisoPeso ?: 0.00},
     CampoNumber("Valor") {ent -> ent.valor ?: 0.00}

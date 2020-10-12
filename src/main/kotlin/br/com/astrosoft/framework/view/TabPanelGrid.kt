@@ -1,5 +1,6 @@
 package br.com.astrosoft.framework.view
 
+import com.github.mvysny.karibudsl.v10.getAll
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.vaadin.flow.component.grid.Grid
@@ -41,7 +42,7 @@ abstract class TabPanelGrid<T: Any>: TabPanel<VerticalLayout> {
   }
   
   val listBeans
-    get() = dataProviderPanel.items.toList()
+    get() = dataProviderPanel.getAll()
   
   fun itensSelecionado() = gridPanel.selectedItems.toList()
 }

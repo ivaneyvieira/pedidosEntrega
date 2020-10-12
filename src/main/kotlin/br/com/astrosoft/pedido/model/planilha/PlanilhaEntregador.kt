@@ -15,7 +15,7 @@ class PlanilhaEntregador {
     CampoInt("Qtd Ent") {ent -> ent.qtdEnt},
     CampoInt("Piso Cxs") {ent -> ent.pisoCxs},
     CampoNumber("Piso Peso") {ent -> ent.pisoPeso},
-    CampoNumber("Valor") {ent -> ent.valor}
+    CampoNumber("Valor") {ent -> ent.valorNota}
                                                          )
   
   fun grava(listaBean: List<Entregador>): ByteArray {

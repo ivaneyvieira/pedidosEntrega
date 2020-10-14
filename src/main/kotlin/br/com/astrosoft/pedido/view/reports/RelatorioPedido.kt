@@ -226,7 +226,7 @@ class RelatorioPedido(val pedido: Pedido) {
         text("MINUTA DE ENTREGA", CENTER)
       }
       
-      text("END DE ENTREGA: ${pedido.enderecoEntrega} - ${pedido.bairroEntrega} ${pedido.area} ${pedido.rota}")
+      text("END DE ENTREGA: ${pedido.enderecoEntrega} - ${pedido.bairroEntrega}    ${pedido.area}    ${pedido.rota}")
       
       text("Observação Vendedor")
       val obsList = listOf(pedido.obs1, pedido.obs2, pedido.obs3, pedido.obs4,
@@ -280,18 +280,18 @@ class RelatorioPedido(val pedido: Pedido) {
         text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
       }
       horizontalFlowList {
-        text("NF: ${pedido.nfFat}", LEFT, 80)
-        text("DATA: ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
-        text("VALOR R$: ${pedido.valorComFrete.format()}", LEFT)
+        val nfText = "NF: ${pedido.nfFat}"
+        val dataText = "DATA: ${pedido.dataFat.format()}-${pedido.horaFat.format()}"
+        val valorText = "VALOR R$: ${pedido.valorComFrete.format()}"
+        val pdvText = "PDV: ${pedido.pdvno}"
+        val metodo = "MET PGTO: ${pedido.metodo}"
+        text("$nfText $dataText $valorText $pdvText $metodo")
       }
       horizontalFlowList {
         text("VENDEDOR: ${pedido.vendedor.replace(" +".toRegex(), " ")}", LEFT)
       }
       horizontalFlowList {
-        text("CLIENTE ${pedido.cliente}", LEFT)
-      }
-      horizontalFlowList {
-        text("${pedido.endereco}   ${pedido.bairro}", LEFT)
+        text("CLIENTE: ${pedido.cliente}       ${pedido.endereco}   ${pedido.bairro}", LEFT)
       }
     }
   }

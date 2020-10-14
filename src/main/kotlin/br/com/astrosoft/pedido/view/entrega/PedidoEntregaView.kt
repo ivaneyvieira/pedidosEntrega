@@ -52,7 +52,7 @@ class PedidoEntregaView: ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVie
   }
   
   override fun showRelatorioPedido(pedidos: List<Pedido>) {
-    val byteArray = RelatorioPedido.processaPedidos(pedidos)
+    val byteArray = RelatorioPedido.processaPedidosMinutaCompacta(pedidos)
     showRelatorio(byteArray)
   }
   

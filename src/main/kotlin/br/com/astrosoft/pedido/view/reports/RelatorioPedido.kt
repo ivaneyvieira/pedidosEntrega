@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.view.reports
 
 import br.com.astrosoft.framework.util.format
+import br.com.astrosoft.framework.util.lpad
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.ProdutoPedido
 import br.com.astrosoft.pedido.view.reports.Templates.columnStyle
@@ -18,7 +19,6 @@ import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
 import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.RIGHT
 import net.sf.dynamicreports.report.constant.Position
-import net.sf.dynamicreports.report.exception.DRException
 import net.sf.jasperreports.engine.export.JRPdfExporter
 import net.sf.jasperreports.export.SimpleExporterInput
 import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput
@@ -41,7 +41,6 @@ class RelatorioPedido(val pedido: Pedido) {
         this.setHorizontalTextAlignment(LEFT)
         this.setFixedWidth(50)
       }
-
   val colCodBarras =
     col.column("Cod Barras", ProdutoPedido::barcode.name, type.stringType())
       .apply {
@@ -79,16 +78,30 @@ class RelatorioPedido(val pedido: Pedido) {
       .setSubtotalStyle(stl.style()
                           .setPadding(2)
                           .setTopBorder(stl.pen1Point()))
+      /*
       .pageFooter(cmp.pageNumber()
                     .setHorizontalTextAlignment(RIGHT)
                     .setStyle(stl.style()
                                 .setFontSize(8)))
+                                
+       */
   }
   
   fun makeReportMinuta(): JasperReportBuilder? {
-    return report().title(titleBuiderMinuta())
+    return report().title(titleBuiderMinutaCompacta())
       .setTemplate(Templates.reportTemplate)
       .setDataSource(listOf(pedido))
+  }
+  
+  fun titleBuiderReportDuplo(): ComponentBuilder<*, *>? {
+    return verticalList {
+      this.add(cmp.subreport(makeReportPedido()))
+      this.add(cmp.subreport(makeReportMinuta()))
+    }
+  }
+  
+  fun makeReportDuplo(): JasperReportBuilder? {
+    return report().title(titleBuiderReportDuplo())
   }
   
   private fun titleBuiderMinuta(): ComponentBuilder<*, *>? {
@@ -206,6 +219,55 @@ class RelatorioPedido(val pedido: Pedido) {
     }
   }
   
+  private fun titleBuiderMinutaCompacta(): ComponentBuilder<*, *>? {
+    return verticalList {
+      breakLine()
+      horizontalFlowList {
+        text("MINUTA DE ENTREGA", CENTER)
+      }
+      
+      text("END DE ENTREGA: ${pedido.enderecoEntrega} - ${pedido.bairroEntrega} ${pedido.area} ${pedido.rota}")
+      
+      text("Observação Vendedor")
+      val obsList = listOf(pedido.obs1, pedido.obs2, pedido.obs3, pedido.obs4,
+                           pedido.obs5, pedido.obs6, pedido.obs7).flatMap {obs ->
+        val obsFormat = obs.lpad(80, " ")
+        val part1 = obsFormat.substring(1, 40)
+        val part2 = obsFormat.substring(41, 80)
+        listOf(part1, part2)
+      }.mapNotNull {obs ->
+        val obsTrim = obs.trim()
+        if(obsTrim == "" || obsTrim == ".") null else obsTrim
+      } + ""
+  
+        obsList.windowed(2, 2).map { Pair(it[0], it[1]) }.forEach {par ->
+          horizontalFlowList {
+            text(par.first)
+            text(par.second)
+          }
+        }
+        breakLine()
+        horizontalFlowList {
+          text("Separador:  __________________________________", LEFT)
+          text("Motorista: __________________________________", RIGHT)
+        }
+        horizontalFlowList {
+          text("Hora Saida: ___________________", LEFT)
+          text("Hora Chegada: ___________________", CENTER)
+          text("Quilometragem: ___________________", RIGHT)
+        }
+        breakLine()
+        horizontalFlowList {
+          text("Data Recebimento\n_____/_____/_____", CENTER, 100)
+          text("Identificacao e Assinatura ao Receber\n_____________________________________________________", CENTER)
+        }
+        horizontalFlowList{
+          text("Observacao Motorista:")
+        }
+      }
+    }
+  
+  
   private fun pageFooterBuilder(): ComponentBuilder<*, *>? {
     return cmp.verticalList()
   }
@@ -218,16 +280,18 @@ class RelatorioPedido(val pedido: Pedido) {
         text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
       }
       horizontalFlowList {
-        text("NF ${pedido.nfFat}", LEFT, 80)
-        text("DATA ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
-        text("VALOR R$ ${pedido.valorComFrete.format()}", CENTER)
-        text("VEND ${pedido.vendedor.replace(" +".toRegex(), " ")}", RIGHT, 220)
+        text("NF: ${pedido.nfFat}", LEFT, 80)
+        text("DATA: ${pedido.dataFat.format()}-${pedido.horaFat.format()}", CENTER, 120)
+        text("VALOR R$: ${pedido.valorComFrete.format()}", LEFT)
+      }
+      horizontalFlowList {
+        text("VENDEDOR: ${pedido.vendedor.replace(" +".toRegex(), " ")}", LEFT)
       }
       horizontalFlowList {
         text("CLIENTE ${pedido.cliente}", LEFT)
       }
       horizontalFlowList {
-        text("${pedido.endereco}   ${pedido.bairro}   ${pedido.area}   ${pedido.rota}", LEFT)
+        text("${pedido.endereco}   ${pedido.bairro}", LEFT)
       }
     }
   }
@@ -249,7 +313,7 @@ class RelatorioPedido(val pedido: Pedido) {
       sbt.text("", colVlUnit),
       sbt.sum(vlTotal)
         .setLabel("Total R$")
-      .setLabelStyle(style)
+        .setLabelStyle(style)
         .setLabelPosition(Position.LEFT)
         .setStyle(style))
   }
@@ -271,13 +335,32 @@ class RelatorioPedido(val pedido: Pedido) {
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-    
+      
       exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-    
+      
       exporter.exportReport()
       return out.toByteArray()
     }
-
+    
+    fun processaPedidosMinutaCompacta(list: List<Pedido>): ByteArray {
+      val reports = list.flatMap {pedido ->
+        val report = RelatorioPedido(pedido)
+        listOf(report.makeReportDuplo())
+      }
+        .filterNotNull()
+      val jasperPrints = reports.map {jasperReportBuild ->
+        jasperReportBuild.toJasperPrint()
+      }
+      val exporter = JRPdfExporter()
+      val out = ByteArrayOutputStream()
+      exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
+      
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
+      
+      exporter.exportReport()
+      return out.toByteArray()
+    }
+    
     fun processaPedidos(list: List<Pedido>): ByteArray {
       val reports = list.flatMap {pedido ->
         val report = RelatorioPedido(pedido)
@@ -290,9 +373,9 @@ class RelatorioPedido(val pedido: Pedido) {
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-    
+      
       exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-    
+      
       exporter.exportReport()
       return out.toByteArray()
     }

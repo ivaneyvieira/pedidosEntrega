@@ -42,7 +42,7 @@ class PedidoRetiraView: ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView {
   }
   
   override fun showRelatorioPedidoMinuta(pedidos: List<Pedido>) {
-    val byteArray = RelatorioPedido.processaPedidosMinuta(pedidos)
+    val byteArray = RelatorioPedido.processaPedidosMinutaCompacta(pedidos)
     showRelatorio(byteArray)
   }
   

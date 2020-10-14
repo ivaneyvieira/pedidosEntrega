@@ -56,7 +56,8 @@ data class Pedido(
   val obs5: String,
   val obs6: String,
   val obs7: String,
-  val tipo: String
+  val tipo: String,
+  val metodo: String
                  ) {
   val dataHoraPrint
     get() = if(dataPrint == null || horaPrint == null) null

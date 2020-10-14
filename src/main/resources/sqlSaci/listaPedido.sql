@@ -79,7 +79,8 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs5,
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs6,
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs7,
-       IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS tipo
+       IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS tipo,
+       paym.name                                                              AS metodo
 FROM sqldados.eord           AS EO
   INNER JOIN sqldados.store  AS S
 	       ON S.no = EO.storeno

@@ -11,8 +11,8 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-private const val DATE_PATTERN = "dd/MM/yy"
-private const val DATETIME_PATTERN = "dd/MM/yy HH:mm"
+private const val DATE_PATTERN = "dd/MM/yyyy"
+private const val DATETIME_PATTERN = "dd/MM/yyyy HH:mm"
 private const val TIME_PATTERN = "HH:mm"
 private val DATE_FORMATTER = DateTimeFormatter.ofPattern(DATE_PATTERN)
 private val DATETIME_FORMATTER = DateTimeFormatter.ofPattern(DATETIME_PATTERN)

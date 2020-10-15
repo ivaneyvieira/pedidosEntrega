@@ -37,6 +37,8 @@ SELECT EO.storeno                                                             AS
        EO.pdvno                                                               AS pdvno,
        SEC_TO_TIME(P.time)                                                    AS hora,
 
+       T2.pdvno                                                               AS pdvnoVenda,
+
        IFNULL(cast(T2.nfno_venda AS CHAR), '')                                AS nfnoFat,
        IFNULL(T2.nfse_venda, '')                                              AS nfseFat,
        if(T2.data_venda = 0, NULL, cast(T2.data_venda AS DATE))               AS dataFat,

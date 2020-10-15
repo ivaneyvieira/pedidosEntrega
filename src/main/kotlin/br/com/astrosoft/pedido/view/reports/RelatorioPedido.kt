@@ -78,13 +78,13 @@ class RelatorioPedido(val pedido: Pedido) {
       .setSubtotalStyle(stl.style()
                           .setPadding(2)
                           .setTopBorder(stl.pen1Point()))
-      /*
-      .pageFooter(cmp.pageNumber()
-                    .setHorizontalTextAlignment(RIGHT)
-                    .setStyle(stl.style()
-                                .setFontSize(8)))
-                                
-       */
+    /*
+    .pageFooter(cmp.pageNumber()
+                  .setHorizontalTextAlignment(RIGHT)
+                  .setStyle(stl.style()
+                              .setFontSize(8)))
+                              
+     */
   }
   
   fun makeReportMinuta(): JasperReportBuilder? {
@@ -228,45 +228,61 @@ class RelatorioPedido(val pedido: Pedido) {
       
       text("END DE ENTREGA: ${pedido.enderecoEntrega} - ${pedido.bairroEntrega}    ${pedido.area}    ${pedido.rota}")
       
-      text("Observação Vendedor")
+      text("Observação Vendedor:")
       val obsList = listOf(pedido.obs1, pedido.obs2, pedido.obs3, pedido.obs4,
                            pedido.obs5, pedido.obs6, pedido.obs7).flatMap {obs ->
         val obsFormat = obs.lpad(80, " ")
         val part1 = obsFormat.substring(1, 40)
         val part2 = obsFormat.substring(41, 80)
         listOf(part1, part2)
-      }.mapNotNull {obs ->
-        val obsTrim = obs.trim()
-        if(obsTrim == "" || obsTrim == ".") null else obsTrim
-      } + ""
-  
-        obsList.windowed(2, 2).map { Pair(it[0], it[1]) }.forEach {par ->
+      }
+                      .mapNotNull {obs ->
+                        val obsTrim = obs.trim()
+                        if(obsTrim == "" || obsTrim == ".") null else obs
+                      } + ""
+      /*
+      obsList.windowed(2, 2)
+        .map {Pair(it[0], it[1])}
+        .forEach {par ->
           horizontalFlowList {
-            text(par.first)
-            text(par.second)
+            text(par.first + par.second, LEFT)
           }
         }
-        breakLine()
-        horizontalFlowList {
-          text("Separador:  __________________________________", LEFT)
-          text("Motorista: __________________________________", RIGHT)
-        }
-        horizontalFlowList {
-          text("Hora Saida: ___________________", LEFT)
-          text("Hora Chegada: ___________________", CENTER)
-          text("Quilometragem: ___________________", RIGHT)
-        }
-        breakLine()
-        horizontalFlowList {
-          text("Data Recebimento\n_____/_____/_____", CENTER, 100)
-          text("Identificacao e Assinatura ao Receber\n_____________________________________________________", CENTER)
-        }
-        horizontalFlowList{
-          text("Observacao Motorista:")
-        }
+        
+       */
+      
+      if(pedido.obs1.trim() != "")
+        text(pedido.obs1.trim())
+      if(pedido.obs2.trim() != "")
+        text(pedido.obs2.trim())
+      if(pedido.obs3.trim() != "")
+        text(pedido.obs3.trim())
+      if(pedido.obs4.trim() != "")
+        text(pedido.obs4.trim())
+      if(pedido.obs5.trim() != "")
+        text(pedido.obs5.trim())
+      if(pedido.obs6.trim() != "")
+        text(pedido.obs6.trim())
+      if(pedido.obs7.trim() != "")
+        text(pedido.obs7.trim())
+      
+      breakLine()
+      horizontalFlowList {
+        text("Separador:  __________________________________", LEFT)
+        text("Motorista: __________________________________", RIGHT)
+      }
+      horizontalFlowList {
+        text("Hora Saída: ___________________", LEFT)
+        text("Hora Chegada: ___________________", CENTER)
+        text("Quilometragem: ___________________", RIGHT)
+      }
+      breakLine()
+      horizontalFlowList {
+        text("Data Recebimento\n_____/_____/_____\nObservação Motorista:", CENTER, 150)
+        text("\n_____________________________________________________\nIdentificação e Assinatura ao Receber", CENTER)
       }
     }
-  
+  }
   
   private fun pageFooterBuilder(): ComponentBuilder<*, *>? {
     return cmp.verticalList()
@@ -285,7 +301,7 @@ class RelatorioPedido(val pedido: Pedido) {
         val valorText = "VALOR R$: ${pedido.valorComFrete.format()}"
         val pdvText = "PDV: ${pedido.pdvno}"
         val metodo = "MET PGTO: ${pedido.metodo}"
-        text("$nfText $dataText $valorText $pdvText $metodo")
+        text("$nfText $dataText $valorText      $pdvText      $metodo")
       }
       horizontalFlowList {
         text("VENDEDOR: ${pedido.vendedor.replace(" +".toRegex(), " ")}", LEFT)

@@ -76,9 +76,9 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 81, 80), ' '), 80, ' ')                AS obs2,
        RPAD(IFNULL(MID(O.remarks__480, 161, 80), ' '), 80, ' ')               AS obs3,
        RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs4,
-       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs5,
-       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs6,
-       RPAD(IFNULL(MID(O.remarks__480, 241, 80), ' '), 80, ' ')               AS obs7,
+       RPAD(IFNULL(MID(O.remarks__480, 321, 80), ' '), 80, ' ')               AS obs5,
+       RPAD(IFNULL(MID(O.remarks__480, 401, 80), ' '), 80, ' ')               AS obs6,
+       RPAD(IFNULL(MID(O.remarks__480, 481, 80), ' '), 80, ' ')               AS obs7,
        IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS tipo,
        paym.name                                                              AS metodo
 FROM sqldados.eord           AS EO

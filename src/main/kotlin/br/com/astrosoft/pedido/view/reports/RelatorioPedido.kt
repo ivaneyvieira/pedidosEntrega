@@ -278,8 +278,8 @@ class RelatorioPedido(val pedido: Pedido) {
       }
       breakLine()
       horizontalFlowList {
-        text("Data Recebimento\n_____/_____/_____\nObservação Motorista:", CENTER, 150)
-        text("\n_____________________________________________________\nIdentificação e Assinatura ao Receber", CENTER)
+        text("Data Recebimento\n_____/_____/_____\n\nObservação Motorista:", CENTER, 150)
+        text("\n_____________________________________________________\nIdentificação e Assinatura do(a) Recebedor(a)", CENTER)
       }
     }
   }
@@ -299,7 +299,7 @@ class RelatorioPedido(val pedido: Pedido) {
         val nfText = "NF: ${pedido.nfFat}"
         val dataText = "DATA: ${pedido.dataFat.format()}-${pedido.horaFat.format()}"
         val valorText = "VALOR R$: ${pedido.valorComFrete.format()}"
-        val pdvText = "PDV: ${pedido.pdvno}"
+        val pdvText = "PDV: ${pedido.pdvnoVenda}"
         val metodo = "MET PGTO: ${pedido.metodo}"
         text("$nfText $dataText $valorText      $pdvText      $metodo")
       }

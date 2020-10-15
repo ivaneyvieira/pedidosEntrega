@@ -16,6 +16,7 @@ data class Pedido(
   val data: LocalDate?,
   val dataEntrega: LocalDate?,
   val pdvno: Int,
+  val pdvnoVenda: Int?,
   val hora: Time?,
   val nfnoFat: String,
   val nfseFat: String,

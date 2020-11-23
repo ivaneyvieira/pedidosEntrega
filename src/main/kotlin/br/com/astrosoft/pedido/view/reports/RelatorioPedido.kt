@@ -240,16 +240,6 @@ class RelatorioPedido(val pedido: Pedido) {
                         val obsTrim = obs.trim()
                         if(obsTrim == "" || obsTrim == ".") null else obs
                       } + ""
-      /*
-      obsList.windowed(2, 2)
-        .map {Pair(it[0], it[1])}
-        .forEach {par ->
-          horizontalFlowList {
-            text(par.first + par.second, LEFT)
-          }
-        }
-        
-       */
       
       if(pedido.obs1.trim() != "")
         text(pedido.obs1.trim())
@@ -279,7 +269,8 @@ class RelatorioPedido(val pedido: Pedido) {
       breakLine()
       horizontalFlowList {
         text("Data Recebimento\n_____/_____/_____\n\nObservação Motorista:", CENTER, 150)
-        text("\n_____________________________________________________\nIdentificação e Assinatura do(a) Recebedor(a)", CENTER)
+        text("\n_____________________________________________________\nIdentificação e Assinatura do(a) Recebedor(a)",
+             CENTER)
       }
     }
   }

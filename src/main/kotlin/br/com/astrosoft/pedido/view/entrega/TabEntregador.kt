@@ -145,6 +145,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()
+      //
       setClassNameGenerator {
         if(it.funcaoName == "")
           "destaque1L"

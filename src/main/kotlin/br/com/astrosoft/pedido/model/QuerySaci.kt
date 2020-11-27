@@ -33,13 +33,15 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     script(sql) {
       addOptionalParameter("login", user.login)
       addOptionalParameter("bitAcesso", user.bitAcesso)
+      addOptionalParameter("loja", user.storeno)
     }
   }
   
-  fun listaPedido(tipo : ETipoPedido): List<Pedido> {
+  fun listaPedido(loja : Int, tipo : ETipoPedido): List<Pedido> {
     val sql = "/sqlSaci/listaPedido.sql"
     return query(sql, Pedido::class){
       addOptionalParameter("tipo", tipo.sigla)
+      addOptionalParameter("storeno", loja)
     }
   }
   

@@ -121,6 +121,11 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrud
             isReadOnly = true
             binder.bind(this, UserSaci::impressora.name)
           }
+        if(operation in listOf(READ, DELETE, UPDATE))
+          integerField("Número Loja") {
+            isReadOnly = false
+            binder.bind(this, UserSaci::storeno.name)
+          }
         if(operation in listOf(ADD, READ, DELETE, UPDATE)) {
           checkBox("Entrega Imprimir") {
             binder.bind(this, UserSaci::entrega_imprimir.name)

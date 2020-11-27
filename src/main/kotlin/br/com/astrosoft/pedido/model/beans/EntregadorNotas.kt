@@ -56,36 +56,10 @@ data class EntregadorNotas(
     get() = datePedido.format()
   var classFormat: Int = 0
   
-  fun groupByNota() = EntregadorNotasGroup(cargano, loja, notaEnt, numPedido, datePedido, valorNota, valorFrete)
+  fun groupByNota() = EntregadorNotasGroup(loja, notaEnt)
 }
 
-class EntregadorNotasGroup(val cargano: Int,
-                           val loja: Int,
-                           val notaEnt: String,
-                           val numPedido: Int,
-                           val datePedido: LocalDate?,
-                           val valorNota: Double,
-                           val valorFrete: Double) {
-  override fun equals(other: Any?): Boolean {
-    if(this === other) return true
-    if(javaClass != other?.javaClass) return false
-    
-    other as EntregadorNotasGroup
-    
-    if(loja != other.loja) return false
-    if(notaEnt != other.notaEnt) return false
-    if(numPedido != other.numPedido) return false
-    
-    return true
-  }
-  
-  override fun hashCode(): Int {
-    var result = loja
-    result = 31 * result + notaEnt.hashCode()
-    result = 31 * result + numPedido
-    return result
-  }
-}
+data class EntregadorNotasGroup(val loja: Int, val notaEnt: String)
 
 fun List<EntregadorNotas>.groupByNota(): List<EntregadorNotas> {
   val groupBy = this.groupBy {entregadorNota ->
@@ -152,16 +126,16 @@ private fun resumoPedido(groupBy: Set<Entry<EntregadorNotasGroup, List<Entregado
                     empno = value.firstOrNull()?.empno ?: 0,
                     loja = key.loja,
                     notaEnt = key.notaEnt,
-                    numPedido = key.numPedido,
-                    datePedido = key.datePedido,
+                    numPedido = value.firstOrNull()?.numPedido ?: 0,
+                    datePedido = value.firstOrNull()?.datePedido,
                     prdno = "",
                     grade = "",
                     descricao = "",
                     pisoCxs = value.sumBy {it.pisoCxs ?: 0},
                     pisoPeso = value.sumByDouble {it.pisoPeso ?: 0.00},
-                    valor = key.valorNota,
+                    valor = value.firstOrNull()?.valorNota ?: 0.00,
                     valorNota = value.sumByDouble {it.valorNota},
-                    valorFrete = key.valorFrete
+                    valorFrete = value.firstOrNull()?.valorFrete ?: 0.00
                    )
   }
   return resumo
@@ -170,7 +144,8 @@ private fun resumoPedido(groupBy: Set<Entry<EntregadorNotasGroup, List<Entregado
 private fun grupoFrete(groupBy: Set<Entry<EntregadorNotasGroup, List<EntregadorNotas>>>): List<EntregadorNotas> {
   val groupFrete = groupBy.map {entry ->
     val key = entry.key
-    EntregadorNotas(cargano = key.cargano,
+    val first = entry.value.firstOrNull()
+    EntregadorNotas(cargano = first?.cargano ?: 0,
                     funcaoName = "",
                     nome = "",
                     dateEnt = null,
@@ -180,14 +155,14 @@ private fun grupoFrete(groupBy: Set<Entry<EntregadorNotasGroup, List<EntregadorN
                     notaFat = "",
                     dateFat = null,
                     notaEnt = key.notaEnt,
-                    numPedido = key.numPedido,
-                    datePedido = key.datePedido,
+                    numPedido = first?.numPedido ?: 0,
+                    datePedido = first?.datePedido,
                     prdno = "MMMMMM",
                     grade = "",
                     descricao = "Frete",
                     pisoCxs = null,
                     pisoPeso = null,
-                    valor = key.valorFrete,
+                    valor = first?.valorFrete,
                     valorNota = 0.00,
                     valorFrete = 0.00
                    )
@@ -225,10 +200,11 @@ private fun totalGeral(group: List<EntregadorNotas>): EntregadorNotas {
 
 private fun totalParcial(groupBy: Set<Entry<EntregadorNotasGroup, List<EntregadorNotas>>>): List<EntregadorNotas> {
   val groupValor = groupBy.map {entry ->
-    val valorNota = entry.key.valorNota
-    val valorFrete = entry.key.valorFrete
+    val first = entry.value.firstOrNull()
+    val valorNota = first?.valorNota ?: 0.00
+    val valorFrete = first?.valorFrete ?: 0.00
     
-    EntregadorNotas(cargano = entry.key.cargano,
+    EntregadorNotas(cargano = first?.cargano ?: 0,
                     funcaoName = "",
                     nome = "",
                     dateEnt = null,
@@ -238,8 +214,8 @@ private fun totalParcial(groupBy: Set<Entry<EntregadorNotasGroup, List<Entregado
                     empno = 0,
                     loja = entry.key.loja,
                     notaEnt = entry.key.notaEnt,
-                    numPedido = entry.key.numPedido,
-                    datePedido = entry.key.datePedido,
+                    numPedido = first?.numPedido ?: 0,
+                    datePedido = first?.datePedido,
                     prdno = "ZZZZZZ",
                     grade = "",
                     descricao = "Total parcial",

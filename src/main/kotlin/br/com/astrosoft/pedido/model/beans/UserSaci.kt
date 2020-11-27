@@ -8,6 +8,7 @@ class UserSaci {
   var name: String = ""
   var login: String = ""
   var senha: String = ""
+  var storeno: Int = 0
   var bitAcesso: Int = 0
   var prntno: Int = 0
   var impressora: String = ""

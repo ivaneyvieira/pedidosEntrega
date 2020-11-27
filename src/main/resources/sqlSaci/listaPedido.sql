@@ -125,6 +125,7 @@ FROM sqldados.eord           AS EO
   LEFT JOIN  sqldados.eordrk AS OBS
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE (EO.storeno IN (1, 2, 3, 4, 5, 6))
+  AND (EO.storeno = :storeno OR :storeno = 0)
   AND (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
        ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
   AND EO.status NOT IN (3, 5)

@@ -1,13 +1,14 @@
 package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.saci
 import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-data class Pedido(
+class Pedido(
   val loja: Int,
   val nomeLoja: String,
   val siglaLoja: String,
@@ -109,7 +110,9 @@ data class Pedido(
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
   
   companion object {
-    fun listaPedido(tipo: ETipoPedido): List<Pedido> = saci.listaPedido(tipo)
+    val storeno = AppConfig.userSaci?.storeno ?: 0
+    fun listaPedido(tipo: ETipoPedido): List<Pedido> = (if(tipo == ENTREGA) saci.listaPedido(0, tipo)
+    else saci.listaPedido(storeno, tipo))
       .sortedWith(compareBy<Pedido> {it.data}.thenBy {
         it.hora
       })

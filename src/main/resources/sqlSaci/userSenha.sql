@@ -1,6 +1,7 @@
 SELECT U.no,
        U.name,
        login,
+       U.auxLong1             AS storeno,
        IFNULL(cast(concat(CHAR(ascii(SUBSTRING(pswd, 1, 1)) + ascii('e') - ascii('j')),
 			  CHAR(ascii(SUBSTRING(pswd, 2, 1)) + ascii('a') - ascii('h')),
 			  CHAR(ascii(SUBSTRING(pswd, 3, 1)) + ascii('c') - ascii('k')),

@@ -2,6 +2,7 @@ package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
+import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
 import br.com.astrosoft.pedido.model.saci
 import java.sql.Time
 import java.time.LocalDate
@@ -60,7 +61,7 @@ class Pedido(
   val obs7: String,
   val tipo: String,
   val metodo: String
-                 ) {
+            ) {
   val dataHoraPrint
     get() = if(dataPrint == null || horaPrint == null) null
     else LocalDateTime.of(dataPrint, horaPrint)
@@ -110,12 +111,17 @@ class Pedido(
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
   
   companion object {
-    val storeno = AppConfig.userSaci?.storeno ?: 0
-    fun listaPedido(tipo: ETipoPedido): List<Pedido> = (if(tipo == ENTREGA) saci.listaPedido(0, tipo)
-    else saci.listaPedido(storeno, tipo))
-      .sortedWith(compareBy<Pedido> {it.data}.thenBy {
+    
+    fun listaPedido(tipo: ETipoPedido): List<Pedido> {
+      val storeno = AppConfig.userSaci?.storeno ?: 0
+      val lista = when(tipo) {
+        ENTREGA -> saci.listaPedido(0, tipo)
+        RETIRA -> saci.listaPedido(storeno, tipo)
+      }
+      return lista.sortedWith(compareBy<Pedido> {it.data}.thenBy {
         it.hora
       })
+    }
     
     fun listaPedidoImprimir(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
       .filter {it.paraImprimir}

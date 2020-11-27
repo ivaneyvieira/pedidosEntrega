@@ -79,13 +79,13 @@ class Pedido(
   }
   
   val paraImprimir: Boolean
-    get() = (marca != "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 5, 18)) ?: true)
+    get() = (marca != "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val impressoSemNota: Boolean
-    get() = (marca == "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+    get() = (marca == "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val impressoComNota: Boolean
-    get() = (nfnoEnt != "") && (data?.isAfter(LocalDate.of(2020, 5, 17)) ?: true)
+    get() = (nfnoEnt != "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val pedidoPendente: Boolean
-    get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2020, 1, 1)) ?: true)
+    get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val valorComFrete
     get() = valorFat
   

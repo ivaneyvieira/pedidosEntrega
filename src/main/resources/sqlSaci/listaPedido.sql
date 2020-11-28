@@ -2,6 +2,17 @@ DO @TIPO := :tipo;
 DO @DATA1 := IF(@TIPO = 'R', 20170601, 20200101);
 DO @DATA2 := IF(@TIPO = 'R', 20170601, 20200518);
 
+DROP TEMPORARY TABLE IF EXISTS T_TIPO;
+CREATE TEMPORARY TABLE T_TIPO (
+  PRIMARY KEY (storeno, ordno)
+)
+SELECT DISTINCT storeno, ordno
+FROM sqldados.eoprdf
+WHERE (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
+       ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
+  AND (storeno IN (2, 3, 4, 5))
+  AND (date >= @DATA2);
+
 DROP TEMPORARY TABLE IF EXISTS T2;
 CREATE TEMPORARY TABLE T2 (
   PRIMARY KEY (storeno, ordno)
@@ -20,12 +31,20 @@ SELECT pxa.storeno,
        MAX(IF(pxa.cfo IN (5117, 6117), pxa.nfse, NULL)) AS nfse_entrega,
        MAX(IF(pxa.cfo IN (5117, 6117), pxa.amt, NULL))  AS valor_entrega
 FROM sqlpdv.pxa
-  LEFT JOIN sqlpdv.pxanf
-	      ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND pxa.pdvno = pxanf.pdvno)
-WHERE (pxa.storeno IN (1, 2, 3, 4, 5, 6))
+  INNER JOIN T_TIPO AS T
+	       ON T.storeno = pxa.storeno AND pxa.eordno = T.ordno
+  LEFT JOIN  sqlpdv.pxanf
+	       ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND
+		   pxa.pdvno = pxanf.pdvno)
+WHERE (pxa.storeno IN (2, 3, 4, 5))
+  AND (pxa.storeno = :storeno OR :storeno = 0)
   AND (pxa.date >= @DATA2)
   AND pxa.cfo IN (5922, 6922, 5117, 6117)
 GROUP BY pxa.storeno, pxa.eordno;
+/*
+show index from sqldados.pxa;
+create index e3 on sqlpdv.pxa(storeno, cfo, date);
+*/
 
 SELECT EO.storeno                                                             AS loja,
        S.name                                                                 AS nomeLoja,
@@ -65,7 +84,7 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(CA.nei, C.nei1), 25, ' ')                                  AS bairroEntrega,
        IFNULL(T2.fre_amt, 0) / 100                                            AS frete,
        EO.amount / 100                                                        AS valor,
-       IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS status,
+       @TIPO                                                                  AS status,
        IFNULL(A.name, '')                                                     AS area,
        IFNULL(R.name, '')                                                     AS rota,
        IF(LEFT(OBS.remarks__480, 2) = 'EF ', LEFT(OBS.remarks__480, 11), ' ') AS obs,
@@ -81,13 +100,13 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 321, 80), ' '), 80, ' ')               AS obs5,
        RPAD(IFNULL(MID(O.remarks__480, 401, 80), ' '), 80, ' ')               AS obs6,
        RPAD(IFNULL(MID(O.remarks__480, 481, 80), ' '), 80, ' ')               AS obs7,
-       IF(eoprdf.bits & POW(2, 1), 'R', 'E')                                  AS tipo,
+       @TIPO                                                                  AS tipo,
        paym.name                                                              AS metodo
 FROM sqldados.eord           AS EO
-  INNER JOIN sqldados.store  AS S
-	       ON S.no = EO.storeno
   INNER JOIN T2
 	       ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
+  LEFT JOIN  sqldados.store  AS S
+	       ON S.no = EO.storeno
   LEFT JOIN  sqldados.eordrk AS O
 	       ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
 
@@ -99,11 +118,9 @@ FROM sqldados.eord           AS EO
 	       ON (C.no = EO.custno)
   LEFT JOIN  sqldados.emp    AS E
 	       ON (E.no = EO.empno)
-  LEFT JOIN  sqldados.eoprdf
-	       ON (eoprdf.storeno = EO.storeno AND eoprdf.ordno = EO.ordno)
   LEFT JOIN  sqldados.paym
 	       ON (paym.no = EO.paymno)
-  LEFT JOIN  sqlpdv.pxa      AS P USE INDEX (e1)
+  LEFT JOIN  sqlpdv.pxa      AS P
 	       ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
 		   EO.nfse_futura = P.nfse)
   LEFT JOIN  sqldados.ctadd  AS AD
@@ -124,11 +141,7 @@ FROM sqldados.eord           AS EO
 	       ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
   LEFT JOIN  sqldados.eordrk AS OBS
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
-WHERE (EO.storeno IN (1, 2, 3, 4, 5, 6))
-  AND (EO.storeno = :storeno OR :storeno = 0)
-  AND (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
-       ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
-  AND EO.status NOT IN (3, 5)
+WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
 GROUP BY EO.storeno, EO.ordno

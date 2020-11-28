@@ -41,10 +41,7 @@ WHERE (pxa.storeno IN (2, 3, 4, 5))
   AND (pxa.date >= @DATA2)
   AND pxa.cfo IN (5922, 6922, 5117, 6117)
 GROUP BY pxa.storeno, pxa.eordno;
-/*
-show index from sqldados.pxa;
-create index e3 on sqlpdv.pxa(storeno, cfo, date);
-*/
+
 
 SELECT EO.storeno                                                             AS loja,
        S.name                                                                 AS nomeLoja,

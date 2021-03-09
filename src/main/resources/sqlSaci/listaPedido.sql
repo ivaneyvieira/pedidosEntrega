@@ -62,7 +62,8 @@ SELECT E.storeno,
 FROM sqldados.eord AS E
 WHERE (E.storeno IN (4))
   AND (E.storeno = :storeno OR :storeno = 0)
-  AND (E.empno = 4000)
+  AND (E.pdvno = 440)
+  AND (E.empno = 440)
 GROUP BY E.storeno, E.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_NORMAL;
@@ -264,7 +265,7 @@ FROM sqldados.eord           AS EO
 	       ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
   LEFT JOIN  sqldados.eordrk AS OBS
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
-WHERE EO.status NOT IN (3, 5)
+WHERE EO.status NOT IN (5)
   AND (nff.status <> 1 OR nff.status IS NULL)
 GROUP BY EO.storeno, EO.ordno;
 

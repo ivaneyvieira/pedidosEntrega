@@ -111,7 +111,6 @@ class Pedido(
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
   
   companion object {
-    
     fun listaPedido(tipo: ETipoPedido): List<Pedido> {
       val storeno = AppConfig.userSaci?.storeno ?: 0
       val lista = when(tipo) {

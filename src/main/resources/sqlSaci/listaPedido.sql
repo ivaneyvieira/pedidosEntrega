@@ -62,7 +62,6 @@ SELECT E.storeno,
 FROM sqldados.eord AS E
 WHERE (E.storeno IN (4))
   AND (E.storeno = :storeno OR :storeno = 0)
-  AND (E.pdvno = 440)
   AND (E.empno = 440)
 GROUP BY E.storeno, E.ordno;
 

@@ -71,9 +71,9 @@ FROM sqldados.awnfr          AS A
 	       ON A.storenoNfr = C.storeno AND A.pdvnoNfr = C.pdvno AND A.xanoNfr = C.xano
   INNER JOIN sqldados.eord   AS O
 	       ON O.storeno = A.storenoNfr AND O.ordno = A.ordno
-  INNER JOIN sqldados.eoprdf AS F
+  LEFT JOIN sqldados.eoprdf AS F
 	       ON (F.storeno = O.storeno AND F.ordno = O.ordno)
-WHERE F.nfNfno <> 0
+WHERE (F.nfNfno <> 0 AND F.nfNfno IS NOT NULL) OR (O.empno = 440 AND O.storeno = 4)
 GROUP BY storenoEnt, nfnoEnt, nfseEnt;
 
 DROP TABLE IF EXISTS T_METRICAS;

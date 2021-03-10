@@ -82,6 +82,7 @@ FROM sqldados.awnfr          AS A
 	       ON O.storeno = A.storenoNfr AND O.ordno = A.ordno
   LEFT JOIN sqldados.eoprdf AS F
 	       ON (F.storeno = O.storeno AND F.ordno = O.ordno)
+WHERE (F.nfNfno <> 0 AND F.nfNfno IS NOT NULL) OR (O.empno = 440 AND O.storeno = 4)
 GROUP BY storenoEnt, nfnoEnt, nfseEnt;
 
 DROP TABLE IF EXISTS T_METRICAS;

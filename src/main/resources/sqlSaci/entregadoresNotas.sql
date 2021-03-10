@@ -60,18 +60,18 @@ CREATE TEMPORARY TABLE T_NOTAS (
   KEY (storeno, pdvno, xano),
   PRIMARY KEY (storenoEnt, nfnoEnt, nfseEnt)
 )
-SELECT DISTINCT A.cargano                                            AS cargano,
-		A.storenoNfr                                         AS storeno,
-		A.pdvnoNfr                                           AS pdvno,
-		A.xanoNfr                                            AS xano,
-		A.ordno                                              AS ordno,
-		O.date                                               AS datePedido,
-		A.nfno                                               AS nfnoFat,
-		A.nfse                                               AS nfseFat,
-		CAST(IF(N.issuedate = 0, NULL, N.issuedate) AS DATE) AS dateFat,
-		F.nfStoreno                                          AS storenoEnt,
-		F.nfNfno                                             AS nfnoEnt,
-		F.nfNfse                                             AS nfseEnt,
+SELECT DISTINCT A.cargano                                                   AS cargano,
+		A.storenoNfr                                                AS storeno,
+		A.pdvnoNfr                                                  AS pdvno,
+		A.xanoNfr                                                   AS xano,
+		A.ordno                                                     AS ordno,
+		O.date                                                      AS datePedido,
+		IF(O.empno = 440 AND O.storeno = 4, O.nfno, A.nfno)         AS nfnoFat,
+		IF(O.empno = 440 AND O.storeno = 4, O.nfse, A.nfse)         AS nfseFat,
+		CAST(IF(N.issuedate = 0, NULL, N.issuedate) AS DATE)        AS dateFat,
+		IF(O.empno = 440 AND O.storeno = 4, O.storeno, F.nfStoreno) AS storenoEnt,
+		IF(O.empno = 440 AND O.storeno = 4, O.nfno, F.nfNfno)       AS nfnoEnt,
+		IF(O.empno = 440 AND O.storeno = 4, O.nfse, F.nfNfse)       AS nfseEnt,
 		C.empno
 FROM sqldados.awnfr          AS A
   LEFT JOIN  sqldados.nf     AS N
@@ -80,9 +80,8 @@ FROM sqldados.awnfr          AS A
 	       ON A.storenoNfr = C.storeno AND A.pdvnoNfr = C.pdvno AND A.xanoNfr = C.xano
   INNER JOIN sqldados.eord   AS O
 	       ON O.storeno = A.storenoNfr AND O.ordno = A.ordno
-  INNER JOIN sqldados.eoprdf AS F
+  LEFT JOIN sqldados.eoprdf AS F
 	       ON (F.storeno = O.storeno AND F.ordno = O.ordno)
-WHERE F.nfNfno <> 0
 GROUP BY storenoEnt, nfnoEnt, nfseEnt;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -105,8 +104,8 @@ SELECT C.storeno,
        C.ordno                                                          AS numPedido,
        CAST(C.datePedido AS DATE)                                       AS datePedido,
        COUNT(DISTINCT C.xano)                                           AS qtdEnt,
-       ROUND(SUM(if(P.groupno = 010000, X.qtty, 0.000)), 2)             AS pisoCxs,
-       ROUND(SUM(if(P.groupno = 010000, (X.qtty) * P.weight, 0.00)), 2) AS pisoPeso,
+       ROUND(SUM(IF(P.groupno = 010000, X.qtty, 0.000)), 2)             AS pisoCxs,
+       ROUND(SUM(IF(P.groupno = 010000, (X.qtty) * P.weight, 0.00)), 2) AS pisoPeso,
        ROUND(SUM((X.price / 100) * (X.qtty)), 2)                        AS valor,
        N.grossamt / 100                                                 AS valorNota,
        N.fre_amt / 100                                                  AS valorFrete,

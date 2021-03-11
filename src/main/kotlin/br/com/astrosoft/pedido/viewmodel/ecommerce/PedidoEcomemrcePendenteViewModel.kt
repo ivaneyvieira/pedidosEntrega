@@ -1,18 +1,18 @@
-package br.com.astrosoft.pedido.viewmodel.retira
+package br.com.astrosoft.pedido.viewmodel.ecommerce
 
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
+import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 
-class PedidoRetiraPendenteViewModel(val viewModel : PedidoRetiraViewModel) {
+class PedidoEcomemrcePendenteViewModel(val viewModel : PedidoEcommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabRetiraPendente
-  private fun listPedidosEntregaPendente(): List<Pedido> {
+    get() = viewModel.view.tabEcommercePendente
+  private fun listPedidosEcommercePendente(): List<Pedido> {
     val numPedido = subView.pedidoPendente
     val data = subView.dataPendente
     val area = subView.areaPendente.trim()
     val rota = subView.rotaPendente.trim()
-    return Pedido.listaPedidoPendente(RETIRA, ecommerce = false)
+    return Pedido.listaPedidoPendente(ENTREGA, ecommerce = true)
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
         (pedido.data == data || data == null) &&
@@ -22,11 +22,11 @@ class PedidoRetiraPendenteViewModel(val viewModel : PedidoRetiraViewModel) {
   }
   
   fun updateGridPendente() {
-    subView.updateGrid(listPedidosEntregaPendente())
+    subView.updateGrid(listPedidosEcommercePendente())
   }
 }
 
-interface IPedidoRetiraPendente {
+interface IPedidoEcommercePendente {
   fun updateGrid(itens: List<Pedido>)
   val pedidoPendente: Int
   val dataPendente: LocalDate?

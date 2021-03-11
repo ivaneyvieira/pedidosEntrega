@@ -2,15 +2,7 @@ package br.com.astrosoft.pedido.viewmodel.retira
 
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
-import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoComNotaViewModel
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSemNotaViewModel
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImprimirViewModel
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaPendenteViewModel
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregadorViewModel
-import java.time.LocalDate
-import java.time.LocalDateTime
 
 class PedidoRetiraViewModel(view: IPedidoRetiraView): ViewModel<IPedidoRetiraView>(view) {
   val tabRetiraImprimirViewModel = PedidoRetiraImprimirViewModel(this)

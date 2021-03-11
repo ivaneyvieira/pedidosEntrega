@@ -14,9 +14,11 @@ data class Entregador(
   val valorNota: Double,
   val valorFrete: Double
                      ) {
-  fun findEntregadoresNotas(dateI: LocalDate, dateF: LocalDate) = saci.findEntregadoresNotas(dateI, dateF, empno)
-  
+  fun findEntregadoresNotas(dateI: LocalDate, dateF: LocalDate, ecommerce: Boolean) =
+    saci.findEntregadoresNotas(dateI, dateF, empno, ecommerce)
+
   companion object {
-    fun findEntregador(dateI: LocalDate, dateF: LocalDate) = saci.findEntregadores(dateI, dateF)
+    fun findEntregador(dateI: LocalDate, dateF: LocalDate, ecommerce: Boolean) =
+      saci.findEntregadores(dateI, dateF, ecommerce)
   }
 }

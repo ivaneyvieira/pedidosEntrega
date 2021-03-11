@@ -63,13 +63,13 @@ class Pedido(
   val metodo: String
             ) {
   val dataHoraPrint
-    get() = if(dataPrint == null || horaPrint == null) null
+    get() = if (dataPrint == null || horaPrint == null) null
     else LocalDateTime.of(dataPrint, horaPrint)
   val nfFat: String
     get() = numeroNota(nfnoFat, nfseFat)
   val nfEnt: String
     get() = numeroNota(nfnoEnt, nfseEnt)
-  
+
   private fun numeroNota(nfno: String, nfse: String): String {
     return when {
       nfno == "" -> ""
@@ -77,7 +77,9 @@ class Pedido(
       else       -> "$nfno/$nfse"
     }
   }
-  
+
+  val isEcommerce
+    get() = vendno == 440 && loja == 4
   val paraImprimir: Boolean
     get() = (marca != "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val impressoSemNota: Boolean
@@ -88,55 +90,54 @@ class Pedido(
     get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val valorComFrete
     get() = valorFat
-  
+
   fun marcaImpresso() {
     saci.ativaMarca(loja, pedido, "S")
   }
-  
+
   fun desmarcaImpresso() {
     saci.ativaMarca(loja, pedido, " ")
     desmarcaDataHora()
   }
-  
+
   fun marcaDataHora(dataHora: LocalDateTime) {
     saci.ativaDataHoraImpressao(loja, pedido, dataHora.toLocalDate(), dataHora.toLocalTime())
   }
-  
+
   private fun desmarcaDataHora() {
     saci.ativaDataHoraImpressao(loja, pedido, null, null)
   }
-  
+
   fun canPrint(): Boolean = dataHoraPrint == null || (AppConfig.isAdmin)
-  
+
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
-  
+
   companion object {
-    fun listaPedido(tipo: ETipoPedido): List<Pedido> {
+    fun listaPedido(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> {
       val storeno = AppConfig.userSaci?.storeno ?: 0
-      val lista = when(tipo) {
-        ENTREGA -> saci.listaPedido(0, tipo)
-        RETIRA -> saci.listaPedido(storeno, tipo)
+      val lista = when (tipo) {
+        ENTREGA -> saci.listaPedido(0, tipo, ecommerce)
+        RETIRA  -> saci.listaPedido(storeno, tipo, ecommerce)
       }
-      return lista.sortedWith(compareBy<Pedido> {it.data}.thenBy {
+      return lista.sortedWith(compareBy<Pedido> { it.data }.thenBy {
         it.hora
       })
     }
-    
-    fun listaPedidoImprimir(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
-      .filter {it.paraImprimir}
-    
-    fun listaPedidoImpressoSemNota(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
-      .filter {it.impressoSemNota}
-    
-    fun listaPedidoImpressoComNota(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
-      .filter {it.impressoComNota}
-    
-    fun listaPedidoPendente(tipo: ETipoPedido): List<Pedido> = listaPedido(tipo)
-      .filter {it.pedidoPendente}
+
+    fun listaPedidoImprimir(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
+      listaPedido(tipo, ecommerce).filter { it.paraImprimir }
+
+    fun listaPedidoImpressoSemNota(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
+      listaPedido(tipo, ecommerce).filter { it.impressoSemNota }
+
+    fun listaPedidoImpressoComNota(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
+      listaPedido(tipo, ecommerce).filter { it.impressoComNota }
+
+    fun listaPedidoPendente(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
+      listaPedido(tipo, ecommerce).filter { it.pedidoPendente }
   }
 }
 
 enum class ETipoPedido(val sigla: String) {
-  ENTREGA("E"),
-  RETIRA("R")
+  ENTREGA("E"), RETIRA("R")
 }

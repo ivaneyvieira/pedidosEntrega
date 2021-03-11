@@ -1,4 +1,5 @@
 DO @TIPO := :tipo;
+DO @EC := :ecommerce;
 DO @DATA1 := IF(@TIPO = 'R', 20170601, 20200101);
 DO @DATA2 := IF(@TIPO = 'R', 20170601, 20200518);
 
@@ -63,6 +64,7 @@ FROM sqldados.eord AS E
 WHERE (E.storeno IN (4))
   AND (E.storeno = :storeno OR :storeno = 0)
   AND (E.empno = 440)
+  AND (@TIPO = 'E')
 GROUP BY E.storeno, E.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_NORMAL;
@@ -165,6 +167,7 @@ FROM sqldados.eord           AS EO
 WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
+  AND (@EC <> 'S')
 GROUP BY EO.storeno, EO.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_ECOMERCE;

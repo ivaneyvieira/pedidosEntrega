@@ -1,5 +1,6 @@
 DO @DI := :dateI;
 DO @DF := :dateF;
+DO @EC := :ecommerce;
 DO @COLETA := 4499;
 
 DROP TABLE IF EXISTS T_EMP;
@@ -130,7 +131,8 @@ FROM sqldados.awnfrh        AS A
 	       ON A.storenoNfr = CG.storeno AND A.pdvnoNfr = CG.pdvno AND C.xanoNfr = CG.xano AND
 		  A.date = CG.date AND A.time = CG.time
   INNER JOIN T_EMP          AS E
-	       ON E.empno = CG.empno;
+	       ON E.empno = CG.empno
+WHERE (storenoNfr = 4 AND E.empno = 440) OR @EC = 'N';
 
 SELECT funcaoName,
        sname               AS nome,

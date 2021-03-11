@@ -1,4 +1,4 @@
-package br.com.astrosoft.pedido.viewmodel.entrega
+package br.com.astrosoft.pedido.viewmodel.ecommerce
 
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
@@ -7,15 +7,15 @@ import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class PedidoEntregaImprimirViewModel(val viewModel : PedidoEntregaViewModel) {
+class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabEntregaImprimir
-  private fun listPedidosEntregaImprimir(): List<Pedido> {
+    get() = viewModel.view.tabEcommerceImprimir
+  private fun listPedidosEcommerceImprimir(): List<Pedido> {
     val numPedido = subView.pedidoImprimir
     val data = subView.dataImprimir
     val area = subView.areaImprimir.trim()
     val rota = subView.rotaImprimir.trim()
-    return Pedido.listaPedidoImprimir(ENTREGA, ecommerce = false)
+    return Pedido.listaPedidoImprimir(ENTREGA, ecommerce = true)
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
         (pedido.data == data || data == null) &&
@@ -25,7 +25,7 @@ class PedidoEntregaImprimirViewModel(val viewModel : PedidoEntregaViewModel) {
   }
   
   fun updateGridImprimir() {
-    subView.updateGrid(listPedidosEntregaImprimir())
+    subView.updateGrid(listPedidosEcommerceImprimir())
   }
   
   fun imprimirPedidos(pedidos: List<Pedido>) = exec(viewModel.view) {
@@ -35,7 +35,7 @@ class PedidoEntregaImprimirViewModel(val viewModel : PedidoEntregaViewModel) {
   
   fun confirmaPrint() {
     val pedidos =
-      viewModel.view.tabEntregaImprimir.itensSelecionado()
+      viewModel.view.tabEcommerceImprimir.itensSelecionado()
         .ifEmpty {fail("Não há pedido selecionado")}
     
     pedidos.forEach {pedido ->
@@ -53,7 +53,7 @@ class PedidoEntregaImprimirViewModel(val viewModel : PedidoEntregaViewModel) {
   fun imprimirPedidoMinuta() = exec(viewModel.view) {
     val datetime = LocalDateTime.now()
     val pedidos =
-      viewModel.view.tabEntregaImprimir.itensSelecionado()
+      viewModel.view.tabEcommerceImprimir.itensSelecionado()
         .ifEmpty {fail("Não há pedido selecionado")}
     printPedidoMinutaPdf(pedidos)
     pedidos.forEach {pedido ->
@@ -67,7 +67,7 @@ class PedidoEntregaImprimirViewModel(val viewModel : PedidoEntregaViewModel) {
   }
 }
 
-interface IPedidoEntregaImprimir {
+interface IPedidoEcommerceImprimir {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoImprimir: Int

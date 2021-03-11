@@ -10,7 +10,7 @@ class PedidoEntregaImpressoComNotaViewModel(val viewModel : PedidoEntregaViewMod
     get() = viewModel.view.tabEntregaImpressoComNota
   private fun listPedidosEntregaImpressoComNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoComNota
-    return Pedido.listaPedidoImpressoComNota(ENTREGA)
+    return Pedido.listaPedidoImpressoComNota(ENTREGA, ecommerce = false)
       .filter {pedido ->
         pedido.pedido == numPedido || numPedido == 0
       }

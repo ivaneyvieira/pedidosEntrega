@@ -15,7 +15,7 @@ class PedidoRetiraImprimirViewModel(val viewModel : PedidoRetiraViewModel) {
     val data = subView.dataImprimir
     val area = subView.areaImprimir.trim()
     val rota = subView.rotaImprimir.trim()
-    return Pedido.listaPedidoImprimir(RETIRA)
+    return Pedido.listaPedidoImprimir(RETIRA, ecommerce = false)
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
         (pedido.data == data || data == null) &&

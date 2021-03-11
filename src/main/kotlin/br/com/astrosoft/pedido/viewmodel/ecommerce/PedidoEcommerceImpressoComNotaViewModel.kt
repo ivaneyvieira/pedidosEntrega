@@ -1,25 +1,23 @@
-package br.com.astrosoft.pedido.viewmodel.retira
+package br.com.astrosoft.pedido.viewmodel.ecommerce
 
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaViewModel
 
-class PedidoRetiraImpressoComNotaViewModel(val viewModel : PedidoRetiraViewModel) {
+class PedidoEcommerceImpressoComNotaViewModel(val viewModel : PedidoEcommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabRetiraImpressoComNota
-  private fun listPedidosEntregaImpressoComNota(): List<Pedido> {
+    get() = viewModel.view.tabEcommerceImpressoComNota
+  private fun listPedidosEcommerceImpressoComNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoComNota
-    return Pedido.listaPedidoImpressoComNota(RETIRA, ecommerce = false)
+    return Pedido.listaPedidoImpressoComNota(ENTREGA, ecommerce = true)
       .filter {pedido ->
         pedido.pedido == numPedido || numPedido == 0
       }
   }
   
   fun updateGridImpressoComNota() {
-    subView.updateGrid(listPedidosEntregaImpressoComNota())
+    subView.updateGrid(listPedidosEcommerceImpressoComNota())
   }
   
   fun desmarcaComNota() = exec(viewModel.view) {
@@ -34,7 +32,7 @@ class PedidoRetiraImpressoComNotaViewModel(val viewModel : PedidoRetiraViewModel
   }
 }
 
-interface IPedidoRetiraImpressoComNota {
+interface IPedidoEcommerceImpressoComNota {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   

@@ -7,10 +7,10 @@ import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel) {
+class PedidoECommerceImprimirViewModel(val viewModel : PedidoECommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabEcommerceImprimir
-  private fun listPedidosEcommerceImprimir(): List<Pedido> {
+    get() = viewModel.view.tabECommerceImprimir
+  private fun listPedidosECommerceImprimir(): List<Pedido> {
     val numPedido = subView.pedidoImprimir
     val data = subView.dataImprimir
     val area = subView.areaImprimir.trim()
@@ -25,7 +25,7 @@ class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel)
   }
   
   fun updateGridImprimir() {
-    subView.updateGrid(listPedidosEcommerceImprimir())
+    subView.updateGrid(listPedidosECommerceImprimir())
   }
   
   fun imprimirPedidos(pedidos: List<Pedido>) = exec(viewModel.view) {
@@ -35,7 +35,7 @@ class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel)
   
   fun confirmaPrint() {
     val pedidos =
-      viewModel.view.tabEcommerceImprimir.itensSelecionado()
+      viewModel.view.tabECommerceImprimir.itensSelecionado()
         .ifEmpty {fail("Não há pedido selecionado")}
     
     pedidos.forEach {pedido ->
@@ -53,7 +53,7 @@ class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel)
   fun imprimirPedidoMinuta() = exec(viewModel.view) {
     val datetime = LocalDateTime.now()
     val pedidos =
-      viewModel.view.tabEcommerceImprimir.itensSelecionado()
+      viewModel.view.tabECommerceImprimir.itensSelecionado()
         .ifEmpty {fail("Não há pedido selecionado")}
     printPedidoMinutaPdf(pedidos)
     pedidos.forEach {pedido ->
@@ -67,7 +67,7 @@ class PedidoEcommerceImprimirViewModel(val viewModel : PedidoEcommerceViewModel)
   }
 }
 
-interface IPedidoEcommerceImprimir {
+interface IPedidoECommerceImprimir {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoImprimir: Int

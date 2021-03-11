@@ -4,10 +4,10 @@ import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 
-class PedidoEcomemrcePendenteViewModel(val viewModel : PedidoEcommerceViewModel) {
+class PedidoECommercePendenteViewModel(val viewModel : PedidoECommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabEcommercePendente
-  private fun listPedidosEcommercePendente(): List<Pedido> {
+    get() = viewModel.view.tabECommercePendente
+  private fun listPedidosECommercePendente(): List<Pedido> {
     val numPedido = subView.pedidoPendente
     val data = subView.dataPendente
     val area = subView.areaPendente.trim()
@@ -22,11 +22,11 @@ class PedidoEcomemrcePendenteViewModel(val viewModel : PedidoEcommerceViewModel)
   }
   
   fun updateGridPendente() {
-    subView.updateGrid(listPedidosEcommercePendente())
+    subView.updateGrid(listPedidosECommercePendente())
   }
 }
 
-interface IPedidoEcommercePendente {
+interface IPedidoECommercePendente {
   fun updateGrid(itens: List<Pedido>)
   val pedidoPendente: Int
   val dataPendente: LocalDate?

@@ -5,10 +5,10 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoEcommerceImpressoSemNotaViewModel(val viewModel : PedidoEcommerceViewModel) {
+class PedidoECommerceImpressoSemNotaViewModel(val viewModel : PedidoECommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabEcommerceImpressoSemNota
-  private fun listPedidosEcommerceImpressoSemNota(): List<Pedido> {
+    get() = viewModel.view.tabECommerceImpressoSemNota
+  private fun listPedidosECommerceImpressoSemNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoSemNota
     return Pedido.listaPedidoImpressoSemNota(ENTREGA, ecommerce = true)
       .filter {pedido ->
@@ -17,7 +17,7 @@ class PedidoEcommerceImpressoSemNotaViewModel(val viewModel : PedidoEcommerceVie
   }
   
   fun updateGridImpressoSemNota() {
-    subView.updateGrid(listPedidosEcommerceImpressoSemNota())
+    subView.updateGrid(listPedidosECommerceImpressoSemNota())
   }
   
   fun desmarcaSemNota() = exec(viewModel.view) {
@@ -32,11 +32,11 @@ class PedidoEcommerceImpressoSemNotaViewModel(val viewModel : PedidoEcommerceVie
   }
   
   fun imprimirPedidos(itensSelecionado: List<Pedido>) {
-    viewModel.tabEcommerceImprimirViewModel.imprimirPedidos(itensSelecionado)
+    viewModel.tabECommerceImprimirViewModel.imprimirPedidos(itensSelecionado)
   }
 }
 
-interface IPedidoEcommerceImpressoSemNota {
+interface IPedidoECommerceImpressoSemNota {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoImpressoSemNota: Int

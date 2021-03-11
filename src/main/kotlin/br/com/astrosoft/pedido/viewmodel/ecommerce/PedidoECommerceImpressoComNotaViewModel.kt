@@ -5,10 +5,10 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoEcommerceImpressoComNotaViewModel(val viewModel : PedidoEcommerceViewModel) {
+class PedidoECommerceImpressoComNotaViewModel(val viewModel : PedidoECommerceViewModel) {
   private val subView
-    get() = viewModel.view.tabEcommerceImpressoComNota
-  private fun listPedidosEcommerceImpressoComNota(): List<Pedido> {
+    get() = viewModel.view.tabECommerceImpressoComNota
+  private fun listPedidosECommerceImpressoComNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoComNota
     return Pedido.listaPedidoImpressoComNota(ENTREGA, ecommerce = true)
       .filter {pedido ->
@@ -17,7 +17,7 @@ class PedidoEcommerceImpressoComNotaViewModel(val viewModel : PedidoEcommerceVie
   }
   
   fun updateGridImpressoComNota() {
-    subView.updateGrid(listPedidosEcommerceImpressoComNota())
+    subView.updateGrid(listPedidosECommerceImpressoComNota())
   }
   
   fun desmarcaComNota() = exec(viewModel.view) {
@@ -32,7 +32,7 @@ class PedidoEcommerceImpressoComNotaViewModel(val viewModel : PedidoEcommerceVie
   }
 }
 
-interface IPedidoEcommerceImpressoComNota {
+interface IPedidoECommerceImpressoComNota {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   

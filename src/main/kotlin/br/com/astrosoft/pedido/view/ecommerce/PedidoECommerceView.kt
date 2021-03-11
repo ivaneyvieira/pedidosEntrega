@@ -14,7 +14,7 @@ import com.github.mvysny.karibudsl.v10.tabSheet
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route(layout = PedidoEntregaLayout::class)
+@Route(layout = PedidoEntregaLayout::class, value = "ecommerce")
 @PageTitle("E-Commerce")
 class PedidoECommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoECommerceView {
   override val viewModel: PedidoECommerceViewModel = PedidoECommerceViewModel(this)
@@ -34,11 +34,11 @@ class PedidoECommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoEComm
     tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if (user?.entrega_imprimir == true) tabPanel(tabECommerceImprimir)
-      if (user?.entrega_impressoSemNota == true) tabPanel(tabECommerceImpressoSemNota)
-      if (user?.entrega_pendente == true) tabPanel(tabECommercePendente)
-      if (user?.entrega_impressoComNota == true) tabPanel(tabECommerceImpressoComNota)
-      if (user?.entrega_entregador == true) tabPanel(tabECommerceDesempenho)
+      if (user?.admin == true) tabPanel(tabECommerceImprimir)
+      if (user?.admin == true) tabPanel(tabECommerceImpressoSemNota)
+      if (user?.admin == true) tabPanel(tabECommercePendente)
+      if (user?.admin == true) tabPanel(tabECommerceImpressoComNota)
+      if (user?.admin == true) tabPanel(tabECommerceDesempenho)
     }
   }
 

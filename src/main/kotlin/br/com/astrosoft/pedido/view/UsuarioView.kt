@@ -39,7 +39,7 @@ import org.vaadin.crudui.crud.impl.GridCrud
 import org.vaadin.crudui.form.AbstractCrudFormFactory
 import org.vaadin.gatanaso.MultiselectComboBox
 
-@Route(layout = PedidoEntregaLayout::class)
+@Route(layout = PedidoEntregaLayout::class, value = "usuario")
 @PageTitle("Usuário")
 class UsuarioView: ViewLayout<UsuarioViewModel>(), IUsuarioView {
   override val viewModel = UsuarioViewModel(this)

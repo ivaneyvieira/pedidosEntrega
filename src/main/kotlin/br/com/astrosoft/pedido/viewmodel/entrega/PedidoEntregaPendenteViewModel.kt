@@ -12,7 +12,7 @@ class PedidoEntregaPendenteViewModel(val viewModel : PedidoEntregaViewModel) {
     val data = subView.dataPendente
     val area = subView.areaPendente.trim()
     val rota = subView.rotaPendente.trim()
-    return Pedido.listaPedidoPendente(ENTREGA)
+    return Pedido.listaPedidoPendente(ENTREGA, ecommerce = false)
       .filter {pedido ->
         (pedido.pedido == numPedido || numPedido == 0) &&
         (pedido.data == data || data == null) &&

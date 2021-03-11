@@ -10,7 +10,7 @@ class PedidoRetiraImpressoSemNotaViewModel(val viewModel : PedidoRetiraViewModel
     get() = viewModel.view.tabRetiraImpressoSemNota
   private fun listPedidosEntregaImpressoSemNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoSemNota
-    return Pedido.listaPedidoImpressoSemNota(RETIRA)
+    return Pedido.listaPedidoImpressoSemNota(RETIRA, ecommerce = false)
       .filter {pedido ->
         pedido.pedido == numPedido || numPedido == 0
       }

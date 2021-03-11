@@ -37,11 +37,13 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun listaPedido(loja : Int, tipo : ETipoPedido): List<Pedido> {
+  fun listaPedido(loja : Int, tipo : ETipoPedido, ecommerce : Boolean): List<Pedido> {
     val sql = "/sqlSaci/listaPedido.sql"
+    val ec = if(ecommerce) "S" else "N"
     return query(sql, Pedido::class){
       addOptionalParameter("tipo", tipo.sigla)
       addOptionalParameter("storeno", loja)
+      addOptionalParameter("ecommerce", ec)
     }
   }
   
@@ -73,20 +75,25 @@ class QuerySaci: QueryDB(driver, url, username, password) {
     }
   }
   
-  fun findEntregadores(dateI : LocalDate, dateF : LocalDate) : List<Entregador>{
+  fun findEntregadores(dateI : LocalDate, dateF : LocalDate, ecommerce : Boolean) :
+    List<Entregador>{
     val sql = "/sqlSaci/entregadores.sql"
+    val ec = if(ecommerce) "S" else "N"
     return query(sql, Entregador::class) {
       addOptionalParameter("dateI", dateI.toSaciDate())
       addOptionalParameter("dateF", dateF.toSaciDate())
+      addOptionalParameter("ecommerce", ec)
     }
   }
   
-  fun findEntregadoresNotas(dateI : LocalDate, dateF : LocalDate, empno : Int) : List<EntregadorNotas>{
+  fun findEntregadoresNotas(dateI : LocalDate, dateF : LocalDate, empno : Int, ecommerce : Boolean) : List<EntregadorNotas>{
     val sql = "/sqlSaci/entregadoresNotas.sql"
+    val ec = if(ecommerce) "S" else "N"
     return query(sql, EntregadorNotas::class) {
       addOptionalParameter("dateI", dateI.toSaciDate())
       addOptionalParameter("dateF", dateF.toSaciDate())
       addOptionalParameter("empno", empno)
+      addOptionalParameter("ecommerce", ec)
     }
   }
   

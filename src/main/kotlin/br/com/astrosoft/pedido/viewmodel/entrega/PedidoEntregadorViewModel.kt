@@ -9,7 +9,7 @@ class PedidoEntregadorViewModel(val viewModel : PedidoEntregaViewModel) {
   private fun listEntregador(): List<Entregador> {
     val dateI = subView.dateI
     val dateF = subView.dateF
-    return Entregador.findEntregador(dateI, dateF)
+    return Entregador.findEntregador(dateI, dateF, ecommerce = false)
   }
   
   fun updateGridEntregador() {

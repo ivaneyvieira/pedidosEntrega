@@ -28,5 +28,5 @@ FROM sqldados.eoprd          AS E
 WHERE E.storeno = :storeno
   AND E.ordno = :ordno
   AND ((@TIPO = 'R') AND (O.bits & POW(2, 1)) OR (@TIPO = 'E') AND (NOT O.bits & POW(2, 1)) OR
-       (E.storeno = 4 AND E.empno = 440))
+       (EO.storeno = 4 AND EO.empno = 440))
 GROUP BY E.storeno, E.ordno, E.prdno, E.grade

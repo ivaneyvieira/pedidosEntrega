@@ -61,13 +61,14 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @CssImport(value = "./styles/gridTotal.css", themeFor = "vaadin-grid")
-class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entregador>(), IPedidoEntregador {
+class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entregador>(),
+                                                               IPedidoEntregador {
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
   
   private fun showDialogDetailProduto(entregador: Entregador?) {
     entregador ?: return
-    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF)
+    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {
       buttonDownloadProdutos(entregadorList)
     }) {
@@ -79,7 +80,7 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel): TabPanelGrid<Entr
   private fun showDialogDetailPedido(entregador: Entregador?) {
     entregador ?: return
     val entregadorList =
-      entregador.findEntregadoresNotas(dateI, dateF)
+      entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
         .groupByPedido()
         .classificaLinhas()
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {

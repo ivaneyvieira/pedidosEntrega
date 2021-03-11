@@ -17,7 +17,7 @@ import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
 
-class TabEcommercePendente(val viewModel: PedidoECommercePendenteViewModel): TabPanelGrid<Pedido>(),
+class TabECommercePendente(val viewModel: PedidoECommercePendenteViewModel): TabPanelGrid<Pedido>(),
                                                                              IPedidoECommercePendente {
   private lateinit var edtPedidoPendente: TextField
   private lateinit var edtRotaPendente: TextField

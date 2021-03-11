@@ -24,7 +24,7 @@ import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
 
-class TabEcommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): TabPanelGrid<Pedido>(),
+class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): TabPanelGrid<Pedido>(),
                                                                              IPedidoECommerceImprimir {
   private lateinit var edtPedidoImprimir: TextField
   private lateinit var edtRotaImprimir: TextField

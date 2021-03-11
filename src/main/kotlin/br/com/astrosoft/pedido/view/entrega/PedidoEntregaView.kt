@@ -14,8 +14,8 @@ import com.github.mvysny.karibudsl.v10.tabSheet
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route(layout = PedidoEntregaLayout::class)
-@PageTitle("Pedidos")
+@Route(layout = PedidoEntregaLayout::class, value = "entrega")
+@PageTitle("Entrega")
 class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   override val tabEntregaImprimir = TabEntregaImprimir(viewModel.tabEntregaImprimirViewModel)

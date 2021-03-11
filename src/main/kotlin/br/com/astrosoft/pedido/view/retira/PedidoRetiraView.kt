@@ -14,7 +14,7 @@ import com.github.mvysny.karibudsl.v10.tabSheet
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route( layout = PedidoEntregaLayout::class)
+@Route( layout = PedidoEntregaLayout::class, value = "retira")
 @PageTitle("Retira")
 class PedidoRetiraView: ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView {
   override val viewModel: PedidoRetiraViewModel = PedidoRetiraViewModel(this)

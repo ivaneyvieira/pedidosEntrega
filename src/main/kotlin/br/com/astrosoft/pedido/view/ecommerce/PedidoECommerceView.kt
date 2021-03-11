@@ -16,14 +16,14 @@ import com.vaadin.flow.router.Route
 
 @Route(layout = PedidoEntregaLayout::class)
 @PageTitle("E-Commerce")
-class PedidoEcommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoECommerceView {
+class PedidoECommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoECommerceView {
   override val viewModel: PedidoECommerceViewModel = PedidoECommerceViewModel(this)
-  override val tabECommerceImprimir = TabEcommerceImprimir(viewModel.tabECommerceImprimirViewModel)
+  override val tabECommerceImprimir = TabECommerceImprimir(viewModel.tabECommerceImprimirViewModel)
   override val tabECommerceImpressoSemNota =
-    TabEcommerceImpressoSemNota(viewModel.tabECommerceImpressoSemNotaViewModel)
-  override val tabECommercePendente = TabEcommercePendente(viewModel.tabECommercePendenteViewModel)
+    TabECommerceImpressoSemNota(viewModel.tabECommerceImpressoSemNotaViewModel)
+  override val tabECommercePendente = TabECommercePendente(viewModel.tabECommercePendenteViewModel)
   override val tabECommerceImpressoComNota =
-    TabEcommerceImpressoComNota(viewModel.tabECommerceImpressoComNotaViewModel)
+    TabECommerceImpressoComNota(viewModel.tabECommerceImpressoComNotaViewModel)
   override val tabECommerceDesempenho = TabECommerceDesempenho(
     viewModel.tabECommerceDesempenhoViewModel
                                                               )

@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.view
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.pedido.view.ecommerce.PedidoECommerceView
 import br.com.astrosoft.pedido.view.entrega.PedidoEntregaView
 import br.com.astrosoft.pedido.view.retira.PedidoRetiraView
 import com.github.mvysny.karibudsl.v10.anchor
@@ -19,8 +20,7 @@ import com.github.mvysny.karibudsl.v10.tabs
 import com.github.mvysny.karibudsl.v10.verticalLayout
 import com.vaadin.flow.component.applayout.AppLayout
 import com.vaadin.flow.component.dependency.JsModule
-import com.vaadin.flow.component.icon.VaadinIcon.FORM
-import com.vaadin.flow.component.icon.VaadinIcon.USER
+import com.vaadin.flow.component.icon.VaadinIcon.*
 import com.vaadin.flow.component.page.Push
 import com.vaadin.flow.component.tabs.Tabs
 import com.vaadin.flow.server.PWA
@@ -61,6 +61,11 @@ class PedidoEntregaLayout: AppLayout() {
         tab {
           this.icon(FORM)
           routerLink(text = "Retira", viewType = PedidoRetiraView::class)
+        }
+        tab {
+          this.isEnabled = AppConfig.isAdmin
+          this.icon(CLOUD)
+          routerLink(text = "E-Commerce", viewType = PedidoECommerceView::class)
         }
         tab {
           this.isEnabled = AppConfig.isAdmin

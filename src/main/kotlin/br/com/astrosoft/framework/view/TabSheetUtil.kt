@@ -5,12 +5,11 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 
-fun <T: Component> TabSheet.tabPanel(tabPanel: TabPanel<T>) {
+fun <T : Component> TabSheet.tabPanel(tabPanel: TabPanel<T>) {
   this.tab {
     tabPanel.createComponent
-    
-  }
-    .apply {
+
+  }.apply {
       val button = Button(tabPanel.label) {
         tabPanel.updateComponent()
       }
@@ -20,8 +19,8 @@ fun <T: Component> TabSheet.tabPanel(tabPanel: TabPanel<T>) {
     }
 }
 
-interface TabPanel<T: Component> {
-  val createComponent:  T
+interface TabPanel<T : Component> {
+  val createComponent: T
   val label: String
   fun updateComponent()
 }

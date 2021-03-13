@@ -14,43 +14,41 @@ import com.github.mvysny.karibudsl.v10.tabSheet
 import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 
-@Route( layout = PedidoEntregaLayout::class, value = "retira")
+@Route(layout = PedidoEntregaLayout::class, value = "retira")
 @PageTitle("Retira")
-class PedidoRetiraView: ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView {
+class PedidoRetiraView : ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView {
   override val viewModel: PedidoRetiraViewModel = PedidoRetiraViewModel(this)
   override val tabRetiraImprimir = TabRetiraImprimir(viewModel.tabRetiraImprimirViewModel)
-  override val tabRetiraImpressoSemNota = TabRetiraImpressoSemNota(viewModel.tabRetiraImpressoSemNotaViewModel)
+  override val tabRetiraImpressoSemNota =
+    TabRetiraImpressoSemNota(viewModel.tabRetiraImpressoSemNotaViewModel)
   override val tabRetiraPendente = TabRetiraPendente(viewModel.tabRetiraPendenteViewModel)
-  override val tabRetiraImpressoComNota = TabRetiraImpressoComNota(viewModel.tabRetiraImpressoComNotaViewModel)
-  
+  override val tabRetiraImpressoComNota =
+    TabRetiraImpressoComNota(viewModel.tabRetiraImpressoComNotaViewModel)
+
   override fun isAccept(user: UserSaci) = true
-  
+
   init {
-   tabSheet {
+    tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if(user?.retira_imprimir == true)
-        tabPanel(tabRetiraImprimir)
-      if(user?.retira_impressoSemNota == true)
-        tabPanel(tabRetiraImpressoSemNota)
-      if(user?.retira_pendente == true)
-        tabPanel(tabRetiraPendente)
-      if(user?.retira_impressoComNota == true)
-        tabPanel(tabRetiraImpressoComNota)
+      if (user?.retira_imprimir == true) tabPanel(tabRetiraImprimir)
+      if (user?.retira_impressoSemNota == true) tabPanel(tabRetiraImpressoSemNota)
+      if (user?.retira_pendente == true) tabPanel(tabRetiraPendente)
+      if (user?.retira_impressoComNota == true) tabPanel(tabRetiraImpressoComNota)
     }
-    
+
   }
-  
+
   override fun showRelatorioPedidoMinuta(pedidos: List<Pedido>) {
     val byteArray = RelatorioPedido.processaPedidosMinutaCompacta(pedidos)
     showRelatorio(byteArray)
   }
-  
+
   override fun showRelatorioPedido(pedidos: List<Pedido>) {
     val byteArray = RelatorioPedido.processaPedidosMinutaCompacta(pedidos)
     showRelatorio(byteArray)
   }
-  
+
   private fun showRelatorio(byteArray: ByteArray) {
     val chave = "PedidoRetira"
     SubWindowPDF(chave, byteArray).open()

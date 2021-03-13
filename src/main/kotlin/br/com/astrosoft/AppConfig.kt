@@ -9,9 +9,9 @@ object AppConfig {
   const val title = "Pedido Entrega e Retira"
   const val shortName = "Pedido"
   const val iconPath = "icons/logo.png"
-  
+
   val userDetails get() = SecurityUtils.userDetails
   val userSaci get() = userDetails?.userSaci
-  
+
   val isAdmin get() = userSaci?.admin == true
 }

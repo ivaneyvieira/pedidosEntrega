@@ -7,22 +7,20 @@ import com.vaadin.flow.server.VaadinServiceInitListener
 import org.springframework.stereotype.Component
 
 @Component
-class ConfigureUIServiceInitListener: VaadinServiceInitListener {
+class ConfigureUIServiceInitListener : VaadinServiceInitListener {
   override fun serviceInit(event: ServiceInitEvent) {
-    event.source
-      .addUIInitListener {uiEvent: UIInitEvent ->
+    event.source.addUIInitListener { uiEvent: UIInitEvent ->
         val ui = uiEvent.ui
-        ui.addBeforeEnterListener {event: BeforeEnterEvent ->
+        ui.addBeforeEnterListener { event: BeforeEnterEvent ->
           authenticateNavigation(event)
         }
       }
   }
-  
+
   private fun authenticateNavigation(event: BeforeEnterEvent) {
-    if(canReroute(event))
-      event.rerouteTo(LoginView::class.java)
+    if (canReroute(event)) event.rerouteTo(LoginView::class.java)
   }
-  
-  private fun canReroute(event: BeforeEnterEvent) = LoginView::class.java != event.navigationTarget
-                                                    && !SecurityUtils.isUserLoggedIn
+
+  private fun canReroute(event: BeforeEnterEvent) =
+    LoginView::class.java != event.navigationTarget && !SecurityUtils.isUserLoggedIn
 }

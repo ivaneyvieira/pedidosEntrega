@@ -16,29 +16,29 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 
-class TabECommerceImpressoComNota(val viewModel: PedidoECommerceImpressoComNotaViewModel):
-  TabPanelGrid<Pedido>(), IPedidoECommerceImpressoComNota {
+class TabECommerceImpressoComNota(val viewModel: PedidoECommerceImpressoComNotaViewModel) :
+  TabPanelGrid<Pedido>(),
+  IPedidoECommerceImpressoComNota {
   private lateinit var edtPedidoImpressoComNota: TextField
   override val label = "Editor de nota"
-  
+
   override fun updateComponent() {
     viewModel.updateGridImpressoComNota()
   }
-  
+
   override val pedidoImpressoComNota: Int
     get() = edtPedidoImpressoComNota.value?.toIntOrNull() ?: 0
-  
+
   override fun classPanel() = Pedido::class
-  
+
   override fun HorizontalLayout.toolBarConfig() {
-    if(AppConfig.isAdmin)
-      button("Desmarcar") {
-        icon = CLOSE.create()
-        addClickListener {
-          viewModel.desmarcaComNota()
-        }
+    if (AppConfig.isAdmin) button("Desmarcar") {
+      icon = CLOSE.create()
+      addClickListener {
+        viewModel.desmarcaComNota()
       }
-    
+    }
+
     edtPedidoImpressoComNota = textField("Número Pedido") {
       this.valueChangeMode = TIMEOUT
       this.isAutofocus = true
@@ -47,7 +47,7 @@ class TabECommerceImpressoComNota(val viewModel: PedidoECommerceImpressoComNotaV
       }
     }
   }
-  
+
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
     pedidoLoja()

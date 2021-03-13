@@ -1,5 +1,4 @@
-package br.com.astrosoft.framework.model
-/*
+package br.com.astrosoft.framework.model/*
 object RegistryUserInfo {
   var loginInfoProvider: LoginInfoProvider? = null
   val version = SystemUtils.readFile("/versao.txt") ?: "1.0"

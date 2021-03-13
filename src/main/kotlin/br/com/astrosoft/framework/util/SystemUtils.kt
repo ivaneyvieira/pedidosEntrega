@@ -18,7 +18,7 @@ object SystemUtils {
   private val enviroment = System.getenv()
   fun variable(variable: String, def: String): String {
     val envResult = enviroment[variable]
-    return if(envResult == null || envResult.trim {it <= ' '} == "") {
+    return if (envResult == null || envResult.trim { it <= ' ' } == "") {
       def
     }
     else envResult
@@ -26,18 +26,18 @@ object SystemUtils {
 
   fun resize(imagem: ByteArray?, width: Int, height: Int): ByteArray? {
     return try {
-      if(imagem == null) return null
+      if (imagem == null) return null
       val bImagemIn = toBufferedImage(imagem) ?: return null
       val bimage = Scalr.resize(bImagemIn, Method.QUALITY, Mode.FIT_TO_WIDTH, width, height)
       toByteArray(bimage)
-    } catch(e: IOException) {
+    } catch (e: IOException) {
       ByteArray(0)
     }
   }
 
   @Throws(IOException::class)
   private fun toBufferedImage(imagem: ByteArray?): BufferedImage? {
-    if(imagem == null) return null
+    if (imagem == null) return null
     val inputStream = ByteArrayInputStream(imagem)
     return ImageIO.read(inputStream)
   }
@@ -55,23 +55,24 @@ object SystemUtils {
   fun getResourceAsStream(name: String?): InputStream? {
     var nameRet = name
     nameRet = resolveName(nameRet)
-    val cl = SystemUtils::class.java.classLoader ?: return ClassLoader.getSystemResourceAsStream(nameRet)
+    val cl =
+      SystemUtils::class.java.classLoader ?: return ClassLoader.getSystemResourceAsStream(nameRet)
     return cl.getResourceAsStream(nameRet)
   }
 
   private fun resolveName(name: String?): String? {
     var nameRet = name
-    if(nameRet == null) {
+    if (nameRet == null) {
       return nameRet
     }
-    if(!nameRet.startsWith("/")) {
+    if (!nameRet.startsWith("/")) {
       var c: Class<*> = SystemUtils::class.java
-      while(c.isArray) {
+      while (c.isArray) {
         c = c.componentType
       }
       val baseName = c.name
       val index = baseName.lastIndexOf('.')
-      if(index != -1) {
+      if (index != -1) {
         nameRet = baseName.substring(0, index).replace('.', '/') + "/" + nameRet
       }
     }

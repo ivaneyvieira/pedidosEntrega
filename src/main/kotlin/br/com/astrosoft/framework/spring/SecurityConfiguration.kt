@@ -12,7 +12,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfiguration: WebSecurityConfigurerAdapter() {
+class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   @Throws(Exception::class)
   override fun configure(http: HttpSecurity) {
     http.csrf()
@@ -21,7 +21,7 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
       .requestCache(CustomRequestCache())
       .and()
       .authorizeRequests()
-      .requestMatchers(RequestMatcher {request ->
+      .requestMatchers(RequestMatcher { request ->
         SecurityUtils.isFrameworkInternalRequest(request)
       })
       .permitAll()
@@ -37,20 +37,19 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
       .logout()
       .logoutSuccessUrl(LOGOUT_SUCCESS_URL)
   }
-  
+
   @Bean
   public override fun userDetailsService(): UserDetailsService {
     return UserSaciDetailsService()
   }
-  
+
   @Bean
   fun passwordEncoder(): PasswordEncoder? {
     return passwordNoEncoder
   }
-  
+
   override fun configure(web: WebSecurity) {
-    web.ignoring()
-      .antMatchers(
+    web.ignoring().antMatchers(
         "/VAADIN/**",
         "/favicon.ico",
         "/robots.txt",
@@ -60,9 +59,10 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
         "/icons/**",
         "/images/**",
         "/styles/**",
-        "/h2-console/**")
+        "/h2-console/**"
+                              )
   }
-  
+
   companion object {
     private const val LOGIN_PROCESSING_URL = "/login"
     private const val LOGIN_FAILURE_URL = "/login?error"
@@ -72,7 +72,8 @@ class SecurityConfiguration: WebSecurityConfigurerAdapter() {
   }
 }
 
-class PasswordNoEncoder: PasswordEncoder {
+class PasswordNoEncoder : PasswordEncoder {
   override fun encode(rawPassword: CharSequence?) = rawPassword?.toString()
-  override fun matches(rawPassword: CharSequence?, encodedPassword: String?) = rawPassword.toString() == encodedPassword
+  override fun matches(rawPassword: CharSequence?, encodedPassword: String?) =
+    rawPassword.toString() == encodedPassword
 }

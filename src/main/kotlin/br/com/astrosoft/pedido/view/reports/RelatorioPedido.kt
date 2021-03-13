@@ -6,18 +6,11 @@ import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.ProdutoPedido
 import br.com.astrosoft.pedido.view.reports.Templates.columnStyle
 import net.sf.dynamicreports.jasper.builder.JasperReportBuilder
-import net.sf.dynamicreports.report.builder.DynamicReports.cmp
-import net.sf.dynamicreports.report.builder.DynamicReports.col
-import net.sf.dynamicreports.report.builder.DynamicReports.report
-import net.sf.dynamicreports.report.builder.DynamicReports.sbt
-import net.sf.dynamicreports.report.builder.DynamicReports.stl
-import net.sf.dynamicreports.report.builder.DynamicReports.type
+import net.sf.dynamicreports.report.builder.DynamicReports.*
 import net.sf.dynamicreports.report.builder.column.ColumnBuilder
 import net.sf.dynamicreports.report.builder.component.ComponentBuilder
 import net.sf.dynamicreports.report.builder.subtotal.SubtotalBuilder
-import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.CENTER
-import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.LEFT
-import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.RIGHT
+import net.sf.dynamicreports.report.constant.HorizontalTextAlignment.*
 import net.sf.dynamicreports.report.constant.Position
 import net.sf.jasperreports.engine.export.JRPdfExporter
 import net.sf.jasperreports.export.SimpleExporterInput
@@ -25,47 +18,34 @@ import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput
 import java.io.ByteArrayOutputStream
 
 class RelatorioPedido(val pedido: Pedido) {
-  val colCodigo =
-    col.column("Código", ProdutoPedido::codigo.name, type.stringType())
-      .apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(40)
-      }
+  val colCodigo = col.column("Código", ProdutoPedido::codigo.name, type.stringType()).apply {
+      this.setHorizontalTextAlignment(LEFT)
+      this.setFixedWidth(40)
+    }
   val colDescricao =
-    col.column("Descrição", ProdutoPedido::descricaoReport.name, type.stringType())
-      .apply {
-      }
-  val colGrade =
-    col.column("Grade", ProdutoPedido::grade.name, type.stringType())
-      .apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(50)
-      }
+    col.column("Descrição", ProdutoPedido::descricaoReport.name, type.stringType()).apply {}
+  val colGrade = col.column("Grade", ProdutoPedido::grade.name, type.stringType()).apply {
+      this.setHorizontalTextAlignment(LEFT)
+      this.setFixedWidth(50)
+    }
   val colCodBarras =
-    col.column("Cod Barras", ProdutoPedido::barcode.name, type.stringType())
-      .apply {
+    col.column("Cod Barras", ProdutoPedido::barcode.name, type.stringType()).apply {
         this.setHorizontalTextAlignment(LEFT)
         this.setFixedWidth(80)
       }
-  val colQtd =
-    col.column("Qtd", ProdutoPedido::qtd.name, type.integerType())
-      .apply {
-        this.setPattern("#,##0.####")
-        this.setFixedWidth(40)
-      }
-  val colVlUnit =
-    col.column("R$ Unit", ProdutoPedido::vlUnit.name, type.doubleType())
-      .apply {
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(80)
-      }
-  val vlTotal =
-    col.column("R$ Total", ProdutoPedido::vlTotal.name, type.doubleType())
-      .apply {
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(80)
-      }
-  
+  val colQtd = col.column("Qtd", ProdutoPedido::qtd.name, type.integerType()).apply {
+      this.setPattern("#,##0.####")
+      this.setFixedWidth(40)
+    }
+  val colVlUnit = col.column("R$ Unit", ProdutoPedido::vlUnit.name, type.doubleType()).apply {
+      this.setPattern("#,##0.00")
+      this.setFixedWidth(80)
+    }
+  val vlTotal = col.column("R$ Total", ProdutoPedido::vlTotal.name, type.doubleType()).apply {
+      this.setPattern("#,##0.00")
+      this.setFixedWidth(80)
+    }
+
   fun makeReportPedido(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()
     return report().title(titleBuider())
@@ -75,10 +55,9 @@ class RelatorioPedido(val pedido: Pedido) {
       .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
       .setDataSource(dataSource())
       .summary(pageFooterBuilder())
-      .setSubtotalStyle(stl.style()
-                          .setPadding(2)
-                          .setTopBorder(stl.pen1Point()))
-    /*
+      .setSubtotalStyle(
+        stl.style().setPadding(2).setTopBorder(stl.pen1Point())
+                       )/*
     .pageFooter(cmp.pageNumber()
                   .setHorizontalTextAlignment(RIGHT)
                   .setStyle(stl.style()
@@ -86,24 +65,24 @@ class RelatorioPedido(val pedido: Pedido) {
                               
      */
   }
-  
+
   fun makeReportMinuta(): JasperReportBuilder? {
     return report().title(titleBuiderMinutaCompacta())
       .setTemplate(Templates.reportTemplate)
       .setDataSource(listOf(pedido))
   }
-  
+
   fun titleBuiderReportDuplo(): ComponentBuilder<*, *>? {
     return verticalList {
       this.add(cmp.subreport(makeReportPedido()))
       this.add(cmp.subreport(makeReportMinuta()))
     }
   }
-  
+
   fun makeReportDuplo(): JasperReportBuilder? {
     return report().title(titleBuiderReportDuplo())
   }
-  
+
   private fun titleBuiderMinuta(): ComponentBuilder<*, *>? {
     return verticalList {
       horizontalFlowList {
@@ -174,7 +153,7 @@ class RelatorioPedido(val pedido: Pedido) {
         text("Hora", CENTER, coluna2)
       }
       breakLine()
-      
+
       horizontalFlowList {
         text("Observações motorista", LEFT)
         text("Hora Chegada:  ___________________", RIGHT)
@@ -218,44 +197,37 @@ class RelatorioPedido(val pedido: Pedido) {
       }
     }
   }
-  
+
   private fun titleBuiderMinutaCompacta(): ComponentBuilder<*, *>? {
     return verticalList {
       breakLine()
       horizontalFlowList {
         text("MINUTA DE ENTREGA", CENTER)
       }
-      
+
       text("END DE ENTREGA: ${pedido.enderecoEntrega} - ${pedido.bairroEntrega}    ${pedido.area}    ${pedido.rota}")
-      
+
       text("Observação Vendedor:")
-      val obsList = listOf(pedido.obs1, pedido.obs2, pedido.obs3, pedido.obs4,
-                           pedido.obs5, pedido.obs6, pedido.obs7).flatMap {obs ->
+      val obsList = listOf(
+        pedido.obs1, pedido.obs2, pedido.obs3, pedido.obs4, pedido.obs5, pedido.obs6, pedido.obs7
+                          ).flatMap { obs ->
         val obsFormat = obs.lpad(80, " ")
         val part1 = obsFormat.substring(1, 40)
         val part2 = obsFormat.substring(41, 80)
         listOf(part1, part2)
-      }
-                      .mapNotNull {obs ->
-                        val obsTrim = obs.trim()
-                        if(obsTrim == "" || obsTrim == ".") null else obs
-                      } + ""
-      
-      if(pedido.obs1.trim() != "")
-        text(pedido.obs1.trim())
-      if(pedido.obs2.trim() != "")
-        text(pedido.obs2.trim())
-      if(pedido.obs3.trim() != "")
-        text(pedido.obs3.trim())
-      if(pedido.obs4.trim() != "")
-        text(pedido.obs4.trim())
-      if(pedido.obs5.trim() != "")
-        text(pedido.obs5.trim())
-      if(pedido.obs6.trim() != "")
-        text(pedido.obs6.trim())
-      if(pedido.obs7.trim() != "")
-        text(pedido.obs7.trim())
-      
+      }.mapNotNull { obs ->
+          val obsTrim = obs.trim()
+          if (obsTrim == "" || obsTrim == ".") null else obs
+        } + ""
+
+      if (pedido.obs1.trim() != "") text(pedido.obs1.trim())
+      if (pedido.obs2.trim() != "") text(pedido.obs2.trim())
+      if (pedido.obs3.trim() != "") text(pedido.obs3.trim())
+      if (pedido.obs4.trim() != "") text(pedido.obs4.trim())
+      if (pedido.obs5.trim() != "") text(pedido.obs5.trim())
+      if (pedido.obs6.trim() != "") text(pedido.obs6.trim())
+      if (pedido.obs7.trim() != "") text(pedido.obs7.trim())
+
       breakLine()
       horizontalFlowList {
         text("Separador:  __________________________________", LEFT)
@@ -269,16 +241,18 @@ class RelatorioPedido(val pedido: Pedido) {
       breakLine()
       horizontalFlowList {
         text("Data Recebimento\n_____/_____/_____\n\nObservação Motorista:", CENTER, 150)
-        text("\n_____________________________________________________\nIdentificação e Assinatura do(a) Recebedor(a)",
-             CENTER)
+        text(
+          "\n_____________________________________________________\nIdentificação e Assinatura do(a) Recebedor(a)",
+          CENTER
+            )
       }
     }
   }
-  
+
   private fun pageFooterBuilder(): ComponentBuilder<*, *>? {
     return cmp.verticalList()
   }
-  
+
   private fun titleBuider(): ComponentBuilder<*, *>? {
     return verticalList {
       horizontalFlowList {
@@ -302,15 +276,13 @@ class RelatorioPedido(val pedido: Pedido) {
       }
     }
   }
-  
+
   private fun dataSource(): List<ProdutoPedido> {
-    return pedido.produtos()
-      .sortedBy {it.descricao + it.grade}
+    return pedido.produtos().sortedBy { it.descricao + it.grade }
   }
-  
+
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {
-    val style = stl.style(columnStyle)
-      .setTopBorder(stl.pen1Point())
+    val style = stl.style(columnStyle).setTopBorder(stl.pen1Point())
     return listOf(
       sbt.text("", colCodigo),
       sbt.text("", colDescricao),
@@ -322,67 +294,65 @@ class RelatorioPedido(val pedido: Pedido) {
         .setLabel("Total R$")
         .setLabelStyle(style)
         .setLabelPosition(Position.LEFT)
-        .setStyle(style))
+        .setStyle(style)
+                 )
   }
-  
+
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
     return listOf(colCodigo, colDescricao, colGrade, colCodBarras, colQtd, colVlUnit, vlTotal)
   }
-  
+
   companion object {
     fun processaPedidosMinuta(list: List<Pedido>): ByteArray {
-      val reports = list.flatMap {pedido ->
+      val reports = list.flatMap { pedido ->
         val report = RelatorioPedido(pedido)
         listOf(report.makeReportPedido(), report.makeReportMinuta())
-      }
-        .filterNotNull()
-      val jasperPrints = reports.map {jasperReportBuild ->
+      }.filterNotNull()
+      val jasperPrints = reports.map { jasperReportBuild ->
         jasperReportBuild.toJasperPrint()
       }
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-      
-      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-      
+
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out)
+
       exporter.exportReport()
       return out.toByteArray()
     }
-    
+
     fun processaPedidosMinutaCompacta(list: List<Pedido>): ByteArray {
-      val reports = list.flatMap {pedido ->
+      val reports = list.flatMap { pedido ->
         val report = RelatorioPedido(pedido)
         listOf(report.makeReportDuplo())
-      }
-        .filterNotNull()
-      val jasperPrints = reports.map {jasperReportBuild ->
+      }.filterNotNull()
+      val jasperPrints = reports.map { jasperReportBuild ->
         jasperReportBuild.toJasperPrint()
       }
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-      
-      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-      
+
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out)
+
       exporter.exportReport()
       return out.toByteArray()
     }
-    
+
     fun processaPedidos(list: List<Pedido>): ByteArray {
-      val reports = list.flatMap {pedido ->
+      val reports = list.flatMap { pedido ->
         val report = RelatorioPedido(pedido)
         listOf(report.makeReportPedido())
-      }
-        .filterNotNull()
-      val jasperPrints = reports.map {jasperReportBuild ->
+      }.filterNotNull()
+      val jasperPrints = reports.map { jasperReportBuild ->
         jasperReportBuild.toJasperPrint()
       }
       val exporter = JRPdfExporter()
       val out = ByteArrayOutputStream()
       exporter.setExporterInput(SimpleExporterInput.getInstance(jasperPrints))
-      
-      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out);
-      
+
+      exporter.exporterOutput = SimpleOutputStreamExporterOutput(out)
+
       exporter.exportReport()
       return out.toByteArray()
     }

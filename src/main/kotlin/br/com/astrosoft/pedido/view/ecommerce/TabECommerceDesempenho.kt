@@ -32,11 +32,11 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @CssImport(value = "./styles/gridTotal.css", themeFor = "vaadin-grid")
-class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel): TabPanelGrid<Entregador>(),
-                                                                                 IPedidoECommerceDesempenho {
+class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel) : TabPanelGrid<Entregador>(),
+                                                                                  IPedidoECommerceDesempenho {
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
-  
+
   private fun showDialogDetailProduto(entregador: Entregador?) {
     entregador ?: return
     val entregadorList = entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
@@ -47,32 +47,28 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
     }
     form.open()
   }
-  
+
   private fun showDialogDetailPedido(entregador: Entregador?) {
     entregador ?: return
-    val entregadorList =
-      entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
-        .groupByPedido()
-        .classificaLinhas()
+    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
+      .groupByPedido()
+      .classificaLinhas()
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {
       buttonDownloadPedidos(entregadorList)
-      buttonPdfPedido(entregadorList.filter {it.funcaoName != ""})
+      buttonPdfPedido(entregadorList.filter { it.funcaoName != "" })
     }) {
       createGridDetailPedidos(entregadorList)
     }
     form.open()
   }
-  
+
   private fun createGridDetailProdutos(entregadorList: List<EntregadorNotas>): Grid<EntregadorNotas> {
     val gridDetail = Grid(EntregadorNotas::class.java, false)
     return gridDetail.apply {
       addThemeVariants(LUMO_COMPACT)
       isMultiSort = false
-      val itens = entregadorList
-        .groupByNota()
-        .classificaLinhas()
-      setItems(itens)
-      //
+      val itens = entregadorList.groupByNota().classificaLinhas()
+      setItems(itens) //
       entregadorNotasCarganoCol()
       entregadorNotasLojaCol()
       entregadorNotasNumPedidoCol()
@@ -88,23 +84,20 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
       entregadorNotasValor()
-      
+
       setClassNameGenerator {
-        if(it.funcaoName == "")
-          if(it.classFormat == 0) "destaque1L" else "destaque2L"
-        else
-          if(it.classFormat == 0) "destaque1" else "destaque2"
+        if (it.funcaoName == "") if (it.classFormat == 0) "destaque1L" else "destaque2L"
+        else if (it.classFormat == 0) "destaque1" else "destaque2"
       }
     }
   }
-  
+
   private fun createGridDetailPedidos(entregadorList: List<EntregadorNotas>): Grid<EntregadorNotas> {
     val gridDetail = Grid(EntregadorNotas::class.java, false)
     return gridDetail.apply {
       addThemeVariants(LUMO_COMPACT)
       isMultiSort = false
-      setItems(entregadorList)
-      //
+      setItems(entregadorList) //
       entregadorNotasCarganoCol()
       entregadorNotasLojaCol()
       entregadorNotasNumPedidoCol()
@@ -116,29 +109,27 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
       entregadorNotasEntregaCol()
       entregadorNotasPisoCxs()
       entregadorNotasPisoPeso()
-      entregadorNotasValor()
-      //
+      entregadorNotasValor() //
       setClassNameGenerator {
-        if(it.funcaoName == "")
-          "destaque1L"
+        if (it.funcaoName == "") "destaque1L"
         else "destaque1"
       }
     }
   }
-  
+
   override val label = "Desempenho Entrega"
-  
+
   override fun updateComponent() {
     viewModel.updateGridECommerceDesempenho()
   }
-  
+
   override val dateI: LocalDate
     get() = edtEntregadorDateI.value ?: LocalDate.now()
   override val dateF: LocalDate
     get() = edtEntregadorDateF.value ?: LocalDate.now()
-  
+
   override fun classPanel() = Entregador::class
-  
+
   override fun HorizontalLayout.toolBarConfig() {
     buttonXlsxEntregador()
     buttonPdfEntregador()
@@ -159,14 +150,14 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
       }
     }
   }
-  
+
   override fun Grid<Entregador>.gridPanel() {
-    addColumnButton(TABLE, "Pedidos", execButton = {entregador ->
+    addColumnButton(TABLE, "Pedidos", execButton = { entregador ->
       showDialogDetailPedido(entregador)
     }, block = {
       setHeader("Pedidos")
     })
-    addColumnButton(TABLE, "Produtos", execButton = {entregador ->
+    addColumnButton(TABLE, "Produtos", execButton = { entregador ->
       showDialogDetailProduto(entregador)
     }, block = {
       setHeader("Produtos")
@@ -179,30 +170,26 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
     entregadorPisoPeso()
     entregadorValorNota()
   }
-  
+
   private fun filename(name: String, ext: String): String {
     val sdf = DateTimeFormatter.ofPattern("yyMMddHHmmss")
-    val textTime =
-      LocalDateTime.now()
-        .format(sdf)
+    val textTime = LocalDateTime.now().format(sdf)
     val filename = "$name$textTime.$ext"
     return filename
   }
-  
+
   private fun HasComponents.buttonXlsxEntregador() {
-    val button = LazyDownloadButton(FILE_EXCEL.create(),
-                                    {filename("Entregador", "xlsx")}, {
-                                      val planilha = PlanilhaEntregador()
-                                      val bytes = planilha.grava(listBeans)
-                                      ByteArrayInputStream(bytes)
-                                    }
-                                   )
+    val button = LazyDownloadButton(FILE_EXCEL.create(), { filename("Entregador", "xlsx") }, {
+      val planilha = PlanilhaEntregador()
+      val bytes = planilha.grava(listBeans)
+      ByteArrayInputStream(bytes)
+    })
     button.addThemeVariants(LUMO_SMALL)
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
     add(button)
   }
-  
+
   private fun HasComponents.buttonPdfEntregador() {
     button {
       addThemeVariants(LUMO_SMALL)
@@ -215,23 +202,20 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
       }
     }
   }
-  
+
   private fun HasComponents.buttonDownloadPedidos(lista: List<EntregadorNotas>) {
-    val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(),
-                                    {filename("Pedidos", "xlsx")},
-                                    {
-                                      val planilha = PlanilhaPedidos()
-                                      val bytes =
-                                        planilha.grava(lista)
-                                      ByteArrayInputStream(bytes)
-                                    }
-                                   )
+    val button =
+      LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Pedidos", "xlsx") }, {
+        val planilha = PlanilhaPedidos()
+        val bytes = planilha.grava(lista)
+        ByteArrayInputStream(bytes)
+      })
     button.addThemeVariants(LUMO_SMALL)
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
     add(button)
   }
-  
+
   private fun HasComponents.buttonPdfPedido(lista: List<EntregadorNotas>) {
     button {
       addThemeVariants(LUMO_SMALL)
@@ -244,23 +228,22 @@ class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel):
       }
     }
   }
-  
+
   private fun HasComponents.buttonDownloadProdutos(lista: List<EntregadorNotas>) {
-    val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(),
-                                    {filename("Produtos", "xlsx")},
-                                    {
-                                      val planilha = PlanilhaProduto()
-                                      val bytes = planilha.grava(lista.groupByNota()
-                                                                   .classificaLinhas())
-                                      ByteArrayInputStream(bytes)
-                                    }
-                                   )
+    val button =
+      LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Produtos", "xlsx") }, {
+        val planilha = PlanilhaProduto()
+        val bytes = planilha.grava(
+          lista.groupByNota().classificaLinhas()
+                                  )
+        ByteArrayInputStream(bytes)
+      })
     button.addThemeVariants(LUMO_SMALL)
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
     add(button)
   }
-  
+
   private fun showRelatorio(chave: String, byteArray: ByteArray) {
     SubWindowPDF(chave, byteArray).open()
   }

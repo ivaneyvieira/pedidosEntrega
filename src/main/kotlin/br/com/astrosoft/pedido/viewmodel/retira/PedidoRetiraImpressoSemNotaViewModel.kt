@@ -5,32 +5,30 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoRetiraImpressoSemNotaViewModel(val viewModel : PedidoRetiraViewModel) {
+class PedidoRetiraImpressoSemNotaViewModel(val viewModel: PedidoRetiraViewModel) {
   private val subView
     get() = viewModel.view.tabRetiraImpressoSemNota
+
   private fun listPedidosEntregaImpressoSemNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoSemNota
-    return Pedido.listaPedidoImpressoSemNota(RETIRA, ecommerce = false)
-      .filter {pedido ->
+    return Pedido.listaPedidoImpressoSemNota(RETIRA, ecommerce = false).filter { pedido ->
         pedido.pedido == numPedido || numPedido == 0
       }
   }
-  
+
   fun updateGridImpressoSemNota() {
     subView.updateGrid(listPedidosEntregaImpressoSemNota())
   }
-  
+
   fun desmarcaSemNota() = exec(viewModel.view) {
-    val pedidos =
-      subView.itensSelecionado()
-        .ifEmpty {fail("Não há pedido selecionado")}
-    pedidos.forEach {pedido ->
+    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    pedidos.forEach { pedido ->
       pedido.desmarcaImpresso()
     }
-    
+
     updateGridImpressoSemNota()
   }
-  
+
   fun imprimirPedidos(itensSelecionado: List<Pedido>) {
     viewModel.tabRetiraImprimirViewModel.imprimirPedidos(itensSelecionado)
   }

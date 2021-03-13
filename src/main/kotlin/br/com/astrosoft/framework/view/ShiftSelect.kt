@@ -11,19 +11,19 @@ import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.streams.toList
 
-fun <T: Any> @VaadinDsl Grid<T>.shiftSelect() {
+fun <T : Any> @VaadinDsl Grid<T>.shiftSelect() {
   var pedidoInicial: T? = null
   var pedidoFinal: T? = null
-  this.addItemClickListener {evento ->
+  this.addItemClickListener { evento ->
     val grade = evento.source
-    if(evento.isShiftKey) {
+    if (evento.isShiftKey) {
       val pedido = evento.item
-      if(pedidoInicial == null) {
+      if (pedidoInicial == null) {
         pedidoInicial = pedido
         grade.select(pedido)
       }
       else {
-        if(pedidoFinal == null) {
+        if (pedidoFinal == null) {
           val itens = list(grade)
           pedidoFinal = pedido
           val p1 = itens.indexOf(pedidoInicial!!)
@@ -48,42 +48,37 @@ fun <T: Any> @VaadinDsl Grid<T>.shiftSelect() {
   }
 }
 
-fun <T: Any> list(grade: Grid<T>): List<T> {
+fun <T : Any> list(grade: Grid<T>): List<T> {
   val dataProvider = grade.dataProvider as ListDataProvider
   val filter = dataProvider.filter
   val queryOrdem = comparator(grade)
-  return dataProvider.items.toList()
-    .filter {
+  return dataProvider.items.toList().filter {
       filter?.test(it) ?: true
-    }
-    .let {list ->
-      if(queryOrdem == null) list
+    }.let { list ->
+      if (queryOrdem == null) list
       else list.sortedWith<T>(queryOrdem)
     }
 }
 
-fun <T: Any> comparator(grade: Grid<T>): Comparator<T>? {
-  if(grade.sortOrder.isEmpty()) return null
+fun <T : Any> comparator(grade: Grid<T>): Comparator<T>? {
+  if (grade.sortOrder.isEmpty()) return null
   val sortOrder = grade.sortOrder
   val classGrid = grade.beanType.kotlin
   return comparator(sortOrder, classGrid)
 }
 
-fun <T: Any> comparator(sortOrder: List<GridSortOrder<T>>, classGrid: KClass<T>): Comparator<T>? {
-  return sortOrder.flatMap {gridSort ->
-    val sortOrdem =
-      gridSort.sorted.getSortOrder(gridSort.direction)
-        .toList()
-    val propsBean = classGrid.members.toList()
-      .filterIsInstance<KProperty1<T, Comparable<*>>>()
-    val props = sortOrdem.mapNotNull {querySortOrder ->
-      propsBean.firstOrNull {prop ->
+fun <T : Any> comparator(sortOrder: List<GridSortOrder<T>>, classGrid: KClass<T>): Comparator<T>? {
+  return sortOrder.flatMap { gridSort ->
+    val sortOrdem = gridSort.sorted.getSortOrder(gridSort.direction).toList()
+    val propsBean = classGrid.members.toList().filterIsInstance<KProperty1<T, Comparable<*>>>()
+    val props = sortOrdem.mapNotNull { querySortOrder ->
+      propsBean.firstOrNull { prop ->
         prop.name == querySortOrder.sorted
       }
     }
-    props.map {prop ->
-      when(gridSort.direction) {
-        DESCENDING -> compareByDescending {
+    props.map { prop ->
+      when (gridSort.direction) {
+        DESCENDING      -> compareByDescending {
           prop.get(it)
         }
         null, ASCENDING -> compareBy<T> {
@@ -91,8 +86,7 @@ fun <T: Any> comparator(sortOrder: List<GridSortOrder<T>>, classGrid: KClass<T>)
         }
       }
     }
-  }
-    .reduce {acc, comparator ->
+  }.reduce { acc, comparator ->
       acc.thenComparing(comparator)
     }
 }

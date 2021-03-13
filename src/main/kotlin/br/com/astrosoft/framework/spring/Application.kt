@@ -6,7 +6,7 @@ import org.springframework.boot.runApplication
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
 
 @SpringBootApplication(exclude = [ErrorMvcAutoConfiguration::class])
-class Application: SpringBootServletInitializer()
+class Application : SpringBootServletInitializer()
 
 fun main(args: Array<String>) {
   runApplication<Application>(*args)

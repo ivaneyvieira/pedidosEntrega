@@ -4,25 +4,7 @@ import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.view.pedidoArea
-import br.com.astrosoft.pedido.view.pedidoCustno
-import br.com.astrosoft.pedido.view.pedidoData
-import br.com.astrosoft.pedido.view.pedidoDataEnt
-import br.com.astrosoft.pedido.view.pedidoDataFat
-import br.com.astrosoft.pedido.view.pedidoFrete
-import br.com.astrosoft.pedido.view.pedidoHora
-import br.com.astrosoft.pedido.view.pedidoHoraEnt
-import br.com.astrosoft.pedido.view.pedidoHoraFat
-import br.com.astrosoft.pedido.view.pedidoLoja
-import br.com.astrosoft.pedido.view.pedidoNfEnt
-import br.com.astrosoft.pedido.view.pedidoNfFat
-import br.com.astrosoft.pedido.view.pedidoNum
-import br.com.astrosoft.pedido.view.pedidoObs
-import br.com.astrosoft.pedido.view.pedidoPedido
-import br.com.astrosoft.pedido.view.pedidoRota
-import br.com.astrosoft.pedido.view.pedidoUsername
-import br.com.astrosoft.pedido.view.pedidoValor
-import br.com.astrosoft.pedido.view.pedidoVendno
+import br.com.astrosoft.pedido.view.*
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaPendente
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaPendenteViewModel
 import com.github.mvysny.karibudsl.v10.datePicker
@@ -35,8 +17,8 @@ import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
 
-class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel): TabPanelGrid<Pedido>(),
-                                                                         IPedidoEntregaPendente {
+class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel) : TabPanelGrid<Pedido>(),
+                                                                          IPedidoEntregaPendente {
   private lateinit var edtPedidoPendente: TextField
   private lateinit var edtRotaPendente: TextField
   private lateinit var edtAreaPendente: TextField
@@ -44,11 +26,11 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel): TabPane
   private lateinit var gridPedidosPendente: Grid<Pedido>
   private val dataProviderPedidoPendente = ListDataProvider<Pedido>(mutableListOf())
   override val label = "Entrega Pendente"
-  
+
   override fun updateComponent() {
     viewModel.updateGridPendente()
   }
-  
+
   override val pedidoPendente: Int
     get() = edtPedidoPendente.value?.toIntOrNull() ?: 0
   override val dataPendente: LocalDate?
@@ -57,9 +39,9 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel): TabPane
     get() = edtAreaPendente.value?.toUpperCase() ?: ""
   override val rotaPendente: String
     get() = edtRotaPendente.value?.toUpperCase() ?: ""
-  
+
   override fun classPanel() = Pedido::class
-  
+
   override fun HorizontalLayout.toolBarConfig() {
     edtPedidoPendente = textField("Numero Pedido") {
       this.valueChangeMode = TIMEOUT
@@ -83,13 +65,13 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel): TabPane
     }
     edtRotaPendente = textField("Rota") {
       this.valueChangeMode = TIMEOUT
-      
+
       addValueChangeListener {
         updateComponent()
       }
     }
   }
-  
+
   override fun Grid<Pedido>.gridPanel() {
     pedidoNum()
     pedidoLoja()
@@ -98,14 +80,14 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel): TabPane
     pedidoHora()
     pedidoArea()
     pedidoRota()
-    
+
     pedidoNfFat()
     pedidoDataFat()
     pedidoHoraFat()
     pedidoNfEnt()
     pedidoDataEnt()
     pedidoHoraEnt()
-    
+
     pedidoVendno()
     pedidoFrete()
     pedidoValor()

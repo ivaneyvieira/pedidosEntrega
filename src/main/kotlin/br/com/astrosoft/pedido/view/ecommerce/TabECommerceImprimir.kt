@@ -24,18 +24,18 @@ import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
 
-class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): TabPanelGrid<Pedido>(),
-                                                                             IPedidoECommerceImprimir {
+class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel) : TabPanelGrid<Pedido>(),
+                                                                              IPedidoECommerceImprimir {
   private lateinit var edtPedidoImprimir: TextField
   private lateinit var edtRotaImprimir: TextField
   private lateinit var edtAreaImprimir: TextField
   private lateinit var edtDataImprimir: DatePicker
   override val label: String = "Imprimir"
-  
+
   override fun updateComponent() {
     viewModel.updateGridImprimir()
   }
-  
+
   override val pedidoImprimir: Int
     get() = edtPedidoImprimir.value?.toIntOrNull() ?: 0
   override val dataImprimir: LocalDate?
@@ -44,9 +44,9 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     get() = edtAreaImprimir.value?.toUpperCase() ?: ""
   override val rotaImprimir: String
     get() = edtRotaImprimir.value?.toUpperCase() ?: ""
-  
+
   override fun classPanel() = Pedido::class
-  
+
   override fun HorizontalLayout.toolBarConfig() {
     button("Imprimir") {
       icon = PRINT.create()
@@ -54,21 +54,20 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
         viewModel.imprimirPedidoMinuta()
       }
     }
-    if(AppConfig.isAdmin)
-      button("Visualizar") {
-        icon = EYE.create()
-        addClickListener {
-          viewModel.imprimirPedidos(itensSelecionado())
-        }
+    if (AppConfig.isAdmin) button("Visualizar") {
+      icon = EYE.create()
+      addClickListener {
+        viewModel.imprimirPedidos(itensSelecionado())
       }
-    
+    }
+
     button("Confirma") {
       icon = THUMBS_UP.create()
       addClickListener {
         viewModel.confirmaPrint()
       }
     }
-    
+
     edtPedidoImprimir = textField("Numero Pedido") {
       this.valueChangeMode = TIMEOUT
       this.isAutofocus = true
@@ -78,7 +77,7 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     }
     edtDataImprimir = datePicker("Data") {
       localePtBr()
-      setClearButtonVisible(true)
+      isClearButtonVisible = true
       addValueChangeListener {
         viewModel.updateGridImprimir()
       }
@@ -91,13 +90,13 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     }
     edtRotaImprimir = textField("Rota") {
       this.valueChangeMode = TIMEOUT
-      
+
       addValueChangeListener {
         viewModel.updateGridImprimir()
       }
     }
   }
-  
+
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
     pedidoNum()
@@ -109,14 +108,14 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     pedidoHora()
     pedidoArea()
     pedidoRota()
-    
+
     pedidoNfFat()
     pedidoDataFat()
     pedidoHoraFat()
     pedidoNfEnt()
     pedidoDataEnt()
     pedidoHoraEnt()
-    
+
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
@@ -124,9 +123,11 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     pedidoObs()
     pedidoUsername()
     this.shiftSelect()
-    this.sort(listOf(
-      GridSortOrder(getColumnBy(Pedido::loja), ASCENDING),
-      GridSortOrder(getColumnBy(Pedido::pedido), DESCENDING))
+    this.sort(
+      listOf(
+        GridSortOrder(getColumnBy(Pedido::loja), ASCENDING),
+        GridSortOrder(getColumnBy(Pedido::pedido), DESCENDING)
+            )
              )
   }
 }

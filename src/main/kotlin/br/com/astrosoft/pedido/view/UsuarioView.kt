@@ -1,17 +1,10 @@
 package br.com.astrosoft.pedido.view
 
+import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.viewmodel.IUsuarioView
 import br.com.astrosoft.pedido.viewmodel.UsuarioViewModel
-import br.com.astrosoft.framework.view.ViewLayout
-import com.github.mvysny.karibudsl.v10.alignSelf
-import com.github.mvysny.karibudsl.v10.button
-import com.github.mvysny.karibudsl.v10.checkBox
-import com.github.mvysny.karibudsl.v10.formLayout
-import com.github.mvysny.karibudsl.v10.horizontalLayout
-import com.github.mvysny.karibudsl.v10.hr
-import com.github.mvysny.karibudsl.v10.integerField
-import com.github.mvysny.karibudsl.v10.textField
+import com.github.mvysny.karibudsl.v10.*
 import com.vaadin.flow.component.ClickEvent
 import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.ComponentEventListener
@@ -31,102 +24,96 @@ import com.vaadin.flow.router.PageTitle
 import com.vaadin.flow.router.Route
 import org.claspina.confirmdialog.ConfirmDialog
 import org.vaadin.crudui.crud.CrudOperation
-import org.vaadin.crudui.crud.CrudOperation.ADD
-import org.vaadin.crudui.crud.CrudOperation.DELETE
-import org.vaadin.crudui.crud.CrudOperation.READ
-import org.vaadin.crudui.crud.CrudOperation.UPDATE
+import org.vaadin.crudui.crud.CrudOperation.*
 import org.vaadin.crudui.crud.impl.GridCrud
 import org.vaadin.crudui.form.AbstractCrudFormFactory
 import org.vaadin.gatanaso.MultiselectComboBox
 
 @Route(layout = PedidoEntregaLayout::class, value = "usuario")
 @PageTitle("Usuário")
-class UsuarioView: ViewLayout<UsuarioViewModel>(), IUsuarioView {
+class UsuarioView : ViewLayout<UsuarioViewModel>(), IUsuarioView {
   override val viewModel = UsuarioViewModel(this)
-  
+
   override fun isAccept(user: UserSaci) = user.admin
-  
+
   init {
     form("Editor de usuários")
     setSizeFull()
-    val crud: GridCrud<UserSaci> = gridCrud()
-    // layout configuration
+    val crud: GridCrud<UserSaci> = gridCrud() // layout configuration
     setSizeFull()
-    this.add(crud)
-    // logic configuration
+    this.add(crud) // logic configuration
     setOperationd(crud)
   }
-  
+
   private fun gridCrud(): GridCrud<UserSaci> {
     val crud: GridCrud<UserSaci> = GridCrud<UserSaci>(UserSaci::class.java)
-    crud.grid
-      .setColumns(UserSaci::no.name, UserSaci::login.name, UserSaci::name.name, UserSaci::impressora.name)
-    
+    crud.grid.setColumns(
+        UserSaci::no.name,
+        UserSaci::login.name,
+        UserSaci::name.name,
+        UserSaci::impressora.name
+                        )
+
     crud.grid.addThemeVariants(LUMO_COMPACT)
-    
+
     crud.crudFormFactory = UserCrudFormFactory(viewModel)
     crud.setSizeFull()
     return crud
   }
-  
+
   private fun setOperationd(crud: GridCrud<UserSaci>) {
-    crud.setOperations(
-      {viewModel.findAll()},
-      {user: UserSaci -> viewModel.add(user)},
-      {user: UserSaci? -> viewModel.update(user)},
-      {user: UserSaci? -> viewModel.delete(user)})
+    crud.setOperations({ viewModel.findAll() },
+      { user: UserSaci -> viewModel.add(user) },
+      { user: UserSaci? -> viewModel.update(user) },
+      { user: UserSaci? -> viewModel.delete(user) })
   }
-  
+
   private fun Grid<UserSaci>.addColumnBool(caption: String, value: UserSaci.() -> Boolean) {
-    val column = this.addComponentColumn {bean ->
-      if(bean.value()) CHECK_CIRCLE_O.create()
+    val column = this.addComponentColumn { bean ->
+      if (bean.value()) CHECK_CIRCLE_O.create()
       else CIRCLE_THIN.create()
     }
     column.setHeader(caption)
     column.textAlign = ColumnTextAlign.CENTER
   }
-  
-  
+
 }
 
-class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrudFormFactory<UserSaci>() {
+class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCrudFormFactory<UserSaci>() {
   private lateinit var comboAbreviacao: MultiselectComboBox<String>
-  
-  override fun buildNewForm(operation: CrudOperation?,
-                            domainObject: UserSaci?,
-                            readOnly: Boolean,
-                            cancelButtonClickListener: ComponentEventListener<ClickEvent<Button>>?,
-                            operationButtonClickListener: ComponentEventListener<ClickEvent<Button>>?): Component {
+
+  override fun buildNewForm(
+    operation: CrudOperation?,
+    domainObject: UserSaci?,
+    readOnly: Boolean,
+    cancelButtonClickListener: ComponentEventListener<ClickEvent<Button>>?,
+    operationButtonClickListener: ComponentEventListener<ClickEvent<Button>>?
+                           ): Component {
     val binder = Binder<UserSaci>(UserSaci::class.java)
     return VerticalLayout().apply {
       isSpacing = false
       isMargin = false
       formLayout {
-        if(operation in listOf(READ, DELETE, UPDATE))
-          integerField("Número") {
-            isReadOnly = true
-            binder.bind(this, UserSaci::no.name)
-          }
-        if(operation in listOf(ADD, READ, DELETE, UPDATE))
-          textField("Login") {
-            binder.bind(this, UserSaci::login.name)
-          }
-        if(operation in listOf(READ, DELETE, UPDATE))
-          textField("Nome") {
-            isReadOnly = true
-            binder.bind(this, UserSaci::name.name)
-          }
-        if(operation in listOf(READ, DELETE, UPDATE))
-          textField("Impressora") {
-            isReadOnly = true
-            binder.bind(this, UserSaci::impressora.name)
-          }
-        if(operation in listOf(READ, DELETE, UPDATE))
-          integerField("Número Loja") {
-            isReadOnly = false
-            binder.bind(this, UserSaci::storeno.name)
-          }
-        if(operation in listOf(ADD, READ, DELETE, UPDATE)) {
+        if (operation in listOf(READ, DELETE, UPDATE)) integerField("Número") {
+          isReadOnly = true
+          binder.bind(this, UserSaci::no.name)
+        }
+        if (operation in listOf(ADD, READ, DELETE, UPDATE)) textField("Login") {
+          binder.bind(this, UserSaci::login.name)
+        }
+        if (operation in listOf(READ, DELETE, UPDATE)) textField("Nome") {
+          isReadOnly = true
+          binder.bind(this, UserSaci::name.name)
+        }
+        if (operation in listOf(READ, DELETE, UPDATE)) textField("Impressora") {
+          isReadOnly = true
+          binder.bind(this, UserSaci::impressora.name)
+        }
+        if (operation in listOf(READ, DELETE, UPDATE)) integerField("Número Loja") {
+          isReadOnly = false
+          binder.bind(this, UserSaci::storeno.name)
+        }
+        if (operation in listOf(ADD, READ, DELETE, UPDATE)) {
           checkBox("Entrega Imprimir") {
             binder.bind(this, UserSaci::entrega_imprimir.name)
           }
@@ -142,7 +129,7 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrud
           checkBox("Desempenho Entrega") {
             binder.bind(this, UserSaci::entrega_entregador.name)
           }
-  
+
           checkBox("Retira Imprimir") {
             binder.bind(this, UserSaci::retira_imprimir.name)
           }
@@ -175,22 +162,22 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel): AbstractCrud
           addClickListener(cancelButtonClickListener)
         }
       }
-      
+
       binder.readBean(domainObject)
     }
   }
-  
+
   override fun buildCaption(operation: CrudOperation?, domainObject: UserSaci?): String {
-    return operation?.let {crudOperation ->
-      when(crudOperation) {
-        READ   -> "Consulta"
-        ADD    -> "Adiciona"
+    return operation?.let { crudOperation ->
+      when (crudOperation) {
+        READ -> "Consulta"
+        ADD -> "Adiciona"
         UPDATE -> "Atualiza"
         DELETE -> "Remove"
       }
     } ?: "Erro"
   }
-  
+
   override fun showError(operation: CrudOperation?, e: Exception?) {
     ConfirmDialog.createError()
       .withCaption("Erro do aplicativo")

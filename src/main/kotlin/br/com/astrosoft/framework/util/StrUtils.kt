@@ -5,21 +5,21 @@ import java.text.DecimalFormat
 private val formatNumber = DecimalFormat("#,##0.00")
 private val formatInteger = DecimalFormat("#,##0")
 
-fun Double?.format() : String{
+fun Double?.format(): String {
   this ?: return ""
   return formatNumber.format(this)
 }
 
-fun Int?.format() : String{
+fun Int?.format(): String {
   this ?: return ""
   return formatInteger.format(this)
 }
 
 fun String?.lpad(size: Int, filler: String): String {
   var str = this ?: ""
-  if(str.length > size) return str.substring(0, size)
+  if (str.length > size) return str.substring(0, size)
   val buf = StringBuilder(str)
-  while(buf.length < size) buf.insert(0, filler)
+  while (buf.length < size) buf.insert(0, filler)
 
   str = buf.toString()
   return str
@@ -27,19 +27,19 @@ fun String?.lpad(size: Int, filler: String): String {
 
 fun String?.rpad(size: Int, filler: String): String {
   val str = this ?: ""
-  if(str.length > size) return str.substring(0, size)
+  if (str.length > size) return str.substring(0, size)
   val buf = StringBuilder(str)
-  while(buf.length < size) buf.append(filler)
+  while (buf.length < size) buf.append(filler)
 
   return buf.toString()
 }
 
 fun String?.trimNull(): String {
-  return this?.trim {it <= ' '} ?: ""
+  return this?.trim { it <= ' ' } ?: ""
 }
 
 fun String.mid(start: Int, len: Int): String {
-  return if(this == "") ""
+  return if (this == "") ""
   else {
     val end = start + len
     val pStart = when {
@@ -52,7 +52,7 @@ fun String.mid(start: Int, len: Int): String {
       end > length -> length
       else         -> end
     }
-    if(pStart <= pEnd) substring(pStart, pEnd)
+    if (pStart <= pEnd) substring(pStart, pEnd)
     else ""
   }
 }
@@ -64,9 +64,8 @@ fun String.mid(start: Int): String {
 fun parameterNames(sql: String): List<String> {
   val regex = Regex(":([a-zA-Z0-9_]+)")
   val matches = regex.findAll(sql)
-  return matches.map {it.groupValues}.toList().flatten().filter {!it.startsWith(":")}
-}
-/*
+  return matches.map { it.groupValues }.toList().flatten().filter { !it.startsWith(":") }
+}/*
 @Suppress("UNCHECKED_CAST")
 fun readInstanceProperty(instance: Any, propertyName: String): Any? {
   val property = instance::class.memberProperties

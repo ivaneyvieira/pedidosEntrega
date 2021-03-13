@@ -20,7 +20,7 @@ typealias QueryHandle = Query.() -> Unit
 
 open class QueryDB(driver: String, url: String, username: String, password: String) {
   protected val sql2o: Sql2o
-  
+
   init {
     registerDriver(driver)
     val config = HikariConfig()
@@ -38,15 +38,14 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
     maps[LocalTime::class.java] = LocalSqlTimeConverter()
     this.sql2o = Sql2o(url, username, password, NoQuirks(maps))
   }
-  
+
   private fun registerDriver(driver: String) {
     try {
       Class.forName(driver)
-    } catch(e: ClassNotFoundException) {
-      //throw RuntimeException(e)
+    } catch (e: ClassNotFoundException) { //throw RuntimeException(e)
     }
   }
-  
+
   /*
   private inline fun <reified T> buildQuery(file: String, proc: (Connection, Query) -> List<T>): List<T> {
    
@@ -62,69 +61,72 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
       }
   }
   */
-  protected fun <T: Any> query(file: String, classes: KClass<T>, lambda: QueryHandle = {}): List<T> {
+  protected fun <T : Any> query(
+    file: String,
+    classes: KClass<T>,
+    lambda: QueryHandle = {}
+                               ): List<T> {
     val statements = toStratments(file)
-    if(statements.isEmpty()) return emptyList()
+    if (statements.isEmpty()) return emptyList()
     val lastIndex = statements.lastIndex
     val query = statements[lastIndex]
-    val updates = if(statements.size > 1) statements.subList(0, lastIndex) else emptyList()
-    return transaction {con ->
+    val updates = if (statements.size > 1) statements.subList(0, lastIndex) else emptyList()
+    return transaction { con ->
       scriptSQL(con, updates, lambda)
       val ret: List<T> = querySQL(con, query, classes, lambda)
       ret
     }
   }
-  
-  private fun <T: Any> querySQL(con: Connection, sql: String?, classes: KClass<T>,
-                                lambda: QueryHandle = {}): List<T> {
+
+  private fun <T : Any> querySQL(
+    con: Connection, sql: String?, classes: KClass<T>, lambda: QueryHandle = {}
+                                ): List<T> {
     val query = con.createQuery(sql)
     query.lambda()
     println(sql)
     return query.executeAndFetch(classes.java)
   }
-  
+
   protected fun script(file: String, lambda: QueryHandle = {}) {
     val stratments = toStratments(file)
-    transaction {con ->
+    transaction { con ->
       scriptSQL(con, stratments, lambda)
     }
   }
-  
+
   fun toStratments(file: String): List<String> {
-    return if(file.startsWith("/"))
-      readFile(file)?.split(";")
-        .orEmpty()
-        .filter {it.isNotBlank() || it.isNotEmpty()}
+    return if (file.startsWith("/")) readFile(file)?.split(";")
+      .orEmpty()
+      .filter { it.isNotBlank() || it.isNotEmpty() }
     else listOf(file)
   }
-  
+
   private fun scriptSQL(con: Connection, stratments: List<String>, lambda: QueryHandle = {}) {
-    stratments.forEach {sql ->
+    stratments.forEach { sql ->
       val query = con.createQuery(sql)
       query.lambda()
       query.executeUpdate()
       println(sql)
     }
   }
-  
+
   fun Query.addOptionalParameter(name: String, value: String?): Query {
-    if(this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
+    if (this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
     return this
   }
-  
+
   fun Query.addOptionalParameter(name: String, value: Int): Query {
-    if(this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
+    if (this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
     return this
   }
-  
+
   fun Query.addOptionalParameter(name: String, value: Double): Query {
-    if(this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
+    if (this.paramNameToIdxMap.containsKey(name)) this.addParameter(name, value)
     return this
   }
-  
+
   private fun <T> transaction(block: (Connection) -> T): T {
-    return sql2o.beginTransaction()
-      .use {con ->
+    return sql2o.beginTransaction().use { con ->
         val ret = block(con)
         con.commit()
         ret
@@ -132,28 +134,28 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
   }
 }
 
-class LocalDateConverter: Converter<LocalDate?> {
+class LocalDateConverter : Converter<LocalDate?> {
   @Throws(ConverterException::class)
   override fun convert(value: Any?): LocalDate? {
-    if(value !is Date) return null
+    if (value !is Date) return null
     return value.toLocalDate()
   }
-  
+
   override fun toDatabaseParam(value: LocalDate?): Any? {
     value ?: return null
-    return Date(value.atStartOfDay()
-                  .toInstant(ZoneOffset.UTC)
-                  .toEpochMilli())
+    return Date(
+      value.atStartOfDay().toInstant(ZoneOffset.UTC).toEpochMilli()
+               )
   }
 }
 
-class LocalSqlTimeConverter: Converter<LocalTime?> {
+class LocalSqlTimeConverter : Converter<LocalTime?> {
   @Throws(ConverterException::class)
   override fun convert(value: Any?): LocalTime? {
-    if(value !is Time) return null
+    if (value !is Time) return null
     return value.toLocalTime()
   }
-  
+
   override fun toDatabaseParam(value: LocalTime?): Any? {
     value ?: return null
     return Time.valueOf(value)

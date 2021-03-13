@@ -21,7 +21,8 @@ class PedidoECommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoEComm
   override val tabECommerceImprimir = TabECommerceImprimir(viewModel.tabECommerceImprimirViewModel)
   override val tabECommerceImpressoSemNota =
     TabECommerceImpressoSemNota(viewModel.tabECommerceImpressoSemNotaViewModel)
-  override val tabECommercePendente = TabECommercePendente(viewModel.tabECommercePendenteViewModel)
+  //override val tabECommercePendente = TabECommercePendente(viewModel
+  // .tabECommercePendenteViewModel)
   override val tabECommerceImpressoComNota =
     TabECommerceImpressoComNota(viewModel.tabECommerceImpressoComNotaViewModel)
   override val tabECommerceDesempenho = TabECommerceDesempenho(
@@ -36,7 +37,7 @@ class PedidoECommerceView : ViewLayout<PedidoECommerceViewModel>(), IPedidoEComm
       setSizeFull()
       if (user?.admin == true) tabPanel(tabECommerceImprimir)
       if (user?.admin == true) tabPanel(tabECommerceImpressoSemNota)
-      if (user?.admin == true) tabPanel(tabECommercePendente)
+      //if (user?.admin == true) tabPanel(tabECommercePendente)
       if (user?.admin == true) tabPanel(tabECommerceImpressoComNota)
       if (user?.admin == true) tabPanel(tabECommerceDesempenho)
     }

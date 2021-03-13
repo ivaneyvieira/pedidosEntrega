@@ -103,6 +103,7 @@ class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel): Tab
     pedidoNum()
     pedidoLoja()
     pedidoPedido()
+    pedidoTipo()
     pedidoDataHoraPrint()
     pedidoData()
     pedidoHora()

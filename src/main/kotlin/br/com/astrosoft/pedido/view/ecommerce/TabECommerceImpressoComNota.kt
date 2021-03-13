@@ -52,6 +52,7 @@ class TabECommerceImpressoComNota(val viewModel: PedidoECommerceImpressoComNotaV
     setSelectionMode(SelectionMode.MULTI)
     pedidoLoja()
     pedidoPedido()
+    pedidoTipo()
     pedidoData()
     pedidoHora()
     pedidoArea()

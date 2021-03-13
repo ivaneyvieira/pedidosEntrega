@@ -269,7 +269,9 @@ FROM sqldados.eord           AS EO
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE EO.status NOT IN (0, 5)
   AND (nff.status <> 1 OR nff.status IS NULL)
-GROUP BY EO.storeno, EO.ordno;
+GROUP BY EO.storeno, EO.ordno
+HAVING (enderecoEntrega LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'R')
+    OR (enderecoEntrega NOT LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'E');
 
 SELECT loja,
        nomeLoja,

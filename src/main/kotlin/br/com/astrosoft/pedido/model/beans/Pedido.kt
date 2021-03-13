@@ -69,6 +69,8 @@ class Pedido(
     get() = numeroNota(nfnoFat, nfseFat)
   val nfEnt: String
     get() = numeroNota(nfnoEnt, nfseEnt)
+  val tipoStr
+    get() = if (tipo == "E") "Entrega" else "Retira"
 
   private fun numeroNota(nfno: String, nfse: String): String {
     return when {

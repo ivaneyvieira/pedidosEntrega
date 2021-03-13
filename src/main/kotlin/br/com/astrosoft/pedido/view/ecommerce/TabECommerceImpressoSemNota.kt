@@ -58,6 +58,7 @@ class TabECommerceImpressoSemNota(val viewModel: PedidoECommerceImpressoSemNotaV
     pedidoNum()
     pedidoLoja()
     pedidoPedido()
+    pedidoTipo()
     pedidoDataHoraPrint()
     pedidoData()
     pedidoHora()

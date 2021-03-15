@@ -66,15 +66,17 @@ SELECT DISTINCT A.cargano                                                   AS c
 		IF(O.empno = 440 AND O.storeno = 4, O.storeno, F.nfStoreno) AS storenoEnt,
 		IF(O.empno = 440 AND O.storeno = 4, O.nfno, F.nfNfno)       AS nfnoEnt,
 		IF(O.empno = 440 AND O.storeno = 4, O.nfse, F.nfNfse)       AS nfseEnt,
-		C.empno
+		C.empno,
+		O.empno                                                     AS vendedor
 FROM sqldados.awnfr          AS A
   INNER JOIN T_CARGA         AS C
 	       ON A.storenoNfr = C.storeno AND A.pdvnoNfr = C.pdvno AND A.xanoNfr = C.xano
   INNER JOIN sqldados.eord   AS O
 	       ON O.storeno = A.storenoNfr AND O.ordno = A.ordno
-  LEFT JOIN sqldados.eoprdf AS F
+  LEFT JOIN  sqldados.eoprdf AS F
 	       ON (F.storeno = O.storeno AND F.ordno = O.ordno)
-WHERE (F.nfNfno <> 0 AND F.nfNfno IS NOT NULL) OR (O.empno = 440 AND O.storeno = 4)
+WHERE (F.nfNfno <> 0 AND F.nfNfno IS NOT NULL)
+   OR (O.empno = 440 AND O.storeno = 4)
 GROUP BY storenoEnt, nfnoEnt, nfseEnt;
 
 DROP TABLE IF EXISTS T_METRICAS;
@@ -88,7 +90,8 @@ SELECT C.storeno,
        ROUND(SUM((X.price / 100) * (X.qtty)), 2)                        AS valor,
        N.grossamt / 100                                                 AS valorNota,
        N.fre_amt / 100                                                  AS valorFrete,
-       C.empno
+       C.empno,
+       C.vendedor
 FROM T_NOTAS                AS C
   LEFT JOIN  T_DATA_NOTA    AS D
 	       USING (storeno, pdvno, xano)
@@ -132,7 +135,8 @@ FROM sqldados.awnfrh        AS A
 		  A.date = CG.date AND A.time = CG.time
   INNER JOIN T_EMP          AS E
 	       ON E.empno = CG.empno
-WHERE (storenoNfr = 4 AND E.empno = 440) OR @EC = 'N';
+WHERE (storenoNfr = 4 AND vendedor = 440)
+   OR @EC = 'N';
 
 SELECT funcaoName,
        sname               AS nome,

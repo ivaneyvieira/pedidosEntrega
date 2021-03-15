@@ -48,13 +48,16 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.session:spring-session-core")
   providedRuntime("org.springframework.boot:spring-boot-starter-tomcat")
+  compileOnly("org.springframework.boot:spring-boot-devtools")
   // Vaadin-on-Kotlin dependency, includes Vaadin
   implementation("com.github.mvysny.karibudsl:karibu-dsl:${vaadinonkotlin_version}")
   // Vaadin 14
   implementation("com.vaadin:vaadin-core:${vaadin10_version}")
   implementation("com.vaadin:vaadin-spring-boot-starter:${vaadin10_version}")
   providedCompile("javax.servlet:javax.servlet-api:3.1.0")
-  
+  implementation("javax.servlet:jstl:1.2")
+  implementation("javax.servlet.jsp:jsp-api:2.2")
+
   implementation("com.zaxxer:HikariCP:3.4.1")
   // logging
   // currently we are logging through the SLF4J API to LogBack. See src/main/resources/logback.xml file for the logger configuration

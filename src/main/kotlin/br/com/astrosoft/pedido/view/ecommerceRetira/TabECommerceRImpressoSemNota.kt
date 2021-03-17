@@ -1,12 +1,12 @@
-package br.com.astrosoft.pedido.view.ecommerce
+package br.com.astrosoft.pedido.view.ecommerceRetira
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
-import br.com.astrosoft.pedido.viewmodel.ecommerce.IPedidoECommerceImpressoSemNota
-import br.com.astrosoft.pedido.viewmodel.ecommerce.PedidoECommerceImpressoSemNotaViewModel
+import br.com.astrosoft.pedido.viewmodel.ecommerceRetira.IPedidoECommerceRImpressoSemNota
+import br.com.astrosoft.pedido.viewmodel.ecommerceRetira.PedidoECommerceRImpressoSemNotaViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
@@ -17,9 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 
-class TabECommerceImpressoSemNota(val viewModel: PedidoECommerceImpressoSemNotaViewModel) :
-  TabPanelGrid<Pedido>(),
-  IPedidoECommerceImpressoSemNota {
+class TabECommerceRImpressoSemNota(val viewModel: PedidoECommerceRImpressoSemNotaViewModel) :
+  TabPanelGrid<Pedido>(), IPedidoECommerceRImpressoSemNota {
   private lateinit var edtPedidoImpressoSemNota: TextField
   override val label = "Impresso sem Nota"
 

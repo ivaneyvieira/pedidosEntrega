@@ -1,7 +1,8 @@
 package br.com.astrosoft.pedido.view
 
 import br.com.astrosoft.AppConfig
-import br.com.astrosoft.pedido.view.ecommerce.PedidoECommerceView
+import br.com.astrosoft.pedido.view.ecommerceEntrega.PedidoECommerceEView
+import br.com.astrosoft.pedido.view.ecommerceRetira.PedidoECommerceRView
 import br.com.astrosoft.pedido.view.entrega.PedidoEntregaView
 import br.com.astrosoft.pedido.view.retira.PedidoRetiraView
 import com.github.mvysny.karibudsl.v10.anchor
@@ -67,7 +68,12 @@ class PedidoEntregaLayout : AppLayout() {
         tab {
           this.isEnabled = AppConfig.isAdmin
           this.icon(CLOUD)
-          routerLink(text = "E-Commerce", viewType = PedidoECommerceView::class)
+          routerLink(text = "E-Commerce Entrega", viewType = PedidoECommerceEView::class)
+        }
+        tab {
+          this.isEnabled = AppConfig.isAdmin
+          this.icon(CLOUD)
+          routerLink(text = "E-Commerce Retira", viewType = PedidoECommerceRView::class)
         }
         tab {
           this.isEnabled = AppConfig.isAdmin

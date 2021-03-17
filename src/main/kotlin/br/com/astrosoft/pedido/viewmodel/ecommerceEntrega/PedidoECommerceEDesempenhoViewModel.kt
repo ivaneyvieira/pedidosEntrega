@@ -1,11 +1,11 @@
-package br.com.astrosoft.pedido.viewmodel.ecommerce
+package br.com.astrosoft.pedido.viewmodel.ecommerceEntrega
 
 import br.com.astrosoft.pedido.model.beans.Entregador
 import java.time.LocalDate
 
-class PedidoECommerceDesempenhoViewModel(val viewModel: PedidoECommerceViewModel) {
+class PedidoECommerceEDesempenhoViewModel(val viewModel: PedidoECommerceEViewModel) {
   private val subView
-    get() = viewModel.view.tabECommerceDesempenho
+    get() = viewModel.view.tabECommerceEDesempenho
 
   private fun listECommerceDesempenho(): List<Entregador> {
     val dateI = subView.dateI
@@ -18,7 +18,7 @@ class PedidoECommerceDesempenhoViewModel(val viewModel: PedidoECommerceViewModel
   }
 }
 
-interface IPedidoECommerceDesempenho {
+interface IPedidoECommerceEDesempenho {
   fun updateGrid(itens: List<Entregador>)
   val dateI: LocalDate
   val dateF: LocalDate

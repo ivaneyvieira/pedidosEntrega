@@ -1,13 +1,13 @@
-package br.com.astrosoft.pedido.viewmodel.ecommerce
+package br.com.astrosoft.pedido.viewmodel.ecommerceEntrega
 
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoECommerceImpressoComNotaViewModel(val viewModel: PedidoECommerceViewModel) {
+class PedidoECommerceEImpressoComNotaViewModel(val viewModel: PedidoECommerceEViewModel) {
   private val subView
-    get() = viewModel.view.tabECommerceImpressoComNota
+    get() = viewModel.view.tabECommerceEImpressoComNota
 
   private fun listPedidosECommerceImpressoComNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoComNota
@@ -30,7 +30,7 @@ class PedidoECommerceImpressoComNotaViewModel(val viewModel: PedidoECommerceView
   }
 }
 
-interface IPedidoECommerceImpressoComNota {
+interface IPedidoECommerceEImpressoComNota {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
 

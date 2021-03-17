@@ -1,12 +1,12 @@
-package br.com.astrosoft.pedido.view.ecommerce
+package br.com.astrosoft.pedido.view.ecommerceEntrega
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
-import br.com.astrosoft.pedido.viewmodel.ecommerce.IPedidoECommerceImpressoComNota
-import br.com.astrosoft.pedido.viewmodel.ecommerce.PedidoECommerceImpressoComNotaViewModel
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.IPedidoECommerceEImpressoComNota
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.PedidoECommerceEImpressoComNotaViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
@@ -16,9 +16,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 
-class TabECommerceImpressoComNota(val viewModel: PedidoECommerceImpressoComNotaViewModel) :
-  TabPanelGrid<Pedido>(),
-  IPedidoECommerceImpressoComNota {
+class TabECommerceEImpressoComNota(val viewModel: PedidoECommerceEImpressoComNotaViewModel) :
+  TabPanelGrid<Pedido>(), IPedidoECommerceEImpressoComNota {
   private lateinit var edtPedidoImpressoComNota: TextField
   override val label = "Editor de nota"
 

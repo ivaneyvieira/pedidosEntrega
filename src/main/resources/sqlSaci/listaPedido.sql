@@ -64,7 +64,6 @@ FROM sqldados.eord AS E
 WHERE (E.storeno IN (4))
   AND (E.storeno = :storeno OR :storeno = 0)
   AND (E.empno = 440)
-  AND (@TIPO = 'E')
 GROUP BY E.storeno, E.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_NORMAL;

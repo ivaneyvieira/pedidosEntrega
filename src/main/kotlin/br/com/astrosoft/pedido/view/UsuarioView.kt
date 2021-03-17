@@ -142,6 +142,29 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           checkBox("Retira Editor de Nota") {
             binder.bind(this, UserSaci::retira_impressoComNota.name)
           }
+
+          checkBox("E-Commerce Entrega Imprimir") {
+            binder.bind(this, UserSaci::ecommerceE_imprimir.name)
+          }
+          checkBox("E-Commerce Entrega Impresso sem nota") {
+            binder.bind(this, UserSaci::ecommerceE_impressoSemNota.name)
+          }
+          checkBox("E-Commerce Entrega Editor de Nota") {
+            binder.bind(this, UserSaci::ecommerceE_impressoComNota.name)
+          }
+          checkBox("E-Commerce Desempenho Entrega") {
+            binder.bind(this, UserSaci::ecommerceE_entregador.name)
+          }
+
+          checkBox("E-Commerce Retira Imprimir") {
+            binder.bind(this, UserSaci::ecommerceR_imprimir.name)
+          }
+          checkBox("E-Commerce Retira Impresso sem nota") {
+            binder.bind(this, UserSaci::ecommerceR_impressoSemNota.name)
+          }
+          checkBox("E-Commerce Retira Editor de Nota") {
+            binder.bind(this, UserSaci::ecommerceR_impressoComNota.name)
+          }
         }
       }
       hr()

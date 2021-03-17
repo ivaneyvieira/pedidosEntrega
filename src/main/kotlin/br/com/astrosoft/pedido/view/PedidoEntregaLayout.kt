@@ -66,12 +66,10 @@ class PedidoEntregaLayout : AppLayout() {
           routerLink(text = "Retira", viewType = PedidoRetiraView::class)
         }
         tab {
-          this.isEnabled = AppConfig.isAdmin
           this.icon(CLOUD)
           routerLink(text = "E-Commerce Entrega", viewType = PedidoECommerceEView::class)
         }
         tab {
-          this.isEnabled = AppConfig.isAdmin
           this.icon(CLOUD)
           routerLink(text = "E-Commerce Retira", viewType = PedidoECommerceRView::class)
         }

@@ -74,6 +74,50 @@ class UserSaci {
       bitAcesso = if (value) bitAcesso or BIT_RETIRA_IMPRESSO_SEM_NOTA
       else bitAcesso and BIT_RETIRA_IMPRESSO_SEM_NOTA.inv()
     }
+  //
+  var ecommerceE_imprimir
+    get() = (bitAcesso and BIT_ECOMMERCEE_IMPRIMIR) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCEE_IMPRIMIR
+      else bitAcesso and BIT_ECOMMERCEE_IMPRIMIR.inv()
+    }
+  var ecommerceE_impressoComNota
+    get() = (bitAcesso and BIT_ECOMMERCEE_IMPRESSO_COM_NOTA) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCEE_IMPRESSO_COM_NOTA
+      else bitAcesso and BIT_ECOMMERCEE_IMPRESSO_COM_NOTA.inv()
+    }
+  var ecommerceE_impressoSemNota
+    get() = (bitAcesso and BIT_ECOMMERCEE_IMPRESSO_SEM_NOTA) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCEE_IMPRESSO_SEM_NOTA
+      else bitAcesso and BIT_ECOMMERCEE_IMPRESSO_SEM_NOTA.inv()
+    }
+  var ecommerceE_entregador
+    get() = (bitAcesso and BIT_ECOMMERCEE_ENTREGADOR) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCEE_ENTREGADOR
+      else bitAcesso and BIT_ECOMMERCEE_ENTREGADOR.inv()
+    }
+  var ecommerceR_imprimir
+    get() = (bitAcesso and BIT_ECOMMERCER_IMPRIMIR) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCER_IMPRIMIR
+      else bitAcesso and BIT_ECOMMERCER_IMPRIMIR.inv()
+    }
+  var ecommerceR_impressoComNota
+    get() = (bitAcesso and BIT_ECOMMERCER_IMPRESSO_COM_NOTA) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCER_IMPRESSO_COM_NOTA
+      else bitAcesso and BIT_ECOMMERCER_IMPRESSO_COM_NOTA.inv()
+    }
+  var ecommerceR_impressoSemNota
+    get() = (bitAcesso and BIT_ECOMMERCER_IMPRESSO_SEM_NOTA) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ECOMMERCER_IMPRESSO_SEM_NOTA
+      else bitAcesso and BIT_ECOMMERCER_IMPRESSO_SEM_NOTA.inv()
+    }
+
   val admin
     get() = login == "ADM"
 
@@ -88,6 +132,13 @@ class UserSaci {
     private val BIT_RETIRA_PENDENTE = 2.pow(7)
     private val BIT_RETIRA_IMPRESSO_COM_NOTA = 2.pow(8)
     private val BIT_RETIRA_IMPRESSO_SEM_NOTA = 2.pow(9)
+    private val BIT_ECOMMERCEE_IMPRIMIR = 2.pow(10)
+    private val BIT_ECOMMERCEE_IMPRESSO_COM_NOTA = 2.pow(11)
+    private val BIT_ECOMMERCEE_IMPRESSO_SEM_NOTA = 2.pow(12)
+    private val BIT_ECOMMERCEE_ENTREGADOR = 2.pow(13)
+    private val BIT_ECOMMERCER_IMPRIMIR = 2.pow(14)
+    private val BIT_ECOMMERCER_IMPRESSO_COM_NOTA = 2.pow(15)
+    private val BIT_ECOMMERCER_IMPRESSO_SEM_NOTA = 2.pow(16)
 
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser().filter { it.ativo }

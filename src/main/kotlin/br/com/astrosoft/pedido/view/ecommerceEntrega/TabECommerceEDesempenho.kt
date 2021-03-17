@@ -1,4 +1,4 @@
-package br.com.astrosoft.pedido.view.ecommerce
+package br.com.astrosoft.pedido.view.ecommerceEntrega
 
 import br.com.astrosoft.framework.view.*
 import br.com.astrosoft.pedido.model.beans.*
@@ -8,8 +8,8 @@ import br.com.astrosoft.pedido.model.planilha.PlanilhaProduto
 import br.com.astrosoft.pedido.view.*
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregador
 import br.com.astrosoft.pedido.view.reports.RelatorioEntregadorPedido
-import br.com.astrosoft.pedido.viewmodel.ecommerce.IPedidoECommerceDesempenho
-import br.com.astrosoft.pedido.viewmodel.ecommerce.PedidoECommerceDesempenhoViewModel
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.IPedidoECommerceEDesempenho
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.PedidoECommerceEDesempenhoViewModel
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome
 import com.flowingcode.vaadin.addons.fontawesome.FontAwesome.Solid.FILE_EXCEL
 import com.github.mvysny.karibudsl.v10.button
@@ -32,8 +32,8 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @CssImport(value = "./styles/gridTotal.css", themeFor = "vaadin-grid")
-class TabECommerceDesempenho(val viewModel: PedidoECommerceDesempenhoViewModel) : TabPanelGrid<Entregador>(),
-                                                                                  IPedidoECommerceDesempenho {
+class TabECommerceEDesempenho(val viewModel: PedidoECommerceEDesempenhoViewModel) :
+  TabPanelGrid<Entregador>(), IPedidoECommerceEDesempenho {
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
 

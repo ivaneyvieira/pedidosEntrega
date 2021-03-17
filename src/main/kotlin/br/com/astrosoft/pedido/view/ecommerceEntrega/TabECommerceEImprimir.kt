@@ -1,4 +1,4 @@
-package br.com.astrosoft.pedido.view.ecommerce
+package br.com.astrosoft.pedido.view.ecommerceEntrega
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
@@ -6,8 +6,8 @@ import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
-import br.com.astrosoft.pedido.viewmodel.ecommerce.IPedidoECommerceImprimir
-import br.com.astrosoft.pedido.viewmodel.ecommerce.PedidoECommerceImprimirViewModel
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.IPedidoECommerceEImprimir
+import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.PedidoECommerceEImprimirViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
 import com.github.mvysny.karibudsl.v10.getColumnBy
@@ -24,8 +24,9 @@ import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
 
-class TabECommerceImprimir(val viewModel: PedidoECommerceImprimirViewModel) : TabPanelGrid<Pedido>(),
-                                                                              IPedidoECommerceImprimir {
+class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) :
+  TabPanelGrid<Pedido>(),
+                                                                               IPedidoECommerceEImprimir {
   private lateinit var edtPedidoImprimir: TextField
   private lateinit var edtRotaImprimir: TextField
   private lateinit var edtAreaImprimir: TextField

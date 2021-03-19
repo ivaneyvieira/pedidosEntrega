@@ -56,6 +56,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
     pedidoNum()
+    pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
     pedidoDataHoraPrint()

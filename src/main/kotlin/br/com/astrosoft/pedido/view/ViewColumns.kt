@@ -22,6 +22,10 @@ fun Grid<Pedido>.pedidoTipo() = addColumnString(Pedido::tipoStr) {
   this.setHeader("Tipo")
 }
 
+fun Grid<Pedido>.pedidoTipoECommerce() = addColumnString(Pedido::tipoEcommece) {
+  this.setHeader("Tipo")
+}
+
 fun Grid<Pedido>.pedidoData() = addColumnLocalDate(Pedido::data) {
   this.setHeader("Data")
   this.setSortProperty(Pedido::data.name, Pedido::loja.name, Pedido::pedido.name)

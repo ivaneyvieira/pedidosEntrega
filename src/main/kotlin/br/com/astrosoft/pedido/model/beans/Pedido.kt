@@ -82,6 +82,8 @@ class Pedido(
 
   val isEcommerce
     get() = vendno == 440 && loja == 4
+  val tipoEcommece
+    get() = if (isEcommerce) "WEB" else ""
   val paraImprimir: Boolean
     get() = (marca != "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
   val impressoSemNota: Boolean

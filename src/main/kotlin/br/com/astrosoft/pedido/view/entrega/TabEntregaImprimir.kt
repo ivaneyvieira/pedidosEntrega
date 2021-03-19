@@ -100,6 +100,7 @@ class TabEntregaImprimir(val viewModel: PedidoEntregaImprimirViewModel) : TabPan
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
     pedidoNum()
+    pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
     pedidoDataHoraPrint()

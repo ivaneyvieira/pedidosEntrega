@@ -36,7 +36,7 @@ open class QueryDB(driver: String, url: String, username: String, password: Stri
     val maps = HashMap<Class<*>, Converter<*>>()
     maps[LocalDate::class.java] = LocalDateConverter()
     maps[LocalTime::class.java] = LocalSqlTimeConverter()
-    this.sql2o = Sql2o(url, username, password, NoQuirks(maps))
+    this.sql2o = Sql2o(ds, NoQuirks(maps))
   }
 
   private fun registerDriver(driver: String) {

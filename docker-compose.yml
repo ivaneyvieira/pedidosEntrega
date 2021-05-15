@@ -4,12 +4,12 @@ services:
     image: tomcat:8
     container_name: eng_pedido_entrega2
     ports:
-      - "8083:8080"
+      - "8025:8080"
     environment:
       TZ: "America/Fortaleza"
       EBEAN_PROPS: /etc/ebean.properties
     volumes:
-      - ./build/libs/pedidosEntrega-1.0.war:/usr/local/tomcat/webapps/pedidosEntrega.war
+      - ./build/libs/producao-1.0.war:/usr/local/tomcat/webapps/pedidosEntrega.war
       - ./ebean.properties:/etc/ebean.properties
     restart: always
     networks:

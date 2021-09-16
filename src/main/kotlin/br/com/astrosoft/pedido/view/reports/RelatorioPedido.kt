@@ -257,7 +257,8 @@ class RelatorioPedido(val pedido: Pedido) {
     return verticalList {
       horizontalFlowList {
         text("ENGECOPI ${pedido.siglaLoja}", LEFT)
-        text("ROMANEIO DE SEPARAÇÃO PEDIDO DE RETIRA: ${pedido.pedido}", CENTER, 300)
+        val tipoPedido = if(pedido.tipo.startsWith("E")) "ENTREGA" else "RETIRA"
+        text("ROMANEIO DE SEPARAÇÃO PEDIDO DE $tipoPedido: ${pedido.pedido}", CENTER, 300)
         text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
       }
       horizontalFlowList {

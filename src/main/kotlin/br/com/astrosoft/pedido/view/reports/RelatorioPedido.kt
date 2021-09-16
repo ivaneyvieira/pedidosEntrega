@@ -257,7 +257,7 @@ class RelatorioPedido(val pedido: Pedido) {
     return verticalList {
       horizontalFlowList {
         text("ENGECOPI ${pedido.siglaLoja}", LEFT)
-        text("ROMANEIO DE SEPARAÇÃO PEDIDO DE ENTREGA: ${pedido.pedido}", CENTER, 300)
+        text("ROMANEIO DE SEPARAÇÃO PEDIDO DE RETIRA: ${pedido.pedido}", CENTER, 300)
         text("${pedido.data?.format()}-${pedido.hora.format()}", RIGHT)
       }
       horizontalFlowList {

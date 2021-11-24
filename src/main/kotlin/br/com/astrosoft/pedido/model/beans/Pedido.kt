@@ -198,7 +198,7 @@ fun List<Pedido>.groupRota() = this.groupBy { pedido ->
        valorFat = pedidos.sumOf { it.valorFat },
 
        frete = pedidos.sumOf { it.frete },
-
+listRota = pedidos.groupLoja(),
        listPedidos = pedidos)
 }
 

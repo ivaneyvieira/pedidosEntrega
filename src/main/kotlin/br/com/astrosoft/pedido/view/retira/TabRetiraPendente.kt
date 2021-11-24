@@ -70,7 +70,6 @@ class TabRetiraPendente(val viewModel: PedidoRetiraPendenteViewModel) : TabPanel
   }
 
   override fun Grid<Pedido>.gridPanel() {
-    pedidoNum()
     pedidoLoja()
     pedidoPedido()
     pedidoData()

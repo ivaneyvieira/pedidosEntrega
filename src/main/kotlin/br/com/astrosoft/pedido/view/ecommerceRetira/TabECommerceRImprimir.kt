@@ -10,8 +10,8 @@ import br.com.astrosoft.pedido.viewmodel.ecommerceRetira.IPedidoECommerceRImprim
 import br.com.astrosoft.pedido.viewmodel.ecommerceRetira.PedidoECommerceRImprimirViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
-import com.github.mvysny.karibudsl.v10.getColumnBy
 import com.github.mvysny.karibudsl.v10.textField
+import com.github.mvysny.kaributools.getColumnBy
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
@@ -99,7 +99,6 @@ class TabECommerceRImprimir(val viewModel: PedidoECommerceRImprimirViewModel) :
 
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
-    pedidoNum()
     pedidoLoja()
     pedidoPedido()
     pedidoTipo()

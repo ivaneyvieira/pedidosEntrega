@@ -3,19 +3,17 @@ package br.com.astrosoft.framework.view
 import com.github.mvysny.karibudsl.v10.horizontalLayout
 import com.github.mvysny.karibudsl.v10.isExpand
 import com.github.mvysny.kaributools.fetchAll
-import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.GridVariant.LUMO_COMPACT
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.orderedlayout.VerticalLayout
-import com.vaadin.flow.data.provider.ListDataProvider
+import com.vaadin.flow.component.treegrid.TreeGrid
 import kotlin.reflect.KClass
 
-abstract class TabPanelGrid<T : Any> : TabPanel<VerticalLayout> {
-  private val dataProviderPanel = ListDataProvider<T>(mutableListOf())
-  protected val gridPanel: Grid<T> = Grid(classPanel().java, false)
-  protected abstract fun classPanel(): KClass<T>
+abstract class TabPanelTree<T : Any>(classGrid: KClass<T>) : TabPanel<VerticalLayout> {
+  //private val dataProviderPanel = TreeDataProvider<T>(TreeData())
+  protected val gridPanel: TreeGrid<T> = TreeGrid()
   protected abstract fun HorizontalLayout.toolBarConfig()
-  protected abstract fun Grid<T>.gridPanel()
+  protected abstract fun TreeGrid<T>.gridPanel()
 
   override val createComponent = VerticalLayout().apply {
     this.setSizeFull()
@@ -27,7 +25,7 @@ abstract class TabPanelGrid<T : Any> : TabPanel<VerticalLayout> {
     }
 
     gridPanel.apply {
-      this.dataProvider = dataProviderPanel
+      // this.dataProvider = dataProviderPanel
       isExpand = true
       isMultiSort = true
       addThemeVariants(LUMO_COMPACT)
@@ -36,13 +34,12 @@ abstract class TabPanelGrid<T : Any> : TabPanel<VerticalLayout> {
     addAndExpand(gridPanel)
   }
 
-  fun updateGrid(itens: List<T>) {
+  fun updateGrid(itens: List<T>, findChild: (T) -> List<T>) {
     gridPanel.deselectAll()
-    dataProviderPanel.updateItens(itens)
+    gridPanel.setItems(itens, findChild)
   }
 
-  val listBeans
-    get() = dataProviderPanel.fetchAll()
+  fun listBeans() = gridPanel.dataProvider.fetchAll()
 
-  fun itensSelecionado() = gridPanel.selectedItems.toList()
+  fun itensSelecionados() = gridPanel.selectedItems.toList()
 }

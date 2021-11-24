@@ -5,10 +5,10 @@ import br.com.astrosoft.framework.view.*
 import br.com.astrosoft.pedido.model.beans.Entregador
 import br.com.astrosoft.pedido.model.beans.EntregadorNotas
 import br.com.astrosoft.pedido.model.beans.Pedido
-import com.github.mvysny.karibudsl.v10.getAll
+import br.com.astrosoft.pedido.model.beans.Rota
+import com.github.mvysny.kaributools.fetchAll
 import com.vaadin.flow.component.grid.Grid
-
-fun Grid<Pedido>.pedidoNum() = addColumnSeq("Num")
+import com.vaadin.flow.component.treegrid.TreeGrid
 
 fun Grid<Pedido>.pedidoLoja() = addColumnInt(Pedido::loja) {
   this.setHeader("Loja")
@@ -113,7 +113,7 @@ fun Grid<Entregador>.entregadorNome() = addColumnString(Entregador::nome) {
 fun Grid<Entregador>.entregadorQtdEnt() = addColumnInt(Entregador::qtdEnt) {
   this.setHeader("Qtd Ent")
   this.grid.dataProvider.addDataProviderListener {
-    val total = this.grid.dataProvider.getAll().mapNotNull {
+    val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
     }.sumBy { it.qtdEnt }
     this.setFooter(total.format())
@@ -123,7 +123,7 @@ fun Grid<Entregador>.entregadorQtdEnt() = addColumnInt(Entregador::qtdEnt) {
 fun Grid<Entregador>.entregadorPisoCxs() = addColumnInt(Entregador::pisoCxs) {
   this.setHeader("Piso Cxs")
   this.grid.dataProvider.addDataProviderListener {
-    val total = this.grid.dataProvider.getAll().mapNotNull {
+    val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
     }.sumBy { it.pisoCxs }
     this.setFooter(total.format())
@@ -133,7 +133,7 @@ fun Grid<Entregador>.entregadorPisoCxs() = addColumnInt(Entregador::pisoCxs) {
 fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso) {
   this.setHeader("Piso Peso")
   this.grid.dataProvider.addDataProviderListener {
-    val total = this.grid.dataProvider.getAll().mapNotNull {
+    val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
     }.sumByDouble { it.pisoPeso }
     this.setFooter(total.format())
@@ -144,7 +144,7 @@ fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso
 fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNota) {
   this.setHeader("Valor")
   this.grid.dataProvider.addDataProviderListener {
-    val total = this.grid.dataProvider.getAll().mapNotNull {
+    val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
     }.sumByDouble { it.valorNota }
     this.setFooter(total.format())
@@ -233,3 +233,88 @@ fun Grid<EntregadorNotas>.entregadorNotasValor() = addColumnDouble(EntregadorNot
   setHeader("Valor")
   isSortable = false
 }
+
+/****************************************/
+
+fun TreeGrid<Rota>.rotaNome() = addHierarchyColumn(Rota::nomeRota).apply {
+  setHeader("Rota")
+}
+
+fun TreeGrid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
+  setHeader("Loja")
+}
+
+fun TreeGrid<Rota>.rotaRota() = addColumnString(Rota::rota) {
+  this.setHeader("Rota")
+}
+
+fun Grid<Rota>.rotaPedido() = addColumnInt(Rota::pedido) {
+  this.setHeader("Pedido")
+}
+
+
+fun Grid<Rota>.rotaData() = addColumnLocalDate(Rota::data) {
+  this.setHeader("Data")
+  this.setSortProperty(Rota::data.name, Rota::loja.name, Rota::pedido.name)
+}
+
+fun Grid<Rota>.rotaHora() = addColumnTime(Rota::hora) {
+  this.setHeader("Hora")
+}
+
+fun Grid<Rota>.rotaArea() = addColumnString(Rota::area) {
+  this.setHeader("Área")
+}
+
+fun Grid<Rota>.rotaNfFat() = addColumnString(Rota::nfFat) {
+  this.setHeader("NF Fat")
+}
+
+fun Grid<Rota>.rotaDataFat() = addColumnLocalDate(Rota::dataFat) {
+  this.setHeader("Data")
+  this.setSortProperty(Pedido::dataFat.name, Pedido::loja.name, Rota::pedido.name)
+}
+
+fun Grid<Rota>.rotaHoraFat() = addColumnTime(Rota::horaFat) {
+  this.setHeader("Hora")
+}
+
+fun Grid<Rota>.rotaNfEnt() = addColumnString(Rota::nfEnt) {
+  this.setHeader("NF Ent")
+}
+
+fun Grid<Rota>.rotaDataEnt() = addColumnLocalDate(Rota::dataEnt) {
+  this.setHeader("Data")
+  this.setSortProperty(Rota::dataEnt.name, Rota::loja.name, Rota::pedido.name)
+}
+
+fun Grid<Rota>.rotaHoraEnt() = addColumnTime(Rota::horaEnt) {
+  this.setHeader("Hora")
+}
+
+fun Grid<Rota>.rotaVendno() = addColumnInt(Rota::vendno) {
+  this.setHeader("Vendedor")
+}
+
+fun Grid<Rota>.rotaFrete() = addColumnDouble(Rota::frete) {
+  this.setHeader("R$ Frete")
+}
+
+fun Grid<Rota>.rotaValor() = addColumnDouble(Rota::valorComFrete) {
+  this.setHeader("R$ Nota")
+}
+
+fun Grid<Rota>.rotaCustno() = addColumnInt(Rota::custno) {
+  this.setHeader("Cliente")
+}
+
+fun Grid<Rota>.rotaObs() = addColumnString(Rota::obs) {
+  this.setHeader("Obs")
+}
+
+fun Grid<Rota>.rotaUsername() = addColumnString(Rota::username) {
+  this.setHeader("Usuário")
+}
+
+
+

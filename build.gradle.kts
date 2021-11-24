@@ -3,21 +3,21 @@ import Build_gradle.Defs.vaadin10_version
 import Build_gradle.Defs.vaadinonkotlin_version
 
 object Defs {
-  const val vaadinonkotlin_version = "1.0.4"
-  const val vaadin10_version = "14.3.4"
-  const val kotlin_version = "1.4.31"
+  const val vaadinonkotlin_version = "1.1.0"
+  const val vaadin10_version = "14.6.8"
+  const val kotlin_version = "1.5.30"
+  const val vaadin_plugin = "0.14.6.0"
   const val spring_boot_version = "2.2.6.RELEASE"
-  const val vaadin_plugin = "0.14.3.7"
 }
 
 plugins {
   id("org.springframework.boot") version  "2.2.6.RELEASE"
   id("io.spring.dependency-management") version "1.0.9.RELEASE"
-  kotlin("jvm") version "1.4.31"
-  id("org.gretty") version "3.0.3"
+  kotlin("jvm") version "1.5.30"
+  id("org.gretty") version "3.0.6"
   war
-  id("com.vaadin") version "0.14.3.7"
-  kotlin("plugin.spring") version "1.4.31"
+  id("com.vaadin") version "0.14.6.0"
+  id("com.google.cloud.tools.jib") version "3.0.0"
 }
 
 defaultTasks("clean", "vaadinBuildFrontend", "build")

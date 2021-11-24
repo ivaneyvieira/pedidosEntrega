@@ -10,6 +10,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView) : ViewModel<IPedidoEntreg
   val tabEntregaPendenteViewModel = PedidoEntregaPendenteViewModel(this)
   val tabEntregaImpressoComNotaViewModel = PedidoEntregaImpressoComNotaViewModel(this)
   val tabEntregadorViewModel = PedidoEntregadorViewModel(this)
+  val tabRotaViewModel = PedidoEntregaRotaViewModel(this)
 }
 
 interface IPedidoEntregaView : IView {
@@ -18,6 +19,7 @@ interface IPedidoEntregaView : IView {
   val tabEntregaPendente: IPedidoEntregaPendente
   val tabEntregaImpressoComNota: IPedidoEntregaImpressoComNota
   val tabEntregador: IPedidoEntregador
+  val tabEntregaRota: IPedidoEntregaRota
 
   //
   fun showRelatorioPedidoMinuta(pedidos: List<Pedido>)

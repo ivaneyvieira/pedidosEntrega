@@ -56,7 +56,6 @@ class TabECommerceEImpressoSemNota(val viewModel: PedidoECommerceEImpressoSemNot
 
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
-    pedidoNum()
     pedidoLoja()
     pedidoPedido()
     pedidoTipo()

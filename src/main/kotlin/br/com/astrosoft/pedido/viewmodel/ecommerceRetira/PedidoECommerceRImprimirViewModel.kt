@@ -2,8 +2,6 @@ package br.com.astrosoft.pedido.viewmodel.ecommerceRetira
 
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
-import br.com.astrosoft.pedido.model.beans.ETipoPedido
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate

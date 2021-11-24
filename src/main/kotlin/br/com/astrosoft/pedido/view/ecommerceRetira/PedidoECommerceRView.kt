@@ -5,7 +5,6 @@ import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.tabPanel
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.view.PedidoEntregaLayout
 import br.com.astrosoft.pedido.view.reports.RelatorioPedido
 import br.com.astrosoft.pedido.viewmodel.ecommerceRetira.IPedidoECommerceRView
@@ -18,21 +17,15 @@ import com.vaadin.flow.router.Route
 @PageTitle("E-Commerce")
 class PedidoECommerceRView : ViewLayout<PedidoECommerceRViewModel>(), IPedidoECommerceRView {
   override val viewModel: PedidoECommerceRViewModel = PedidoECommerceRViewModel(this)
-  override val tabECommerceRImprimir = TabECommerceRImprimir(
-    viewModel.tabECommerceRImprimirViewModel
-                                                            )
+  override val tabECommerceRImprimir = TabECommerceRImprimir(viewModel.tabECommerceRImprimirViewModel)
   override val tabECommerceRImpressoSemNota =
-    TabECommerceRImpressoSemNota(viewModel.tabECommerceRImpressoSemNotaViewModel)
+          TabECommerceRImpressoSemNota(viewModel.tabECommerceRImpressoSemNotaViewModel)
 
   //override val tabECommercePendente = TabECommercePendente(viewModel
   // .tabECommercePendenteViewModel)
   override val tabECommerceRImpressoComNota =
-    TabECommerceRImpressoComNota(viewModel.tabECommerceRImpressoComNotaViewModel)
-  override val tabECommerceRDesempenho = TabECommerceRDesempenho(
-    viewModel.tabECommerceRDesempenhoViewModel
-                                                               )
-
-  override fun isAccept(user: UserSaci) = true
+          TabECommerceRImpressoComNota(viewModel.tabECommerceRImpressoComNotaViewModel)
+  override val tabECommerceRDesempenho = TabECommerceRDesempenho(viewModel.tabECommerceRDesempenhoViewModel)
 
   init {
     tabSheet {

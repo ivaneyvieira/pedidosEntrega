@@ -10,8 +10,8 @@ import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImprimir
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImprimirViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
-import com.github.mvysny.karibudsl.v10.getColumnBy
 import com.github.mvysny.karibudsl.v10.textField
+import com.github.mvysny.kaributools.getColumnBy
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
@@ -99,7 +99,6 @@ class TabEntregaImprimir(val viewModel: PedidoEntregaImprimirViewModel) : TabPan
 
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(SelectionMode.MULTI)
-    pedidoNum()
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()

@@ -12,7 +12,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfiguration : WebSecurityConfigurerAdapter() {
+open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   @Throws(Exception::class)
   override fun configure(http: HttpSecurity) {
     http.csrf()
@@ -44,7 +44,7 @@ class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   }
 
   @Bean
-  fun passwordEncoder(): PasswordEncoder? {
+  open fun passwordEncoder(): PasswordEncoder? {
     return passwordNoEncoder
   }
 

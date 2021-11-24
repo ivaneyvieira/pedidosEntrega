@@ -73,7 +73,6 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel) : TabPan
   }
 
   override fun Grid<Pedido>.gridPanel() {
-    pedidoNum()
     pedidoLoja()
     pedidoPedido()
     pedidoData()

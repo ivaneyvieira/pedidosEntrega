@@ -32,8 +32,6 @@ class PedidoECommerceEView : ViewLayout<PedidoECommerceEViewModel>(), IPedidoECo
     viewModel.tabECommerceEDesempenhoViewModel
                                                                )
 
-  override fun isAccept(user: UserSaci) = true
-
   init {
     tabSheet {
       val user = AppConfig.userSaci

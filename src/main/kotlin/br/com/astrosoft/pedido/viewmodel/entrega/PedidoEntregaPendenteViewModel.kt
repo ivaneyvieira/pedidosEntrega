@@ -14,12 +14,9 @@ class PedidoEntregaPendenteViewModel(val viewModel: PedidoEntregaViewModel) {
     val area = subView.areaPendente.trim()
     val rota = subView.rotaPendente.trim()
     return Pedido.listaPedidoPendente(ENTREGA, ecommerce = false).filter { pedido ->
-        (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
-          rota
-                                                                                                                        ) || rota == "") && (pedido.area.contains(
-          area
-                                                                                                                                                                 ) || area == "")
-      }
+      (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
+        rota) || rota == "") && (pedido.area.contains(area) || area == "")
+    }
   }
 
   fun updateGridPendente() {

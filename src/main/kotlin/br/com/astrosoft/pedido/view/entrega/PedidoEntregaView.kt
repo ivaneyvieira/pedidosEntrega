@@ -8,6 +8,7 @@ import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.view.PedidoEntregaLayout
 import br.com.astrosoft.pedido.view.reports.RelatorioPedido
+import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaRota
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaView
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaViewModel
 import com.github.mvysny.karibudsl.v10.tabSheet
@@ -25,8 +26,7 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
   override val tabEntregaImpressoComNota =
     TabEntregaImpressoComNota(viewModel.tabEntregaImpressoComNotaViewModel)
   override val tabEntregador = TabEntregador(viewModel.tabEntregadorViewModel)
-
-  override fun isAccept(user: UserSaci) = true
+  override val tabEntregaRota = TabEntregaRota(viewModel.tabRotaViewModel)
 
   init {
     tabSheet {
@@ -37,6 +37,7 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
       if (user?.entrega_pendente == true) tabPanel(tabEntregaPendente)
       if (user?.entrega_impressoComNota == true) tabPanel(tabEntregaImpressoComNota)
       if (user?.entrega_entregador == true) tabPanel(tabEntregador)
+      tabPanel(tabEntregaRota)
     }
 
   }

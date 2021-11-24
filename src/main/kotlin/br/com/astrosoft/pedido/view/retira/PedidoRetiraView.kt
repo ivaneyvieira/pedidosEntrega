@@ -25,8 +25,6 @@ class PedidoRetiraView : ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView 
   override val tabRetiraImpressoComNota =
     TabRetiraImpressoComNota(viewModel.tabRetiraImpressoComNotaViewModel)
 
-  override fun isAccept(user: UserSaci) = true
-
   init {
     tabSheet {
       val user = AppConfig.userSaci

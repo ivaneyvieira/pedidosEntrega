@@ -244,10 +244,6 @@ fun TreeGrid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
   setHeader("Loja")
 }
 
-fun TreeGrid<Rota>.rotaRota() = addColumnString(Rota::rota) {
-  this.setHeader("Rota")
-}
-
 fun Grid<Rota>.rotaPedido() = addColumnInt(Rota::pedido) {
   this.setHeader("Pedido")
 }
@@ -258,12 +254,12 @@ fun Grid<Rota>.rotaData() = addColumnLocalDate(Rota::data) {
   this.setSortProperty(Rota::data.name, Rota::loja.name, Rota::pedido.name)
 }
 
-fun Grid<Rota>.rotaHora() = addColumnTime(Rota::hora) {
-  this.setHeader("Hora")
-}
-
 fun Grid<Rota>.rotaArea() = addColumnString(Rota::area) {
   this.setHeader("Área")
+}
+
+fun TreeGrid<Rota>.rotaRota() = addColumnString(Rota::rota) {
+  this.setHeader("Rota")
 }
 
 fun Grid<Rota>.rotaNfFat() = addColumnString(Rota::nfFat) {
@@ -275,10 +271,6 @@ fun Grid<Rota>.rotaDataFat() = addColumnLocalDate(Rota::dataFat) {
   this.setSortProperty(Pedido::dataFat.name, Pedido::loja.name, Rota::pedido.name)
 }
 
-fun Grid<Rota>.rotaHoraFat() = addColumnTime(Rota::horaFat) {
-  this.setHeader("Hora")
-}
-
 fun Grid<Rota>.rotaNfEnt() = addColumnString(Rota::nfEnt) {
   this.setHeader("NF Ent")
 }
@@ -286,10 +278,6 @@ fun Grid<Rota>.rotaNfEnt() = addColumnString(Rota::nfEnt) {
 fun Grid<Rota>.rotaDataEnt() = addColumnLocalDate(Rota::dataEnt) {
   this.setHeader("Data")
   this.setSortProperty(Rota::dataEnt.name, Rota::loja.name, Rota::pedido.name)
-}
-
-fun Grid<Rota>.rotaHoraEnt() = addColumnTime(Rota::horaEnt) {
-  this.setHeader("Hora")
 }
 
 fun Grid<Rota>.rotaVendno() = addColumnInt(Rota::vendno) {
@@ -300,20 +288,12 @@ fun Grid<Rota>.rotaFrete() = addColumnDouble(Rota::frete) {
   this.setHeader("R$ Frete")
 }
 
-fun Grid<Rota>.rotaValor() = addColumnDouble(Rota::valorComFrete) {
+fun Grid<Rota>.rotaValor() = addColumnDouble(Rota::valorFat) {
   this.setHeader("R$ Nota")
 }
 
 fun Grid<Rota>.rotaCustno() = addColumnInt(Rota::custno) {
   this.setHeader("Cliente")
-}
-
-fun Grid<Rota>.rotaObs() = addColumnString(Rota::obs) {
-  this.setHeader("Obs")
-}
-
-fun Grid<Rota>.rotaUsername() = addColumnString(Rota::username) {
-  this.setHeader("Usuário")
 }
 
 

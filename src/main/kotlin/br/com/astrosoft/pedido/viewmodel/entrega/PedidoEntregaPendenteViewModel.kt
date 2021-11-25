@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.viewmodel.entrega
 
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 
@@ -13,7 +14,10 @@ class PedidoEntregaPendenteViewModel(val viewModel: PedidoEntregaViewModel) {
     val data = subView.dataPendente
     val area = subView.areaPendente.trim()
     val rota = subView.rotaPendente.trim()
-    return Pedido.listaPedidoPendente(ENTREGA, ecommerce = false).filter { pedido ->
+    return Pedido.listaPedidoPendente(FiltroPedido(tipo = ENTREGA,
+                                                   ecommerce = false,
+                                                   dataInicial = null,
+                                                   dataFinal = null)).filter { pedido ->
       (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
         rota) || rota == "") && (pedido.area.contains(area) || area == "")
     }

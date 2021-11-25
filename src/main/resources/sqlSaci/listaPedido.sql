@@ -167,6 +167,9 @@ WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
   AND (@EC <> 'S')
+  AND P.date > 20170601
+  AND (P.date >= :dataInicial OR :dataInicial = 0)
+  AND (P.date <= :dataFinal OR :dataFinal = 0)
 GROUP BY EO.storeno, EO.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_ECOMERCE;
@@ -268,6 +271,9 @@ FROM sqldados.eord           AS EO
 	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE EO.status NOT IN (0, 5)
   AND (nff.status <> 1 OR nff.status IS NULL)
+  AND P.date > 20170601
+  AND (P.date >= :dataInicial OR :dataInicial = 0)
+  AND (P.date <= :dataFinal OR :dataFinal = 0)
 GROUP BY EO.storeno, EO.ordno
 HAVING (enderecoEntrega LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'R')
     OR (enderecoEntrega NOT LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'E');

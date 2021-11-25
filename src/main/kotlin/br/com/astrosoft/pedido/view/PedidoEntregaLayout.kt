@@ -39,7 +39,7 @@ import com.vaadin.flow.theme.lumo.Lumo
 @JsModule("./styles/shared-styles.js")
 class PedidoEntregaLayout : AppLayout() {
   init {
-    isDrawerOpened = true
+    isDrawerOpened = false
     navbar {
       drawerToggle()
       h3(AppConfig.title)

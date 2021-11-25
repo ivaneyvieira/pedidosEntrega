@@ -85,13 +85,13 @@ class Pedido(val loja: Int,
   val tipoEcommece
     get() = if (isEcommerce) "WEB" else ""
   val paraImprimir: Boolean
-    get() = (marca != "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
+    get() = (marca != "S") && (nfnoEnt == "")
   val impressoSemNota: Boolean
-    get() = (marca == "S") && (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
+    get() = (marca == "S") && (nfnoEnt == "")
   val impressoComNota: Boolean
-    get() = (nfnoEnt != "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
+    get() = (nfnoEnt != "")
   val pedidoPendente: Boolean
-    get() = (nfnoEnt == "") && (data?.isAfter(LocalDate.of(2017, 6, 1)) ?: true)
+    get() = (nfnoEnt == "")
   val valorComFrete
     get() = valorFat
 
@@ -117,28 +117,24 @@ class Pedido(val loja: Int,
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
 
   companion object {
-    fun listaPedido(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> {
-      val storeno = AppConfig.userSaci?.storeno ?: 0
-      val lista = when (tipo) {
-        ENTREGA -> saci.listaPedido(0, tipo, ecommerce)
-        RETIRA  -> saci.listaPedido(storeno, tipo, ecommerce)
-      }
+    fun listaPedido(filtro: FiltroPedido): List<Pedido> {
+      val lista = saci.listaPedido(filtro)
       return lista.sortedWith(compareBy<Pedido> { it.data }.thenBy {
         it.hora
       })
     }
 
-    fun listaPedidoImprimir(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
-            listaPedido(tipo, ecommerce).filter { it.paraImprimir }
+    fun listaPedidoImprimir(filtro: FiltroPedido): List<Pedido> =
+            listaPedido(filtro).filter { it.paraImprimir }
 
-    fun listaPedidoImpressoSemNota(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
-            listaPedido(tipo, ecommerce).filter { it.impressoSemNota }
+    fun listaPedidoImpressoSemNota(filtro: FiltroPedido): List<Pedido> =
+            listaPedido(filtro).filter { it.impressoSemNota }
 
-    fun listaPedidoImpressoComNota(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
-            listaPedido(tipo, ecommerce).filter { it.impressoComNota }
+    fun listaPedidoImpressoComNota(filtro: FiltroPedido): List<Pedido> =
+            listaPedido(filtro).filter { it.impressoComNota }
 
-    fun listaPedidoPendente(tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> =
-            listaPedido(tipo, ecommerce).filter { it.pedidoPendente }
+    fun listaPedidoPendente(filtro: FiltroPedido): List<Pedido> =
+            listaPedido(filtro).filter { it.pedidoPendente }
   }
 }
 
@@ -147,28 +143,18 @@ enum class ETipoPedido(val sigla: String) {
 }
 
 fun List<Pedido>.rotaPedido(): List<Rota> = map {
-  Rota(nomeRota = null,
-       loja = null,
-       siglaLoja = null,
-       pedido = it.pedido,
+  Rota(pedido = it.pedido,
        data = it.data,
-       hora = it.hora,
-       nfnoFat = it.nfnoFat,
-       nfseFat = it.nfseFat,
+       nfFat = it.nfFat,
        dataFat = it.dataFat,
-       horaFat = it.horaFat,
        valorFat = it.valorFat,
-       nfnoEnt = it.nfnoEnt,
-       nfseEnt = it.nfseEnt,
+       nfEnt = it.nfEnt,
        dataEnt = it.dataEnt,
-       horaEnt = it.horaEnt,
        vendno = it.vendno,
        custno = it.custno,
        frete = it.frete,
        area = it.area,
        rota = it.rota,
-       obs = it.obs,
-       username = it.username,
        listRota = emptyList(),
        listPedidos = emptyList())
 }
@@ -178,9 +164,7 @@ fun List<Pedido>.groupLoja() = this.groupBy { pedido ->
 }.map { entry ->
   val rota = entry.value.firstOrNull()?.rotaArea ?: ""
   val pedidos = entry.value
-  Rota(nomeRota = null,
-       loja = pedidos.firstOrNull()?.loja,
-       siglaLoja = pedidos.firstOrNull()?.siglaLoja,
+  Rota(loja = pedidos.firstOrNull()?.loja,
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
        listRota = pedidos.rotaPedido(),
@@ -194,45 +178,28 @@ fun List<Pedido>.groupRota() = this.groupBy { pedido ->
   val pedidos = entry.value
   val lojas = entry.value.groupLoja()
   Rota(nomeRota = rota,
-
        valorFat = pedidos.sumOf { it.valorFat },
-
        frete = pedidos.sumOf { it.frete },
-listRota = pedidos.groupLoja(),
+       listRota = pedidos.groupLoja(),
        listPedidos = pedidos)
 }
 
 data class Rota(val nomeRota: String? = "",
                 val loja: Int? = null,
-                val siglaLoja: String? = "",
                 val pedido: Int? = null,
                 val data: LocalDate? = null,
-                val hora: Time? = null,
-                val nfnoFat: String? = "",
-                val nfseFat: String? = "",
-                val dataFat: LocalDate? = null,
-                val horaFat: Time? = null,
-                val valorFat: Double? = null,
-                val nfnoEnt: String? = "",
-                val nfseEnt: String? = "",
-                val dataEnt: LocalDate? = null,
-                val horaEnt: Time? = null,
-                val vendno: Int? = null,
-                val custno: Int? = null,
-                val frete: Double? = null,
                 val area: String? = "",
                 val rota: String? = "",
-                val obs: String? = "",
-                val username: String? = "",
+                val nfFat: String? = "",
+                val dataFat: LocalDate? = null,
+                val nfEnt: String? = "",
+                val dataEnt: LocalDate? = null,
+                val vendno: Int? = null,
+                val frete: Double? = null,
+                val valorFat: Double? = null,
+                val custno: Int? = null,
                 val listRota: List<Rota> = emptyList(),
-                val listPedidos: List<Pedido> = emptyList()) {
-  val nfFat: String
-    get() = numeroNota(nfnoFat, nfseFat)
-  val nfEnt: String
-    get() = numeroNota(nfnoEnt, nfseEnt)
-  val valorComFrete
-    get() = valorFat
-}
+                val listPedidos: List<Pedido> = emptyList())
 
 private fun numeroNota(nfno: String?, nfse: String?): String {
   return when {
@@ -242,3 +209,8 @@ private fun numeroNota(nfno: String?, nfse: String?): String {
     else                 -> "$nfno/$nfse"
   }
 }
+
+data class FiltroPedido(val tipo: ETipoPedido,
+                        val ecommerce: Boolean,
+                        val dataInicial: LocalDate?,
+                        val dataFinal: LocalDate?)

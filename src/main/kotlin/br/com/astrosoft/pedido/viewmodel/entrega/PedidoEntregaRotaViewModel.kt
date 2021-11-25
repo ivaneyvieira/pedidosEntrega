@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.viewmodel.entrega
 
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.Rota
 import br.com.astrosoft.pedido.model.beans.groupRota
@@ -10,15 +11,17 @@ class PedidoEntregaRotaViewModel(val viewModel: PedidoEntregaViewModel) {
     get() = viewModel.view.tabEntregaRota
 
   private fun listPedidosEntregaRota(): List<Rota> {
-    return Pedido.listaPedidoImpressoComNota(ENTREGA, ecommerce = false).groupRota()
+    val filtro = subView.filtro()
+    return Pedido.listaPedidoImpressoComNota(filtro).groupRota()
   }
 
   fun updateGrid() {
     subView.updateGrid(listPedidosEntregaRota())
   }
-
 }
 
 interface IPedidoEntregaRota {
   fun updateGrid(itens: List<Rota>)
+
+  fun filtro(): FiltroPedido
 }

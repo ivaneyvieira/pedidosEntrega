@@ -91,7 +91,8 @@ fun Int.localDate(): LocalDate? {
   return LocalDate.of(year, month, day)
 }
 
-fun LocalDate.toSaciDate(): Int {
+fun LocalDate?.toSaciDate(): Int {
+  this ?: return 0
   val ano = this.year
   val mes = this.monthValue
   val dia = this.dayOfMonth

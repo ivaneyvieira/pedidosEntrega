@@ -1,6 +1,7 @@
 package br.com.astrosoft.pedido.viewmodel.retira
 
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 
@@ -13,13 +14,13 @@ class PedidoRetiraPendenteViewModel(val viewModel: PedidoRetiraViewModel) {
     val data = subView.dataPendente
     val area = subView.areaPendente.trim()
     val rota = subView.rotaPendente.trim()
-    return Pedido.listaPedidoPendente(RETIRA, ecommerce = false).filter { pedido ->
-        (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
-          rota
-                                                                                                                        ) || rota == "") && (pedido.area.contains(
-          area
-                                                                                                                                                                 ) || area == "")
-      }
+    return Pedido.listaPedidoPendente(FiltroPedido(tipo = RETIRA,
+                                                   ecommerce = false,
+                                                   dataInicial = null,
+                                                   dataFinal = null)).filter { pedido ->
+      (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
+        rota) || rota == "") && (pedido.area.contains(area) || area == "")
+    }
   }
 
   fun updateGridPendente() {

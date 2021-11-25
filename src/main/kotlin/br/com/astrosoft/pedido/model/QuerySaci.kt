@@ -1,5 +1,6 @@
 package br.com.astrosoft.pedido.model
 
+import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
 import br.com.astrosoft.framework.util.toSaciDate
@@ -32,12 +33,16 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
-  fun listaPedido(loja: Int, tipo: ETipoPedido, ecommerce: Boolean): List<Pedido> {
+  fun listaPedido(filtro: FiltroPedido): List<Pedido> {
     val sql = "/sqlSaci/listaPedido.sql"
-    val ec = if (ecommerce) "S" else "N"
+    val storeno = AppConfig.userSaci?.storeno ?: 0
+    val ec = if (filtro.ecommerce) "S" else "N"
     return query(sql, Pedido::class) {
-      addOptionalParameter("tipo", tipo.sigla)
-      addOptionalParameter("storeno", loja)
+      addOptionalParameter("tipo", filtro.tipo.sigla)
+      addOptionalParameter("storeno", if (filtro.tipo == ETipoPedido.ENTREGA) 0 else storeno)
+      addOptionalParameter("ecommerce", ec)
+      addOptionalParameter("dataInicial", filtro.dataInicial.toSaciDate())
+      addOptionalParameter("dataFinal", filtro.dataFinal.toSaciDate())
       addOptionalParameter("ecommerce", ec)
     }
   }
@@ -80,12 +85,7 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
-  fun findEntregadoresNotas(
-    dateI: LocalDate,
-    dateF: LocalDate,
-    empno: Int,
-    ecommerce: Boolean
-                           ): List<EntregadorNotas> {
+  fun findEntregadoresNotas(dateI: LocalDate, dateF: LocalDate, empno: Int, ecommerce: Boolean): List<EntregadorNotas> {
     val sql = "/sqlSaci/entregadoresNotas.sql"
     val ec = if (ecommerce) "S" else "N"
     return query(sql, EntregadorNotas::class) {

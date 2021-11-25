@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.viewmodel.retira
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -16,13 +17,13 @@ class PedidoRetiraImprimirViewModel(val viewModel: PedidoRetiraViewModel) {
     val data = subView.dataImprimir
     val area = subView.areaImprimir.trim()
     val rota = subView.rotaImprimir.trim()
-    return Pedido.listaPedidoImprimir(RETIRA, ecommerce = false).filter { pedido ->
-        (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
-          rota
-                                                                                                                        ) || rota == "") && (pedido.area.contains(
-          area
-                                                                                                                                                                 ) || area == "")
-      }
+    return Pedido.listaPedidoImprimir(FiltroPedido(tipo = RETIRA,
+                                                   ecommerce = false,
+                                                   dataInicial = null,
+                                                   dataFinal = null)).filter { pedido ->
+      (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
+        rota) || rota == "") && (pedido.area.contains(area) || area == "")
+    }
   }
 
   fun updateGridImprimir() {
@@ -35,8 +36,7 @@ class PedidoRetiraImprimirViewModel(val viewModel: PedidoRetiraViewModel) {
   }
 
   fun confirmaPrint() {
-    val pedidos = viewModel.view.tabRetiraImprimir.itensSelecionado()
-      .ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = viewModel.view.tabRetiraImprimir.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
 
     pedidos.forEach { pedido ->
       if (pedido.dataHoraPrint != null) pedido.marcaImpresso()
@@ -51,8 +51,7 @@ class PedidoRetiraImprimirViewModel(val viewModel: PedidoRetiraViewModel) {
 
   fun imprimirPedidoMinuta() = exec(viewModel.view) {
     val datetime = LocalDateTime.now()
-    val pedidos = viewModel.view.tabRetiraImprimir.itensSelecionado()
-      .ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = viewModel.view.tabRetiraImprimir.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
     printPedidoMinutaPdf(pedidos)
     pedidos.forEach { pedido ->
       pedido.marcaDataHora(datetime)

@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.viewmodel.ecommerceEntrega
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 
 class PedidoECommerceEImpressoSemNotaViewModel(val viewModel: PedidoECommerceEViewModel) {
@@ -11,9 +12,12 @@ class PedidoECommerceEImpressoSemNotaViewModel(val viewModel: PedidoECommerceEVi
 
   private fun listPedidosECommerceImpressoSemNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoSemNota
-    return Pedido.listaPedidoImpressoSemNota(ENTREGA, ecommerce = true).filter { pedido ->
-        pedido.pedido == numPedido || numPedido == 0
-      }
+    return Pedido.listaPedidoImpressoSemNota(FiltroPedido(tipo = ENTREGA,
+                                                          ecommerce = true,
+                                                          dataInicial = null,
+                                                          dataFinal = null)).filter { pedido ->
+      pedido.pedido == numPedido || numPedido == 0
+    }
   }
 
   fun updateGridImpressoSemNota() {

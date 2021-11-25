@@ -2,7 +2,8 @@ package br.com.astrosoft.pedido.viewmodel.ecommerceRetira
 
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
-import br.com.astrosoft.pedido.model.beans.ETipoPedido
+import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 
 class PedidoECommerceRImpressoSemNotaViewModel(val viewModel: PedidoECommerceRViewModel) {
@@ -11,9 +12,12 @@ class PedidoECommerceRImpressoSemNotaViewModel(val viewModel: PedidoECommerceRVi
 
   private fun listPedidosECommerceImpressoSemNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoSemNota
-    return Pedido.listaPedidoImpressoSemNota(ETipoPedido.RETIRA, ecommerce = true).filter { pedido ->
-        pedido.pedido == numPedido || numPedido == 0
-      }
+    return Pedido.listaPedidoImpressoSemNota(FiltroPedido(tipo = RETIRA,
+                                                          ecommerce = true,
+                                                          dataInicial = null,
+                                                          dataFinal = null)).filter { pedido ->
+      pedido.pedido == numPedido || numPedido == 0
+    }
   }
 
   fun updateGridImpressoSemNota() {

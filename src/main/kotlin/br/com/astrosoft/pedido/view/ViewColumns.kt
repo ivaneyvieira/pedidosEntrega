@@ -81,10 +81,6 @@ fun Grid<Pedido>.pedidoValor() = addColumnDouble(Pedido::valorComFrete) {
   this.setHeader("R$ Nota")
 }
 
-fun Grid<Pedido>.pedidoCustno() = addColumnInt(Pedido::custno) {
-  this.setHeader("Cliente")
-}
-
 fun Grid<Pedido>.pedidoObs() = addColumnString(Pedido::obs) {
   this.setHeader("Obs")
 }
@@ -238,10 +234,14 @@ fun Grid<EntregadorNotas>.entregadorNotasValor() = addColumnDouble(EntregadorNot
 
 fun TreeGrid<Rota>.rotaNome() = addHierarchyColumn(Rota::nomeRota).apply {
   setHeader("Rota")
+  this.isAutoWidth = false
+  this.width = "50px"
 }
 
-fun TreeGrid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
+fun Grid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
   setHeader("Loja")
+  this.isAutoWidth = false
+  this.width = "20px"
 }
 
 fun Grid<Rota>.rotaPedido() = addColumnInt(Rota::pedido) {
@@ -258,7 +258,7 @@ fun Grid<Rota>.rotaArea() = addColumnString(Rota::area) {
   this.setHeader("Área")
 }
 
-fun TreeGrid<Rota>.rotaRota() = addColumnString(Rota::rota) {
+fun Grid<Rota>.rotaRota() = addColumnString(Rota::rota) {
   this.setHeader("Rota")
 }
 
@@ -284,6 +284,10 @@ fun Grid<Rota>.rotaVendno() = addColumnInt(Rota::vendno) {
   this.setHeader("Vendedor")
 }
 
+fun Grid<Rota>.rotaQuantEntrada() = addColumnInt(Rota::quantEntradas) {
+  this.setHeader("Qtd Entr")
+}
+
 fun Grid<Rota>.rotaFrete() = addColumnDouble(Rota::frete) {
   this.setHeader("R$ Frete")
 }
@@ -292,9 +296,6 @@ fun Grid<Rota>.rotaValor() = addColumnDouble(Rota::valorFat) {
   this.setHeader("R$ Nota")
 }
 
-fun Grid<Rota>.rotaCustno() = addColumnInt(Rota::custno) {
-  this.setHeader("Cliente")
-}
 
 
 

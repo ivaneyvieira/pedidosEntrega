@@ -118,7 +118,6 @@ class TabRetiraImprimir(val viewModel: PedidoRetiraImprimirViewModel) : TabPanel
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     this.shiftSelect()

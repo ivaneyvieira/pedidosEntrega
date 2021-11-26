@@ -64,7 +64,6 @@ class TabEntregaImpressoComNota(val viewModel: PedidoEntregaImpressoComNotaViewM
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     shiftSelect()

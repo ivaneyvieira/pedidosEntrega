@@ -1,19 +1,21 @@
 package br.com.astrosoft.pedido.view.entrega
 
+import br.com.astrosoft.framework.util.format
+import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.TabPanelTree
 import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
-import br.com.astrosoft.pedido.model.beans.ETipoPedido
-import br.com.astrosoft.pedido.model.beans.FiltroPedido
-import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.Rota
+import br.com.astrosoft.pedido.model.beans.*
 import br.com.astrosoft.pedido.view.*
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaRota
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaRotaViewModel
+import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.Grid.SelectionMode
+import com.vaadin.flow.component.grid.GridVariant
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.treegrid.TreeGrid
 import java.time.LocalDate
@@ -33,6 +35,29 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
                                        dataInicial = edtEntregadorDateI.value,
                                        dataFinal = edtEntregadorDateF.value)
 
+  override fun showRotaLoja(listRotasLoja: List<Rota>) {
+       val form = SubWindowForm("Período: ${edtEntregadorDateI.value.format()} à ${edtEntregadorDateF.value.format()
+       }") {
+      createGridDetailRotaLoja(listRotasLoja)
+    }
+    form.open()
+  }
+
+  private fun createGridDetailRotaLoja(entregadorList: List<Rota>): Grid<Rota> {
+    val gridDetail = TreeGrid<Rota>()
+    return gridDetail.apply {
+      addThemeVariants(GridVariant.LUMO_COMPACT)
+      isMultiSort = false
+      setItems(entregadorList) //
+      rotaNome()
+      rotaLojaNumero()
+
+      rotaQuantEntrada()
+      rotaFrete()
+      rotaValor()
+    }
+  }
+
   override fun HorizontalLayout.toolBarConfig() {
     edtEntregadorDateI = datePicker("Data Inicial") {
       localePtBr()
@@ -50,34 +75,23 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
         updateComponent()
       }
     }
+    button("Relatório") {
+      icon = VaadinIcon.PRINT.create()
+      addClickListener {
+        viewModel.relatorioSimplificado()
+      }
+    }
   }
 
-  fun Grid<Pedido>.gridPanel() {
-    setSelectionMode(SelectionMode.MULTI)
-    pedidoLoja()
-    pedidoPedido()
-    pedidoData()
-    pedidoHora()
-    pedidoArea()
-    pedidoRota()
-    pedidoNfFat()
-    pedidoDataFat()
-    pedidoHoraFat()
-    pedidoNfEnt()
-    pedidoDataEnt()
-    pedidoHoraEnt()
-    pedidoVendno()
-    pedidoFrete()
-    pedidoValor()
-    pedidoCustno()
-    pedidoObs()
-    pedidoUsername()
-    shiftSelect()
-  }
 
   override fun TreeGrid<Rota>.gridPanel() {
     rotaNome()
     rotaLojaNumero()
+    rotaQuantEntrada().apply {
+      this.setHeader("Qt")
+      this.isAutoWidth = false
+      this.width = "20px"
+    }
     rotaPedido()
 
     rotaData()
@@ -94,7 +108,6 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
     rotaFrete()
 
     rotaValor()
-    rotaCustno()
   }
 
   override val label: String

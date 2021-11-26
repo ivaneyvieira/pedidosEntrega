@@ -71,7 +71,6 @@ class TabRetiraImpressoSemNota(val viewModel: PedidoRetiraImpressoSemNotaViewMod
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoNfEnt()
     pedidoDataEnt()

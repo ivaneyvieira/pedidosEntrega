@@ -118,7 +118,6 @@ class TabEntregaImprimir(val viewModel: PedidoEntregaImprimirViewModel) : TabPan
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     this.shiftSelect()

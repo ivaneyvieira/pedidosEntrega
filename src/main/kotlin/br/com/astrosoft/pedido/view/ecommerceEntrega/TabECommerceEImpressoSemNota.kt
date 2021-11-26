@@ -72,7 +72,6 @@ class TabECommerceEImpressoSemNota(val viewModel: PedidoECommerceEImpressoSemNot
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoNfEnt()
     pedidoDataEnt()

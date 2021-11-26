@@ -1,8 +1,6 @@
 package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.RETIRA
 import br.com.astrosoft.pedido.model.saci
 import java.sql.Time
 import java.time.LocalDate
@@ -124,8 +122,7 @@ class Pedido(val loja: Int,
       })
     }
 
-    fun listaPedidoImprimir(filtro: FiltroPedido): List<Pedido> =
-            listaPedido(filtro).filter { it.paraImprimir }
+    fun listaPedidoImprimir(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro).filter { it.paraImprimir }
 
     fun listaPedidoImpressoSemNota(filtro: FiltroPedido): List<Pedido> =
             listaPedido(filtro).filter { it.impressoSemNota }
@@ -133,8 +130,7 @@ class Pedido(val loja: Int,
     fun listaPedidoImpressoComNota(filtro: FiltroPedido): List<Pedido> =
             listaPedido(filtro).filter { it.impressoComNota }
 
-    fun listaPedidoPendente(filtro: FiltroPedido): List<Pedido> =
-            listaPedido(filtro).filter { it.pedidoPendente }
+    fun listaPedidoPendente(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro).filter { it.pedidoPendente }
   }
 }
 
@@ -155,18 +151,32 @@ fun List<Pedido>.rotaPedido(): List<Rota> = map {
        frete = it.frete,
        area = it.area,
        rota = it.rota,
+       quantEntradas = null,
        listRota = emptyList(),
        listPedidos = emptyList())
+}
+
+fun List<Pedido>.groupRotaLoja() = this.groupBy { pedido ->
+  "${pedido.rotaArea} - ${pedido.loja}"
+}.mapNotNull { entry ->
+  val rota = entry.value.firstOrNull()?.rotaArea ?: return@mapNotNull null
+  val loja = entry.value.firstOrNull()?.loja ?: return@mapNotNull null
+  val pedidos = entry.value
+  Rota(nomeRota = rota,
+       loja = loja,
+       valorFat = pedidos.sumOf { it.valorFat },
+       frete = pedidos.sumOf { it.frete },
+       quantEntradas = pedidos.size)
 }
 
 fun List<Pedido>.groupLoja() = this.groupBy { pedido ->
   pedido.loja
 }.map { entry ->
-  val rota = entry.value.firstOrNull()?.rotaArea ?: ""
   val pedidos = entry.value
   Rota(loja = pedidos.firstOrNull()?.loja,
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
+       quantEntradas = pedidos.size,
        listRota = pedidos.rotaPedido(),
        listPedidos = pedidos)
 }
@@ -180,6 +190,7 @@ fun List<Pedido>.groupRota() = this.groupBy { pedido ->
   Rota(nomeRota = rota,
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
+       quantEntradas = pedidos.size,
        listRota = pedidos.groupLoja(),
        listPedidos = pedidos)
 }
@@ -198,6 +209,7 @@ data class Rota(val nomeRota: String? = "",
                 val frete: Double? = null,
                 val valorFat: Double? = null,
                 val custno: Int? = null,
+                val quantEntradas: Int? = null,
                 val listRota: List<Rota> = emptyList(),
                 val listPedidos: List<Pedido> = emptyList())
 

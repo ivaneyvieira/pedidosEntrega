@@ -65,7 +65,6 @@ class TabECommerceRImpressoComNota(val viewModel: PedidoECommerceRImpressoComNot
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     shiftSelect()

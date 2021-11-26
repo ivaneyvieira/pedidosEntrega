@@ -87,7 +87,6 @@ class TabRetiraPendente(val viewModel: PedidoRetiraPendenteViewModel) : TabPanel
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     shiftSelect()

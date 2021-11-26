@@ -119,7 +119,6 @@ class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) :
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     this.shiftSelect()

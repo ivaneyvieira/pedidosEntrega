@@ -64,7 +64,6 @@ class TabRetiraImpressoComNota(val viewModel: PedidoRetiraImpressoComNotaViewMod
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     shiftSelect()

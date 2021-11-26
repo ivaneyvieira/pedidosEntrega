@@ -90,7 +90,6 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel) : TabPan
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
-    pedidoCustno()
     pedidoObs()
     pedidoUsername()
     shiftSelect()

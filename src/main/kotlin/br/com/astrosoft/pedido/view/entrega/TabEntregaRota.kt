@@ -4,7 +4,6 @@ import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.TabPanelTree
 import br.com.astrosoft.framework.view.localePtBr
-import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.*
 import br.com.astrosoft.pedido.view.*
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaRota
@@ -13,12 +12,13 @@ import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.datePicker
 import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.grid.GridVariant
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.treegrid.TreeGrid
+import com.vaadin.flow.data.provider.hierarchy.HierarchicalQuery
 import java.time.LocalDate
+import kotlin.streams.toList
 
 class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<Rota>(Rota::class), IPedidoEntregaRota {
   private lateinit var edtEntregadorDateI: DatePicker
@@ -36,11 +36,16 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
                                        dataFinal = edtEntregadorDateF.value)
 
   override fun showRotaLoja(listRotasLoja: List<Rota>) {
-       val form = SubWindowForm("Período: ${edtEntregadorDateI.value.format()} à ${edtEntregadorDateF.value.format()
-       }") {
+    val form = SubWindowForm("Período: ${edtEntregadorDateI.value.format()} à ${
+      edtEntregadorDateF.value.format()
+    }") {
       createGridDetailRotaLoja(listRotasLoja)
     }
     form.open()
+  }
+
+  override fun rotaAberta(): Rota? = gridPanel.dataProvider.fetchChildren(HierarchicalQuery(null, null)).toList().firstOrNull {
+    gridPanel.isExpanded(it)
   }
 
   private fun createGridDetailRotaLoja(entregadorList: List<Rota>): Grid<Rota> {
@@ -82,7 +87,6 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
       }
     }
   }
-
 
   override fun TreeGrid<Rota>.gridPanel() {
     rotaNome()

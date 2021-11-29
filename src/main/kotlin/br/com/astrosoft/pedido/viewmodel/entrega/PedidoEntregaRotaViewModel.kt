@@ -1,7 +1,7 @@
 package br.com.astrosoft.pedido.viewmodel.entrega
 
+import br.com.astrosoft.framework.util.lpad
 import br.com.astrosoft.pedido.model.beans.*
-import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 
 class PedidoEntregaRotaViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
@@ -18,7 +18,14 @@ class PedidoEntregaRotaViewModel(val viewModel: PedidoEntregaViewModel) {
 
   fun relatorioSimplificado() {
     val filtro = subView.filtro()
-    val listRotasLoja =Pedido.listaPedidoImpressoComNota(filtro).groupRotaLoja()
+    val rotaAberta =  subView.rotaAberta()
+    val listRotasLoja =
+            Pedido.listaPedidoImpressoComNota(filtro)
+              .groupRotaLoja().filter {
+                rotaAberta ?: return@filter true
+                it.nomeRota == rotaAberta.nomeRota
+              }
+              .sortedBy { it.nomeRota + it.loja.toString().lpad(2, "0") }
 
     subView.showRotaLoja(listRotasLoja)
   }
@@ -29,4 +36,5 @@ interface IPedidoEntregaRota {
 
   fun filtro(): FiltroPedido
   fun showRotaLoja(listRotasLoja: List<Rota>)
+  fun rotaAberta(): Rota?
 }

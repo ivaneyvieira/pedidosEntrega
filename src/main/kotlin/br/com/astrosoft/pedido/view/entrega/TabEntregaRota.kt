@@ -89,8 +89,8 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
   }
 
   override fun TreeGrid<Rota>.gridPanel() {
-    rotaNome()
     rotaLojaNumero()
+    rotaNome()
     rotaQuantEntrada().apply {
       this.setHeader("Qt")
       this.isAutoWidth = false

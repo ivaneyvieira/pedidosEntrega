@@ -167,33 +167,35 @@ fun List<Pedido>.groupRotaLoja() = this.groupBy { pedido ->
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
        quantEntradas = pedidos.size)
-}
+}.sortedBy { it.data }
 
-fun List<Pedido>.groupLoja() = this.groupBy { pedido ->
-  pedido.loja
-}.map { entry ->
+fun List<Pedido>.groupRotas() = this.groupBy { pedido ->
+  pedido.rotaArea
+}.mapNotNull { entry ->
+  val nomeRota = entry.key ?: return@mapNotNull null
   val pedidos = entry.value
-  Rota(loja = pedidos.firstOrNull()?.loja,
+  Rota(nomeRota = nomeRota,
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
        quantEntradas = pedidos.size,
        listRota = pedidos.rotaPedido(),
        listPedidos = pedidos)
-}
+}.sortedBy { it.nomeRota }
 
-fun List<Pedido>.groupRota() = this.groupBy { pedido ->
-  pedido.rotaArea
+fun List<Pedido>.groupRoot() = this.groupBy { pedido ->
+  pedido.loja
 }.mapNotNull { entry ->
-  val rota = entry.key ?: return@mapNotNull null
+  val loja = entry.key
   val pedidos = entry.value
-  val lojas = entry.value.groupLoja()
-  Rota(nomeRota = rota,
+  val rotas = pedidos.groupRotas()
+  Rota(nomeRota = "",
+       loja = loja,
        valorFat = pedidos.sumOf { it.valorFat },
        frete = pedidos.sumOf { it.frete },
        quantEntradas = pedidos.size,
-       listRota = pedidos.groupLoja(),
+       listRota = rotas,
        listPedidos = pedidos)
-}
+}.sortedBy { it.loja }
 
 data class Rota(val nomeRota: String? = "",
                 val loja: Int? = null,

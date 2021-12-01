@@ -158,47 +158,40 @@ fun Grid<EntregadorNotas>.entregadorNotasLojaCol() = addColumnInt(EntregadorNota
   isSortable = false
 }
 
-fun Grid<EntregadorNotas>.entregadorNotasNumPedidoCol() =
-  addColumnInt(EntregadorNotas::numPedidoCol) {
-    setHeader("Pedido")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasNumPedidoCol() = addColumnInt(EntregadorNotas::numPedidoCol) {
+  setHeader("Pedido")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasDatePedidoCol() =
-  addColumnLocalDate(EntregadorNotas::datePedidoCol) {
-    setHeader("Data Pedido")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasDatePedidoCol() = addColumnLocalDate(EntregadorNotas::datePedidoCol) {
+  setHeader("Data Pedido")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasNotaFatCol() =
-  addColumnString(EntregadorNotas::notaFatCol) {
-    setHeader("Nota Fat")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasNotaFatCol() = addColumnString(EntregadorNotas::notaFatCol) {
+  setHeader("Nota Fat")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasDateFatCol() =
-  addColumnLocalDate(EntregadorNotas::dateFatCol) {
-    setHeader("Data Fat")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasDateFatCol() = addColumnLocalDate(EntregadorNotas::dateFatCol) {
+  setHeader("Data Fat")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasNotaEntCol() =
-  addColumnString(EntregadorNotas::notaEntCol) {
-    setHeader("Nota Ent")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasNotaEntCol() = addColumnString(EntregadorNotas::notaEntCol) {
+  setHeader("Nota Ent")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasDateEntCol() =
-  addColumnLocalDate(EntregadorNotas::dateEntCol) {
-    setHeader("Data Ent")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasDateEntCol() = addColumnLocalDate(EntregadorNotas::dateEntCol) {
+  setHeader("Data Ent")
+  isSortable = false
+}
 
-fun Grid<EntregadorNotas>.entregadorNotasEntregaCol() =
-  addColumnLocalDate(EntregadorNotas::entregaCol) {
-    setHeader("Entrega")
-    isSortable = false
-  }
+fun Grid<EntregadorNotas>.entregadorNotasEntregaCol() = addColumnLocalDate(EntregadorNotas::entregaCol) {
+  setHeader("Entrega")
+  isSortable = false
+}
 
 fun Grid<EntregadorNotas>.entregadorNotasPrdno() = addColumnString(EntregadorNotas::prdnoCol) {
   setHeader("Código")
@@ -232,13 +225,13 @@ fun Grid<EntregadorNotas>.entregadorNotasValor() = addColumnDouble(EntregadorNot
 
 /****************************************/
 
-fun TreeGrid<Rota>.rotaNome() = addHierarchyColumn(Rota::nomeRota).apply {
+fun TreeGrid<Rota>.rotaNome() = addColumnString(Rota::nomeRota) {
   setHeader("Rota")
   this.isAutoWidth = false
   this.width = "50px"
 }
 
-fun Grid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
+fun TreeGrid<Rota>.rotaLojaNumero()= addHierarchyColumn { it.loja?.toString() ?: "" }.apply {
   setHeader("Loja")
   this.isAutoWidth = false
   this.width = "20px"
@@ -247,7 +240,6 @@ fun Grid<Rota>.rotaLojaNumero() = addColumnInt(Rota::loja) {
 fun Grid<Rota>.rotaPedido() = addColumnInt(Rota::pedido) {
   this.setHeader("Pedido")
 }
-
 
 fun Grid<Rota>.rotaData() = addColumnLocalDate(Rota::data) {
   this.setHeader("Data")

@@ -9,7 +9,7 @@ class PedidoEntregaRotaViewModel(val viewModel: PedidoEntregaViewModel) {
 
   private fun listPedidosEntregaRota(): List<Rota> {
     val filtro = subView.filtro()
-    return Pedido.listaPedidoImpressoComNota(filtro).groupRota()
+    return Pedido.listaPedidoImpressoComNota(filtro).groupRoot()
   }
 
   fun updateGrid() {

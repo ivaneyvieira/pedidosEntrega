@@ -96,22 +96,17 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
       this.isAutoWidth = false
       this.width = "20px"
     }
+    rotaFrete()
+    rotaValor()
     rotaPedido()
-
     rotaData()
     rotaArea()
-
     rotaRota()
     rotaNfFat()
     rotaDataFat()
-
     rotaNfEnt()
     rotaDataEnt()
-
     rotaVendno()
-    rotaFrete()
-
-    rotaValor()
   }
 
   override val label: String

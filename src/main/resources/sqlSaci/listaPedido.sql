@@ -167,9 +167,8 @@ WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
   AND (@EC <> 'S')
-  AND P.date > 20170601
-  AND (P.date >= :dataInicial OR :dataInicial = 0)
-  AND (P.date <= :dataFinal OR :dataFinal = 0)
+  AND (EO.date >= :dataInicial OR :dataInicial = 0)
+  AND (EO.date <= :dataFinal OR :dataFinal = 0)
 GROUP BY EO.storeno, EO.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_ECOMERCE;

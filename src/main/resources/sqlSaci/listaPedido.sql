@@ -52,15 +52,17 @@ SELECT E.storeno,
        E.ordno                                  AS ordno,
        E.l4                                     AS time,
        E.other                                  AS fre_amt,
-       E.date                                   AS data_venda,
-       CAST(IF(E.nfno = 0, '', E.nfno) AS CHAR) AS nfno_venda,
-       E.nfse                                   AS nfse_venda,
-       E.amount                                 AS valor_venda,
-       E.date                                   AS data_entrega,
-       CAST(IF(E.nfno = 0, '', E.nfno) AS CHAR) AS nfno_entrega,
-       E.nfse                                   AS nfse_entrega,
-       E.amount                                 AS valor_entrega
-FROM sqldados.eord AS E
+       P.date                                   AS data_venda,
+       CAST(IF(P.nfno = 0, '', P.nfno) AS CHAR) AS nfno_venda,
+       P.nfse                                   AS nfse_venda,
+       P.amt                                    AS valor_venda,
+       P.date                                   AS data_entrega,
+       CAST(IF(P.nfno = 0, '', P.nfno) AS CHAR) AS nfno_entrega,
+       P.nfse                                   AS nfse_entrega,
+       P.amt                                    AS valor_entrega
+FROM sqldados.eord       AS E
+  LEFT JOIN sqlpdv.pxa AS P
+	      ON P.storeno = E.storeno AND E.ordno = P.eordno AND P.nfno != ''
 WHERE (E.storeno IN (4))
   AND (E.storeno = :storeno OR :storeno = 0)
   AND (E.empno = 440)

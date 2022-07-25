@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.view.entrega
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.addColumnButton
+import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
@@ -55,6 +56,8 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
 
   override fun Grid<Pedido>.gridPanel() {
     setSelectionMode(Grid.SelectionMode.MULTI)
+
+    addColumnSeq("Seq")
 
     pedidoTipoECommerce()
     pedidoLoja()

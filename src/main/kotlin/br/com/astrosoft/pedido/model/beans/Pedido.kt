@@ -58,6 +58,8 @@ class Pedido(val loja: Int,
              val obs7: String,
              val tipo: String,
              val metodo: String) {
+  var seq: Int = 0
+
   val dataHoraPrint
     get() = if (dataPrint == null || horaPrint == null) null
     else LocalDateTime.of(dataPrint, horaPrint)

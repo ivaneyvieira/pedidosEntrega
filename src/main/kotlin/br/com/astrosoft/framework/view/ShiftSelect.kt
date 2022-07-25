@@ -1,17 +1,15 @@
 package br.com.astrosoft.framework.view
 
 import com.github.mvysny.karibudsl.v10.VaadinDsl
+import com.vaadin.flow.component.grid.ColumnTextAlign
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.grid.GridSortOrder
 import com.vaadin.flow.data.provider.ListDataProvider
-import com.vaadin.flow.data.provider.SortDirection.ASCENDING
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
-import java.util.*
-import kotlin.reflect.KClass
 import kotlin.reflect.KProperty1
 import kotlin.streams.toList
 
-fun <T : Any> @VaadinDsl Grid<T>.shiftSelect() {
+inline fun <reified T> @VaadinDsl Grid<T>.shiftSelect() {
   var pedidoInicial: T? = null
   var pedidoFinal: T? = null
   this.addItemClickListener { evento ->
@@ -48,7 +46,7 @@ fun <T : Any> @VaadinDsl Grid<T>.shiftSelect() {
   }
 }
 
-fun <T : Any> list(grade: Grid<T>): List<T> {
+inline fun <reified T> list(grade: Grid<T>): List<T> {
   val dataProvider = grade.dataProvider as ListDataProvider
   val filter = dataProvider.filter
   val queryOrdem = comparator(grade)
@@ -60,33 +58,42 @@ fun <T : Any> list(grade: Grid<T>): List<T> {
     }
 }
 
-fun <T : Any> comparator(grade: Grid<T>): Comparator<T>? {
+inline fun <reified T> comparator(grade: Grid<T>): Comparator<T>? {
   if (grade.sortOrder.isEmpty()) return null
   val sortOrder = grade.sortOrder
-  val classGrid = grade.beanType.kotlin
-  return comparator(sortOrder, classGrid)
+  return comparator(sortOrder)
 }
 
-fun <T : Any> comparator(sortOrder: List<GridSortOrder<T>>, classGrid: KClass<T>): Comparator<T>? {
+inline fun <reified T> comparator(sortOrder: List<GridSortOrder<T>>): Comparator<T> {
   return sortOrder.flatMap { gridSort ->
     val sortOrdem = gridSort.sorted.getSortOrder(gridSort.direction).toList()
-    val propsBean = classGrid.members.toList().filterIsInstance<KProperty1<T, Comparable<*>>>()
+    val propsBean = T::class.members.toList().filterIsInstance<KProperty1<T, Comparable<*>>>()
     val props = sortOrdem.mapNotNull { querySortOrder ->
       propsBean.firstOrNull { prop ->
         prop.name == querySortOrder.sorted
       }
     }
     props.map { prop ->
-      when (gridSort.direction) {
-        DESCENDING      -> compareByDescending {
-          prop.get(it)
-        }
-        null, ASCENDING -> compareBy<T> {
-          prop.get(it)
-        }
+      if (gridSort.direction == DESCENDING) compareByDescending<T> {
+        prop.get(it)
+      }
+      else compareBy<T> {
+        prop.get(it)
       }
     }
   }.reduce { acc, comparator ->
       acc.thenComparing(comparator)
     }
+}
+
+inline fun <reified T> (@VaadinDsl Grid<T>).addColumnSeq(label: String) {
+  addColumn {
+    val lista = list(this)
+    lista.indexOf(it) + 1
+  }.apply {
+    this.textAlign = ColumnTextAlign.END
+    isAutoWidth = true
+    setHeader(label)
+    width = "30px"
+  }
 }

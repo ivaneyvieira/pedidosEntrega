@@ -2,6 +2,8 @@ package br.com.astrosoft.pedido.view.entrega
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
+import br.com.astrosoft.framework.view.addColumnButton
+import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
@@ -10,12 +12,11 @@ import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSemNotaVie
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.icon.VaadinIcon.EYE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
+import com.vaadin.flow.data.value.ValueChangeMode
 
 class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewModel) : TabPanelGrid<Pedido>(),
                                                                                         IPedidoEntregaImpressoSemNota {
@@ -45,7 +46,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
       }
     }
     edtPedidoImpressoSemNota = textField("Numero Pedido") {
-      this.valueChangeMode = TIMEOUT
+      this.valueChangeMode = ValueChangeMode.TIMEOUT
       this.isAutofocus = true
       addValueChangeListener {
         updateComponent()
@@ -54,7 +55,10 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
   }
 
   override fun Grid<Pedido>.gridPanel() {
-    setSelectionMode(SelectionMode.MULTI)
+    setSelectionMode(Grid.SelectionMode.MULTI)
+
+    addColumnSeq("Seq")
+
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()

@@ -1,3 +1,6 @@
+USE sqldados;
+SET SQL_MODE = '';
+
 DO @TIPO := :tipo;
 DO @EC := :ecommerce;
 DO @DATA1 := IF(@TIPO = 'R', 20170601, 20200101);
@@ -49,18 +52,18 @@ CREATE TEMPORARY TABLE T2_ECOMERCE (
 )
 SELECT E.storeno,
        E.pdvno,
-       E.ordno                                  AS ordno,
-       E.l4                                     AS time,
-       E.other                                  AS fre_amt,
-       P.date                                   AS data_venda,
-       CAST(IF(P.nfno = 0, '', P.nfno) AS CHAR) AS nfno_venda,
-       P.nfse                                   AS nfse_venda,
-       P.amt                                    AS valor_venda,
-       P.date                                   AS data_entrega,
-       CAST(IF(P.nfno = 0, '', P.nfno) AS CHAR) AS nfno_entrega,
-       P.nfse                                   AS nfse_entrega,
-       P.amt                                    AS valor_entrega
-FROM sqldados.eord       AS E
+       E.ordno                          AS ordno,
+       E.l4                             AS time,
+       E.other                          AS fre_amt,
+       IFNULL(P.amt, E.amount)          AS data_venda,
+       CAST(IFNULL(P.nfno, '') AS CHAR) AS nfno_venda,
+       IFNULL(P.nfse, '')               AS nfse_venda,
+       IFNULL(P.amt, E.amount)          AS valor_venda,
+       IFNULL(P.amt, E.amount)          AS data_entrega,
+       CAST(IFNULL(P.nfno, '') AS CHAR) AS nfno_entrega,
+       IFNULL(P.nfse, '')               AS nfse_entrega,
+       IFNULL(P.amt, E.amount)          AS valor_entrega
+FROM sqldados.eord     AS E
   LEFT JOIN sqlpdv.pxa AS P
 	      ON P.storeno = E.storeno AND E.ordno = P.eordno AND P.nfno != ''
 WHERE (E.storeno IN (4))

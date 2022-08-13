@@ -5,7 +5,6 @@ import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.tabPanel
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.view.PedidoEntregaLayout
 import br.com.astrosoft.pedido.view.reports.RelatorioPedido
 import br.com.astrosoft.pedido.viewmodel.ecommerceEntrega.IPedidoECommerceEView
@@ -18,9 +17,7 @@ import com.vaadin.flow.router.Route
 @PageTitle("E-Commerce")
 class PedidoECommerceEView : ViewLayout<PedidoECommerceEViewModel>(), IPedidoECommerceEView {
   override val viewModel: PedidoECommerceEViewModel = PedidoECommerceEViewModel(this)
-  override val tabECommerceEImprimir = TabECommerceEImprimir(
-    viewModel.tabECommerceEImprimirViewModel
-                                                            )
+  override val tabECommerceEImprimir = TabECommerceEImprimir(viewModel.tabECommerceEImprimirViewModel)
   override val tabECommerceEImpressoSemNota =
     TabECommerceEImpressoSemNota(viewModel.tabECommerceEImpressoSemNotaViewModel)
 
@@ -28,18 +25,28 @@ class PedidoECommerceEView : ViewLayout<PedidoECommerceEViewModel>(), IPedidoECo
   // .tabECommercePendenteViewModel)
   override val tabECommerceEImpressoComNota =
     TabECommerceEImpressoComNota(viewModel.tabECommerceEImpressoComNotaViewModel)
-  override val tabECommerceEDesempenho = TabECommerceEDesempenho(
-    viewModel.tabECommerceEDesempenhoViewModel
-                                                               )
+  override val tabECommerceEDesempenho = TabECommerceEDesempenho(viewModel.tabECommerceEDesempenhoViewModel)
 
   init {
     tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if (user?.ecommerceE_imprimir == true) tabPanel(tabECommerceEImprimir)
-      if (user?.ecommerceE_impressoSemNota == true) tabPanel(tabECommerceEImpressoSemNota)
-      if (user?.ecommerceE_impressoComNota == true) tabPanel(tabECommerceEImpressoComNota)
-      if (user?.ecommerceE_entregador == true) tabPanel(tabECommerceEDesempenho)
+      var update = true
+      if (user?.ecommerceE_imprimir == true) {
+        tabPanel(tabECommerceEImprimir, update)
+        update = false
+      }
+      if (user?.ecommerceE_impressoSemNota == true) {
+        tabPanel(tabECommerceEImpressoSemNota, update)
+        update = false
+      }
+      if (user?.ecommerceE_impressoComNota == true) {
+        tabPanel(tabECommerceEImpressoComNota, update)
+        update = false
+      }
+      if (user?.ecommerceE_entregador == true) {
+        tabPanel(tabECommerceEDesempenho, update)
+      }
     }
   }
 

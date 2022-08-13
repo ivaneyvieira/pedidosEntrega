@@ -19,21 +19,30 @@ class PedidoECommerceRView : ViewLayout<PedidoECommerceRViewModel>(), IPedidoECo
   override val viewModel: PedidoECommerceRViewModel = PedidoECommerceRViewModel(this)
   override val tabECommerceRImprimir = TabECommerceRImprimir(viewModel.tabECommerceRImprimirViewModel)
   override val tabECommerceRImpressoSemNota =
-          TabECommerceRImpressoSemNota(viewModel.tabECommerceRImpressoSemNotaViewModel)
+    TabECommerceRImpressoSemNota(viewModel.tabECommerceRImpressoSemNotaViewModel)
 
   //override val tabECommercePendente = TabECommercePendente(viewModel
   // .tabECommercePendenteViewModel)
   override val tabECommerceRImpressoComNota =
-          TabECommerceRImpressoComNota(viewModel.tabECommerceRImpressoComNotaViewModel)
+    TabECommerceRImpressoComNota(viewModel.tabECommerceRImpressoComNotaViewModel)
   override val tabECommerceRDesempenho = TabECommerceRDesempenho(viewModel.tabECommerceRDesempenhoViewModel)
 
   init {
     tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if (user?.ecommerceR_imprimir == true) tabPanel(tabECommerceRImprimir)
-      if (user?.ecommerceR_impressoSemNota == true) tabPanel(tabECommerceRImpressoSemNota)
-      if (user?.ecommerceR_impressoComNota == true) tabPanel(tabECommerceRImpressoComNota)
+      var update = true
+      if (user?.ecommerceR_imprimir == true) {
+        tabPanel(tabECommerceRImprimir, update)
+        update = false
+      }
+      if (user?.ecommerceR_impressoSemNota == true) {
+        tabPanel(tabECommerceRImpressoSemNota, update)
+        update = false
+      }
+      if (user?.ecommerceR_impressoComNota == true) {
+        tabPanel(tabECommerceRImpressoComNota, update)
+      }
     }
   }
 

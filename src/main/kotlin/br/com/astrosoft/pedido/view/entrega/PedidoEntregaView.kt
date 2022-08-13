@@ -32,12 +32,28 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
     tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if (user?.entrega_imprimir == true) tabPanel(tabEntregaImprimir)
-      if (user?.entrega_impressoSemNota == true) tabPanel(tabEntregaImpressoSemNota)
-      if (user?.entrega_pendente == true) tabPanel(tabEntregaPendente)
-      if (user?.entrega_impressoComNota == true) tabPanel(tabEntregaImpressoComNota)
-      if (user?.entrega_entregador == true) tabPanel(tabEntregador)
-      tabPanel(tabEntregaRota)
+      var update = true
+      if (user?.entrega_imprimir == true) {
+        tabPanel(tabEntregaImprimir, update)
+        update = false
+      }
+      if (user?.entrega_impressoSemNota == true) {
+        tabPanel(tabEntregaImpressoSemNota, update)
+        update = false
+      }
+      if (user?.entrega_pendente == true) {
+        tabPanel(tabEntregaPendente, update)
+        update = false
+      }
+      if (user?.entrega_impressoComNota == true) {
+        tabPanel(tabEntregaImpressoComNota, update)
+        update = false
+      }
+      if (user?.entrega_entregador == true) {
+        tabPanel(tabEntregador, update)
+        update = false
+      }
+      tabPanel(tabEntregaRota, update)
     }
 
   }

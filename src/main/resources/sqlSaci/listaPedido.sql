@@ -67,6 +67,8 @@ FROM sqldados.eord     AS E
   LEFT JOIN sqlpdv.pxa AS P
 	      ON P.storeno = E.storeno AND E.ordno = P.eordno AND P.nfno != ''
 WHERE (E.storeno IN (4))
+  AND E.status NOT IN (3, 5)
+  AND (E.date >= @DATA1)
   AND (E.storeno = :storeno OR :storeno = 0)
   AND (E.empno = 440)
 GROUP BY E.storeno, E.ordno;
@@ -129,14 +131,13 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 481, 80), ' '), 80, ' ')               AS obs7,
        @TIPO                                                                  AS tipo,
        paym.name                                                              AS metodo
-FROM sqldados.eord           AS EO
-  INNER JOIN T2
+FROM T2
+  LEFT JOIN sqldados.eord           AS EO
 	       ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
   LEFT JOIN  sqldados.store  AS S
 	       ON S.no = EO.storeno
   LEFT JOIN  sqldados.eordrk AS O
 	       ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
-
   LEFT JOIN  sqldados.ctadd  AS CA
 	       ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
   LEFT JOIN  sqldados.users  AS U
@@ -175,7 +176,7 @@ WHERE EO.status NOT IN (3, 5)
   AND P.date > 20170601
   AND (P.date >= :dataInicial OR :dataInicial = 0)
   AND (P.date <= :dataFinal OR :dataFinal = 0)
-GROUP BY EO.storeno, EO.ordno;
+GROUP BY T2.storeno, T2.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS VENDA_ECOMERCE;
 CREATE TEMPORARY TABLE VENDA_ECOMERCE

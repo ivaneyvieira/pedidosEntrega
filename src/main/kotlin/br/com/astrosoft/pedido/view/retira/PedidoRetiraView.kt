@@ -29,10 +29,22 @@ class PedidoRetiraView : ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView 
     tabSheet {
       val user = AppConfig.userSaci
       setSizeFull()
-      if (user?.retira_imprimir == true) tabPanel(tabRetiraImprimir)
-      if (user?.retira_impressoSemNota == true) tabPanel(tabRetiraImpressoSemNota)
-      if (user?.retira_pendente == true) tabPanel(tabRetiraPendente)
-      if (user?.retira_impressoComNota == true) tabPanel(tabRetiraImpressoComNota)
+      var update = true
+      if (user?.retira_imprimir == true) {
+        tabPanel(tabRetiraImprimir, update)
+        update = false
+      }
+      if (user?.retira_impressoSemNota == true) {
+        tabPanel(tabRetiraImpressoSemNota, update)
+        update = false
+      }
+      if (user?.retira_pendente == true) {
+        tabPanel(tabRetiraPendente, update)
+        update = false
+      }
+      if (user?.retira_impressoComNota == true) {
+        tabPanel(tabRetiraImpressoComNota, update)
+      }
     }
 
   }

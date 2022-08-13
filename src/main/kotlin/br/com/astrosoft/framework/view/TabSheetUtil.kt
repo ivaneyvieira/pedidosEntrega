@@ -5,18 +5,17 @@ import com.vaadin.flow.component.Component
 import com.vaadin.flow.component.button.Button
 import com.vaadin.flow.component.button.ButtonVariant
 
-fun <T : Component> TabSheet.tabPanel(tabPanel: TabPanel<T>) {
+fun <T : Component> TabSheet.tabPanel(tabPanel: TabPanel<T>, update: Boolean) {
   this.tab {
     tabPanel.createComponent
-
   }.apply {
-      val button = Button(tabPanel.label) {
-        tabPanel.updateComponent()
-      }
-      button.addThemeVariants(ButtonVariant.LUMO_SMALL)
-      this.addComponentAsFirst(button)
+    val button = Button(tabPanel.label) {
       tabPanel.updateComponent()
     }
+    button.addThemeVariants(ButtonVariant.LUMO_SMALL)
+    this.addComponentAsFirst(button)
+    if (update) tabPanel.updateComponent()
+  }
 }
 
 interface TabPanel<T : Component> {

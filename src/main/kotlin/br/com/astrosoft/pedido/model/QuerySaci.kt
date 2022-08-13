@@ -37,13 +37,15 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     val sql = "/sqlSaci/listaPedido.sql"
     val storeno = AppConfig.userSaci?.storeno ?: 0
     val ec = if (filtro.ecommerce) "S" else "N"
+
+    val dataInicial = filtro.dataInicial.toSaciDate()
+    val dataFinal = filtro.dataFinal.toSaciDate()
     return query(sql, Pedido::class) {
       addOptionalParameter("tipo", filtro.tipo.sigla)
       addOptionalParameter("storeno", if (filtro.tipo == ETipoPedido.ENTREGA) 0 else storeno)
       addOptionalParameter("ecommerce", ec)
-      addOptionalParameter("dataInicial", filtro.dataInicial.toSaciDate())
-      addOptionalParameter("dataFinal", filtro.dataFinal.toSaciDate())
-      addOptionalParameter("ecommerce", ec)
+      addOptionalParameter("dataInicial", dataInicial)
+      addOptionalParameter("dataFinal", dataFinal)
     }
   }
 

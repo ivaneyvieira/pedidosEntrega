@@ -56,6 +56,10 @@ fun Grid<Pedido>.pedidoHoraFat() = addColumnTime(Pedido::horaFat) {
   this.setHeader("Hora")
 }
 
+fun Grid<Pedido>.pedidoPiso() = addColumnDouble(Pedido::piso) {
+  this.setHeader("Piso")
+}
+
 fun Grid<Pedido>.pedidoNfEnt() = addColumnString(Pedido::nfEnt) {
   this.setHeader("NF Ent")
 }

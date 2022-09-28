@@ -132,43 +132,43 @@ SELECT EO.storeno                                                             AS
        @TIPO                                                                  AS tipo,
        paym.name                                                              AS metodo
 FROM T2
-  LEFT JOIN sqldados.eord           AS EO
-	       ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
-  LEFT JOIN  sqldados.store  AS S
-	       ON S.no = EO.storeno
-  LEFT JOIN  sqldados.eordrk AS O
-	       ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
-  LEFT JOIN  sqldados.ctadd  AS CA
-	       ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
-  LEFT JOIN  sqldados.users  AS U
-	       ON U.no = EO.userno
-  LEFT JOIN  sqldados.custp  AS C
-	       ON (C.no = EO.custno)
-  LEFT JOIN  sqldados.emp    AS E
-	       ON (E.no = EO.empno)
-  LEFT JOIN  sqldados.paym
-	       ON (paym.no = EO.paymno)
-  LEFT JOIN  sqlpdv.pxa      AS P
-	       ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
-		   EO.nfse_futura = P.nfse)
-  LEFT JOIN  sqldados.ctadd  AS AD
-	       ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
-  LEFT JOIN  sqldados.route  AS R
-	       ON (AD.routeno = R.no)
-  LEFT JOIN  sqldados.area   AS A
-	       ON (A.no = R.areano)
-  LEFT JOIN  sqldados.nf     AS nff
-	       ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
-		   T2.storeno = nff.storeno)
-  LEFT JOIN  sqldados.nf2    AS nff2
-	       ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
-  LEFT JOIN  sqldados.nf     AS nfe
-	       ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
-		   T2.storeno = nfe.storeno)
-  LEFT JOIN  sqldados.nf2    AS nfe2
-	       ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
-  LEFT JOIN  sqldados.eordrk AS OBS
-	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
+  LEFT JOIN sqldados.eord   AS EO
+	      ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
+  LEFT JOIN sqldados.store  AS S
+	      ON S.no = EO.storeno
+  LEFT JOIN sqldados.eordrk AS O
+	      ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
+  LEFT JOIN sqldados.ctadd  AS CA
+	      ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
+  LEFT JOIN sqldados.users  AS U
+	      ON U.no = EO.userno
+  LEFT JOIN sqldados.custp  AS C
+	      ON (C.no = EO.custno)
+  LEFT JOIN sqldados.emp    AS E
+	      ON (E.no = EO.empno)
+  LEFT JOIN sqldados.paym
+	      ON (paym.no = EO.paymno)
+  LEFT JOIN sqlpdv.pxa      AS P
+	      ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
+		  EO.nfse_futura = P.nfse)
+  LEFT JOIN sqldados.ctadd  AS AD
+	      ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
+  LEFT JOIN sqldados.route  AS R
+	      ON (AD.routeno = R.no)
+  LEFT JOIN sqldados.area   AS A
+	      ON (A.no = R.areano)
+  LEFT JOIN sqldados.nf     AS nff
+	      ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
+		  T2.storeno = nff.storeno)
+  LEFT JOIN sqldados.nf2    AS nff2
+	      ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
+  LEFT JOIN sqldados.nf     AS nfe
+	      ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
+		  T2.storeno = nfe.storeno)
+  LEFT JOIN sqldados.nf2    AS nfe2
+	      ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
+  LEFT JOIN sqldados.eordrk AS OBS
+	      ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
@@ -283,6 +283,9 @@ GROUP BY EO.storeno, EO.ordno
 HAVING (enderecoEntrega LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'R')
     OR (enderecoEntrega NOT LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'E');
 
+
+DROP TEMPORARY TABLE IF EXISTS PEDIDOS;
+CREATE TEMPORARY TABLE PEDIDOS
 SELECT loja,
        nomeLoja,
        siglaLoja,
@@ -387,4 +390,74 @@ SELECT loja,
        obs7,
        tipo,
        metodo
-FROM VENDA_ECOMERCE
+FROM VENDA_ECOMERCE;
+
+DROP TEMPORARY TABLE IF EXISTS PEDIDO_PISO;
+CREATE TEMPORARY TABLE PEDIDO_PISO (
+  PRIMARY KEY (loja, pedido)
+)
+SELECT storeno          AS loja,
+       ordno            AS pedido,
+       SUM(qtty / 1000) AS piso
+FROM sqldados.eoprd  AS   P
+  INNER JOIN PEDIDOS AS   E
+	       ON P.storeno = E.loja AND P.ordno = E.pedido
+  INNER JOIN sqldados.prd PR
+	       ON PR.no = P.prdno AND PR.groupno = 10000
+GROUP BY storeno, ordno;
+
+SELECT loja,
+       nomeLoja,
+       siglaLoja,
+       pedido,
+       marca,
+       data,
+       dataEntrega,
+       pdvno,
+       hora,
+       pdvnoVenda,
+       nfnoFat,
+       nfseFat,
+       dataFat,
+       horaFat,
+       valorFat,
+       nfnoEnt,
+       nfseEnt,
+       dataEnt,
+       horaEnt,
+       valorEnt,
+       vendno,
+       vendedor,
+       custno,
+       cliente,
+       foneCliente,
+       cidade,
+       estado,
+       endereco,
+       bairro,
+       enderecoEntrega,
+       bairroEntrega,
+       frete,
+       valor,
+       status,
+       area,
+       rota,
+       obs,
+       codArea,
+       userno,
+       username,
+       dataPrint,
+       horaPrint,
+       obs1,
+       obs2,
+       obs3,
+       obs4,
+       obs5,
+       obs6,
+       obs7,
+       tipo,
+       metodo,
+       IFNULL(piso, 0.00) as piso
+FROM PEDIDOS
+  LEFT JOIN PEDIDO_PISO
+	      USING (loja, pedido)

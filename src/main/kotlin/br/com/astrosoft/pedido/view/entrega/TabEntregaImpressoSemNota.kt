@@ -71,6 +71,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
     pedidoNfFat()
     pedidoDataFat()
     pedidoHoraFat()
+    pedidoPiso()
 
     pedidoVendno()
     pedidoFrete()

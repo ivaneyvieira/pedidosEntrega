@@ -45,8 +45,9 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     val pesquisa = filtro.pesquisa.trim()
     val filtroInt = pesquisa.toIntOrNull() ?: 0
     val filtroData = pesquisa.parserDate().toSaciDate()
-    val filtroCD = if(pesquisa.startsWith("CD") && pesquisa.length in listOf(3, 4)) pesquisa else ""
-    val filtroStr = if(filtroInt == 0 && filtroData == 0 && filtroCD == "") pesquisa else ""
+    val filtroCD =
+      if ((pesquisa.startsWith("CD") || pesquisa.startsWith("EXP")) && pesquisa.length in listOf(3, 4)) pesquisa else ""
+    val filtroStr = if (filtroInt == 0 && filtroData == 0 && filtroCD == "") pesquisa else ""
     val filtroLoja = filtroInt
     val filtroPedido = filtroInt
     val filtroArea = filtroStr

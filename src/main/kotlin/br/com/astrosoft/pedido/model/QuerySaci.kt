@@ -8,6 +8,7 @@ import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedido.model.beans.*
 import java.time.LocalDate
 import java.time.LocalTime
+import java.util.*
 
 class QuerySaci : QueryDB(driver, url, username, password) {
   fun findUser(login: String?): UserSaci? {
@@ -46,7 +47,12 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     val filtroInt = pesquisa.toIntOrNull() ?: 0
     val filtroData = pesquisa.parserDate().toSaciDate()
     val filtroCD =
-      if ((pesquisa.startsWith("CD") || pesquisa.startsWith("EXP")) && pesquisa.length in listOf(3, 4)) pesquisa else ""
+      if ((pesquisa.startsWith("CD", ignoreCase = true) || pesquisa.startsWith("EXP",
+                                                                               ignoreCase = true)) && pesquisa.length in listOf(
+                3,
+                4)
+      ) pesquisa.uppercase(Locale.getDefault())
+      else ""
     val filtroStr = if (filtroInt == 0 && filtroData == 0 && filtroCD == "") pesquisa else ""
     val filtroLoja = filtroInt
     val filtroPedido = filtroInt

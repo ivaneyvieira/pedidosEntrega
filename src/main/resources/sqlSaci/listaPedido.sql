@@ -396,15 +396,33 @@ DROP TEMPORARY TABLE IF EXISTS PEDIDO_PISO;
 CREATE TEMPORARY TABLE PEDIDO_PISO (
   PRIMARY KEY (loja, pedido)
 )
-SELECT storeno          AS loja,
-       ordno            AS pedido,
+SELECT P.storeno        AS loja,
+       P.ordno          AS pedido,
        SUM(qtty / 1000) AS piso
 FROM sqldados.eoprd  AS   P
   INNER JOIN PEDIDOS AS   E
 	       ON P.storeno = E.loja AND P.ordno = E.pedido
   INNER JOIN sqldados.prd PR
 	       ON PR.no = P.prdno AND PR.groupno = 10000
-GROUP BY storeno, ordno;
+GROUP BY P.storeno, P.ordno;
+
+DROP TEMPORARY TABLE IF EXISTS PEDIDO_CD;
+CREATE TEMPORARY TABLE PEDIDO_CD (
+  PRIMARY KEY (loja, pedido)
+)
+SELECT P.storeno                                                      AS loja,
+       P.ordno                                                        AS pedido,
+       MID(MAX(CONCAT(LPAD(MID(L.localizacao, 1, 3), 3, ' '),
+		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
+		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 8, 4) AS loc
+FROM sqldados.eoprd          AS P
+  INNER JOIN PEDIDOS         AS E
+	       ON P.storeno = E.loja AND P.ordno = E.pedido
+  LEFT JOIN  sqldados.prdloc AS L
+	       ON P.prdno = L.prdno AND L.storeno = 4
+WHERE localizacao LIKE CONCAT(:filtroCD, '%')
+   OR :filtroCD = ''
+GROUP BY P.storeno, P.ordno;
 
 SELECT loja,
        nomeLoja,
@@ -457,7 +475,17 @@ SELECT loja,
        obs7,
        tipo,
        metodo,
-       IFNULL(piso, 0.00) as piso
+       IFNULL(piso, 0.00) AS piso,
+       IFNULL(loc, '')    AS loc
 FROM PEDIDOS
   LEFT JOIN PEDIDO_PISO
 	      USING (loja, pedido)
+  LEFT JOIN PEDIDO_CD
+	      USING (loja, pedido)
+WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
+       rota LIKE CONCAT('%', :filtroRota, '%') OR :filtroRota = '' OR nfnoFat = :filtroFat OR
+       :filtroFat = '')
+  AND (dataFat = :filtroData OR :filtroData = 0)
+  AND (loc LIKE CONCAT(:filtroCD, '%') OR :filtroCD = '')
+  AND (piso = :filtroPiso OR :filtroPiso = 0 OR vendno = :filtroVend OR :filtroVend = 0 OR
+       pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0)

@@ -11,13 +11,12 @@ class PedidoEntregaImpressoSemNotaViewModel(val viewModel: PedidoEntregaViewMode
     get() = viewModel.view.tabEntregaImpressoSemNota
 
   private fun listPedidosEntregaImpressoSemNota(): List<Pedido> {
-    val numPedido = subView.pedidoImpressoSemNota
+    val pesquisa = subView.pedidoPesquisa
     return Pedido.listaPedidoImpressoSemNota(FiltroPedido(tipo = ENTREGA,
+                                                          pesquisa = pesquisa,
                                                           ecommerce = false,
                                                           dataInicial = null,
-                                                          dataFinal = null)).filter { pedido ->
-      pedido.pedido == numPedido || numPedido == 0
-    }
+                                                          dataFinal = null))
   }
 
   fun updateGridImpressoSemNota() {
@@ -41,5 +40,5 @@ class PedidoEntregaImpressoSemNotaViewModel(val viewModel: PedidoEntregaViewMode
 interface IPedidoEntregaImpressoSemNota {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
-  val pedidoImpressoSemNota: Int
+  val pedidoPesquisa: String
 }

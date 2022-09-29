@@ -32,6 +32,7 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
 
   override fun filtro() = FiltroPedido(tipo = ETipoPedido.ENTREGA,
                                        ecommerce = false,
+                                       pesquisa = "",
                                        dataInicial = edtEntregadorDateI.value,
                                        dataFinal = edtEntregadorDateF.value)
 

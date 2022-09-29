@@ -406,6 +406,18 @@ FROM sqldados.eoprd  AS   P
 	       ON PR.no = P.prdno AND PR.groupno = 10000
 GROUP BY P.storeno, P.ordno;
 
+DROP TEMPORARY TABLE IF EXISTS T_LOC;
+CREATE TEMPORARY TABLE T_LOC (
+  PRIMARY KEY (prdno)
+)
+SELECT prdno,
+       MID(MAX(CONCAT(IF(L.localizacao LIKE 'CD%', 2, 1), LPAD(MID(L.localizacao, 1, 3), 3, ' '),
+		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
+		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS localizacao
+FROM sqldados.prdloc AS L
+WHERE storeno = 4
+GROUP BY prdno;
+
 DROP TEMPORARY TABLE IF EXISTS PEDIDO_CD;
 CREATE TEMPORARY TABLE PEDIDO_CD (
   PRIMARY KEY (loja, pedido)
@@ -418,8 +430,8 @@ SELECT P.storeno                                                      AS loja,
 FROM sqldados.eoprd          AS P
   INNER JOIN PEDIDOS         AS E
 	       ON P.storeno = E.loja AND P.ordno = E.pedido
-  LEFT JOIN  sqldados.prdloc AS L
-	       ON P.prdno = L.prdno AND L.storeno = 4
+  LEFT JOIN  T_LOC AS L
+	       ON P.prdno = L.prdno
 WHERE localizacao LIKE CONCAT(:filtroCD, '%')
    OR :filtroCD = ''
 GROUP BY P.storeno, P.ordno;

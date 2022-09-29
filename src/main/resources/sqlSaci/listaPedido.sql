@@ -412,9 +412,9 @@ CREATE TEMPORARY TABLE PEDIDO_CD (
 )
 SELECT P.storeno                                                      AS loja,
        P.ordno                                                        AS pedido,
-       MID(MAX(CONCAT(LPAD(MID(L.localizacao, 1, 3), 3, ' '),
+       MID(MAX(CONCAT(IF(L.localizacao LIKE 'CD%', 2, 1), LPAD(MID(L.localizacao, 1, 3), 3, ' '),
 		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
-		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 8, 4) AS loc
+		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS loc
 FROM sqldados.eoprd          AS P
   INNER JOIN PEDIDOS         AS E
 	       ON P.storeno = E.loja AND P.ordno = E.pedido

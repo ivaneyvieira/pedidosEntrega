@@ -60,6 +60,7 @@ class Pedido(
   val tipo: String,
   val metodo: String,
   val piso: Double,
+  val loc: String,
             ) {
   var seq: Int = 0
 
@@ -230,6 +231,7 @@ private fun numeroNota(nfno: String?, nfse: String?): String {
 }
 
 data class FiltroPedido(val tipo: ETipoPedido,
+                        val pesquisa: String = "",
                         val ecommerce: Boolean,
                         val dataInicial: LocalDate?,
                         val dataFinal: LocalDate?)

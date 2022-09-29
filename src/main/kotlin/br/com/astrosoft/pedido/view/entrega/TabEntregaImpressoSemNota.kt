@@ -20,15 +20,15 @@ import com.vaadin.flow.data.value.ValueChangeMode
 
 class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewModel) : TabPanelGrid<Pedido>(),
                                                                                         IPedidoEntregaImpressoSemNota {
-  private lateinit var edtPedidoImpressoSemNota: TextField
+  private lateinit var edtPedidoPesquisa: TextField
   override val label = "Impresso sem Nota"
 
   override fun updateComponent() {
     viewModel.updateGridImpressoSemNota()
   }
 
-  override val pedidoImpressoSemNota: Int
-    get() = edtPedidoImpressoSemNota.value?.toIntOrNull() ?: 0
+  override val pedidoPesquisa: String
+    get() = edtPedidoPesquisa.value ?: ""
 
   override fun classPanel() = Pedido::class
 
@@ -45,8 +45,9 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
         viewModel.imprimirPedidos(itensSelecionado())
       }
     }
-    edtPedidoImpressoSemNota = textField("Numero Pedido") {
-      this.valueChangeMode = ValueChangeMode.TIMEOUT
+    edtPedidoPesquisa = textField("Pesquisa") {
+      this.valueChangeMode = ValueChangeMode.LAZY
+      this.valueChangeTimeout = 1500
       this.isAutofocus = true
       addValueChangeListener {
         updateComponent()
@@ -71,6 +72,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
     pedidoNfFat()
     pedidoDataFat()
     pedidoHoraFat()
+    pedidoLoc()
     pedidoPiso()
 
     pedidoVendno()

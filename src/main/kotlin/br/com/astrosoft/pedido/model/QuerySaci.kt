@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.model
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.model.QueryDB
 import br.com.astrosoft.framework.util.DB
+import br.com.astrosoft.framework.util.parserDate
 import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedido.model.beans.*
 import java.time.LocalDate
@@ -40,12 +41,35 @@ class QuerySaci : QueryDB(driver, url, username, password) {
 
     val dataInicial = filtro.dataInicial.toSaciDate()
     val dataFinal = filtro.dataFinal.toSaciDate()
+
+    val pesquisa = filtro.pesquisa.trim()
+    val filtroInt = pesquisa.toIntOrNull() ?: 0
+    val filtroData = pesquisa.parserDate().toSaciDate()
+    val filtroCD = if(pesquisa.startsWith("CD") && pesquisa.length in listOf(3, 4)) pesquisa else ""
+    val filtroStr = if(filtroInt == 0 && filtroData == 0 && filtroCD == "") pesquisa else ""
+    val filtroLoja = filtroInt
+    val filtroPedido = filtroInt
+    val filtroArea = filtroStr
+    val filtroRota = filtroStr
+    val filtroFat = filtroStr
+    val filtroPiso = filtroInt
+    val filtroVend = filtroInt
+
     return query(sql, Pedido::class) {
       addOptionalParameter("tipo", filtro.tipo.sigla)
       addOptionalParameter("storeno", if (filtro.tipo == ETipoPedido.ENTREGA) 0 else storeno)
       addOptionalParameter("ecommerce", ec)
       addOptionalParameter("dataInicial", dataInicial)
       addOptionalParameter("dataFinal", dataFinal)
+      addOptionalParameter("filtroPedido", filtroPedido)
+      addOptionalParameter("filtroArea", filtroArea)
+      addOptionalParameter("filtroRota", filtroRota)
+      addOptionalParameter("filtroFat", filtroFat)
+      addOptionalParameter("filtroData", filtroData)
+      addOptionalParameter("filtroPiso", filtroPiso)
+      addOptionalParameter("filtroVend", filtroVend)
+      addOptionalParameter("filtroLoja", filtroLoja)
+      addOptionalParameter("filtroCD", filtroCD)
     }
   }
 

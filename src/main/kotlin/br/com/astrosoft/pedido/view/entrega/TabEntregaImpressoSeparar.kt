@@ -57,8 +57,6 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     pedidoLoja()
     pedidoPedido()
     pedidoDataHoraPrint()
-    pedidoData()
-    pedidoHora()
     pedidoArea()
     pedidoRota()
 
@@ -69,7 +67,6 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     pedidoPiso()
 
     pedidoVendno()
-    pedidoFrete()
     pedidoValor()
     pedidoObs()
     pedidoNfEnt()

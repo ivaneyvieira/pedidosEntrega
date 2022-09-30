@@ -6,30 +6,30 @@ import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoEntregaImpressoSemNotaViewModel(val viewModel: PedidoEntregaViewModel) {
+class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
-    get() = viewModel.view.tabEntregaImpressoSemNota
+    get() = viewModel.view.tabEntregaImpressoSeparar
 
-  private fun listPedidosEntregaImpressoSemNota(): List<Pedido> {
+  private fun listPedidosEntregaImpressoSeparar(): List<Pedido> {
     val pesquisa = subView.pedidoPesquisa
-    return Pedido.listaPedidoImpressoSemNota(FiltroPedido(tipo = ENTREGA,
+    return Pedido.listaPedidoImpressoSeparar(FiltroPedido(tipo = ENTREGA,
                                                           pesquisa = pesquisa,
                                                           ecommerce = false,
                                                           dataInicial = null,
                                                           dataFinal = null))
   }
 
-  fun updateGridImpressoSemNota() {
-    subView.updateGrid(listPedidosEntregaImpressoSemNota())
+  fun updateGridImpressoSeparar() {
+    subView.updateGrid(listPedidosEntregaImpressoSeparar())
   }
 
-  fun desmarcaSemNota() = exec(viewModel.view) {
+  fun desmarcaSeparar() = exec(viewModel.view) {
     val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
     pedidos.forEach { pedido ->
       pedido.desmarcaImpresso()
     }
 
-    updateGridImpressoSemNota()
+    updateGridImpressoSeparar()
   }
 
   fun imprimirPedidos(itensSelecionado: List<Pedido>) {
@@ -37,7 +37,7 @@ class PedidoEntregaImpressoSemNotaViewModel(val viewModel: PedidoEntregaViewMode
   }
 }
 
-interface IPedidoEntregaImpressoSemNota {
+interface IPedidoEntregaImpressoSeparar {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoPesquisa: String

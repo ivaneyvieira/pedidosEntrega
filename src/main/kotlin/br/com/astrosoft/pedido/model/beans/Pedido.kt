@@ -133,6 +133,8 @@ class Pedido(
     fun listaPedidoImpressoSemNota(filtro: FiltroPedido): List<Pedido> =
       listaPedido(filtro).filter { it.impressoSemNota }
 
+    fun listaPedidoImpressoSeparar(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
+
     fun listaPedidoImpressoComNota(filtro: FiltroPedido): List<Pedido> =
       listaPedido(filtro).filter { it.impressoComNota }
 

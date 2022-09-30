@@ -2,31 +2,31 @@ package br.com.astrosoft.pedido.view.entrega
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
+import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
-import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoComNota
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoComNotaViewModel
+import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoSeparar
+import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSepararViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.grid.Grid.SelectionMode
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
-import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
+import com.vaadin.flow.data.value.ValueChangeMode
 
-class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoComNotaViewModel) : TabPanelGrid<Pedido>(),
-                                                                                        IPedidoEntregaImpressoComNota {
-  private lateinit var edtPedidoImpressoComNota: TextField
-  override val label = "Editor de nota"
+class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewModel) : TabPanelGrid<Pedido>(),
+                                                                                        IPedidoEntregaImpressoSeparar {
+  private lateinit var edtPedidoPesquisa: TextField
+  override val label = "Separar"
 
   override fun updateComponent() {
-    viewModel.updateGridImpressoComNota()
+    viewModel.updateGridImpressoSeparar()
   }
 
-  override val pedidoImpressoComNota: Int
-    get() = edtPedidoImpressoComNota.value?.toIntOrNull() ?: 0
+  override val pedidoPesquisa: String
+    get() = edtPedidoPesquisa.value ?: ""
 
   override fun classPanel() = Pedido::class
 
@@ -34,12 +34,13 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoComNotaViewM
     if (AppConfig.isAdmin) button("Desmarcar") {
       icon = CLOSE.create()
       addClickListener {
-        viewModel.desmarcaComNota()
+        viewModel.desmarcaSeparar()
       }
     }
 
-    edtPedidoImpressoComNota = textField("Número Pedido") {
-      this.valueChangeMode = TIMEOUT
+    edtPedidoPesquisa = textField("Pesquisa") {
+      this.valueChangeMode = ValueChangeMode.LAZY
+      this.valueChangeTimeout = 1500
       this.isAutofocus = true
       addValueChangeListener {
         updateComponent()
@@ -48,23 +49,33 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoComNotaViewM
   }
 
   override fun Grid<Pedido>.gridPanel() {
-    setSelectionMode(SelectionMode.MULTI)
+    setSelectionMode(Grid.SelectionMode.MULTI)
+
+    addColumnSeq("Seq")
+
+    pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
+    pedidoDataHoraPrint()
     pedidoData()
     pedidoHora()
     pedidoArea()
     pedidoRota()
+
     pedidoNfFat()
     pedidoDataFat()
     pedidoHoraFat()
-    pedidoNfEnt()
-    pedidoDataEnt()
-    pedidoHoraEnt()
+    pedidoLoc()
+    pedidoPiso()
+
     pedidoVendno()
     pedidoFrete()
     pedidoValor()
     pedidoObs()
+    pedidoNfEnt()
+    pedidoDataEnt()
+    pedidoHoraEnt()
+
     pedidoUsername()
     shiftSelect()
   }

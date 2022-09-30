@@ -8,6 +8,7 @@ class PedidoEntregaViewModel(view: IPedidoEntregaView) : ViewModel<IPedidoEntreg
   val tabEntregaImprimirViewModel = PedidoEntregaImprimirViewModel(this)
   val tabEntregaImpressoSemNotaViewModel = PedidoEntregaImpressoSemNotaViewModel(this)
   val tabEntregaPendenteViewModel = PedidoEntregaPendenteViewModel(this)
+  val tabEntregaImpressoSepararViewModel = PedidoEntregaImpressoSepararViewModel(this)
   val tabEntregaImpressoComNotaViewModel = PedidoEntregaImpressoComNotaViewModel(this)
   val tabEntregadorViewModel = PedidoEntregadorViewModel(this)
   val tabRotaViewModel = PedidoEntregaRotaViewModel(this)
@@ -18,6 +19,7 @@ interface IPedidoEntregaView : IView {
   val tabEntregaImpressoSemNota: IPedidoEntregaImpressoSemNota
   val tabEntregaPendente: IPedidoEntregaPendente
   val tabEntregaImpressoComNota: IPedidoEntregaImpressoComNota
+  val tabEntregaImpressoSeparar: IPedidoEntregaImpressoSeparar
   val tabEntregador: IPedidoEntregador
   val tabEntregaRota: IPedidoEntregaRota
 

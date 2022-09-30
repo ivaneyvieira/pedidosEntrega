@@ -25,6 +25,8 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
   override val tabEntregaPendente = TabEntregaPendente(viewModel.tabEntregaPendenteViewModel)
   override val tabEntregaImpressoComNota =
     TabEntregaImpressoComNota(viewModel.tabEntregaImpressoComNotaViewModel)
+  override val tabEntregaImpressoSeparar =
+    TabEntregaImpressoSeparar(viewModel.tabEntregaImpressoSepararViewModel)
   override val tabEntregador = TabEntregador(viewModel.tabEntregadorViewModel)
   override val tabEntregaRota = TabEntregaRota(viewModel.tabRotaViewModel)
 
@@ -54,6 +56,11 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
         update = false
       }
       tabPanel(tabEntregaRota, update)
+      update = false
+
+      if (user?.entrega_separar == true) {
+        tabPanel(tabEntregaImpressoSeparar, update)
+      }
     }
 
   }

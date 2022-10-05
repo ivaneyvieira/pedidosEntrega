@@ -38,6 +38,13 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       }
     }
 
+    button("Separado") {
+      icon = CLOSE.create()
+      addClickListener {
+        viewModel.marcaSeparado()
+      }
+    }
+
     edtPedidoPesquisa = textField("Pesquisa") {
       this.valueChangeMode = ValueChangeMode.LAZY
       this.valueChangeTimeout = 1500

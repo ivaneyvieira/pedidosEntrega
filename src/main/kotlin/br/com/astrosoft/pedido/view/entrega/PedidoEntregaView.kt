@@ -5,10 +5,8 @@ import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.tabPanel
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.view.PedidoEntregaLayout
 import br.com.astrosoft.pedido.view.reports.RelatorioPedido
-import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaRota
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaView
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaViewModel
 import com.github.mvysny.karibudsl.v10.tabSheet
@@ -27,6 +25,8 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
     TabEntregaImpressoComNota(viewModel.tabEntregaImpressoComNotaViewModel)
   override val tabEntregaImpressoSeparar =
     TabEntregaImpressoSeparar(viewModel.tabEntregaImpressoSepararViewModel)
+  override val tabEntregaImpressoSeparado =
+    TabEntregaImpressoSeparado(viewModel.tabEntregaImpressoSeparadoViewModel)
   override val tabEntregador = TabEntregador(viewModel.tabEntregadorViewModel)
   override val tabEntregaRota = TabEntregaRota(viewModel.tabRotaViewModel)
 
@@ -61,8 +61,11 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
       if (user?.entrega_separar == true) {
         tabPanel(tabEntregaImpressoSeparar, update)
       }
-    }
 
+      if (user?.entrega_separado == true) {
+        tabPanel(tabEntregaImpressoSeparado, update)
+      }
+    }
   }
 
   override fun showRelatorioPedidoMinuta(pedidos: List<Pedido>) {

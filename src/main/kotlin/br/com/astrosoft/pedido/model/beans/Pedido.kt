@@ -135,6 +135,8 @@ class Pedido(
 
     fun listaPedidoImpressoSeparar(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
 
+    fun listaPedidoImpressoSeparado(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
+
     fun listaPedidoImpressoComNota(filtro: FiltroPedido): List<Pedido> =
       listaPedido(filtro).filter { it.impressoComNota }
 

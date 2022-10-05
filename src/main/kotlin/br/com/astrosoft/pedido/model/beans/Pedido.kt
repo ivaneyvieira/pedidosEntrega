@@ -13,6 +13,7 @@ class Pedido(
   val siglaLoja: String,
   val pedido: Int,
   val marca: String,
+  val separado: String,
   val data: LocalDate?,
   val dataEntrega: LocalDate?,
   val pdvno: Int,
@@ -107,6 +108,11 @@ class Pedido(
     saci.ativaMarca(loja, pedido, " ")
     desmarcaDataHora()
   }
+
+  fun marcaSeparado(marca: String) {
+    saci.marcaSeparado(loja, pedido, marca)
+  }
+
 
   fun marcaDataHora(dataHora: LocalDateTime) {
     saci.ativaDataHoraImpressao(loja, pedido, dataHora.toLocalDate(), dataHora.toLocalTime())

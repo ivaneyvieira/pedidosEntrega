@@ -12,11 +12,15 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
 
   private fun listPedidosEntregaImpressoSeparar(): List<Pedido> {
     val pesquisa = subView.pedidoPesquisa
-    return Pedido.listaPedidoImpressoSeparar(FiltroPedido(tipo = ENTREGA,
-                                                          pesquisa = pesquisa,
-                                                          ecommerce = false,
-                                                          dataInicial = null,
-                                                          dataFinal = null))
+    return Pedido
+      .listaPedidoImpressoSeparar(FiltroPedido(tipo = ENTREGA,
+                                               pesquisa = pesquisa,
+                                               ecommerce = false,
+                                               dataInicial = null,
+                                               dataFinal = null))
+      .filter {
+        it.separado != "S"
+      }
   }
 
   fun updateGridImpressoSeparar() {
@@ -27,6 +31,15 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
     val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
     pedidos.forEach { pedido ->
       pedido.desmarcaImpresso()
+    }
+
+    updateGridImpressoSeparar()
+  }
+
+  fun marcaSeparado() = exec(viewModel.view) {
+    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    pedidos.forEach { pedido ->
+      pedido.marcaSeparado("S")
     }
 
     updateGridImpressoSeparar()

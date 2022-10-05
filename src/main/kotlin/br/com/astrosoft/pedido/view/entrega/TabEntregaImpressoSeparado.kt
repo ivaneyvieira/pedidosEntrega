@@ -31,12 +31,13 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
-    if (AppConfig.isAdmin) button("Desmarcar") {
+    button("Volta") {
       icon = CLOSE.create()
       addClickListener {
         viewModel.desmarcaSeparado()
       }
     }
+
 
     edtPedidoPesquisa = textField("Pesquisa") {
       this.valueChangeMode = ValueChangeMode.LAZY

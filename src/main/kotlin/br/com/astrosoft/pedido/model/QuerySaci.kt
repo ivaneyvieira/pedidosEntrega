@@ -89,6 +89,15 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
+  fun marcaSeparado(storeno: Int, ordno: Int, marca: String) {
+    val sql = "/sqlSaci/marcaSeparado.sql"
+    script(sql) {
+      addOptionalParameter("storeno", storeno)
+      addOptionalParameter("ordno", ordno)
+      addOptionalParameter("marca", marca)
+    }
+  }
+
   fun ativaDataHoraImpressao(storeno: Int, ordno: Int, data: LocalDate?, hora: LocalTime?) {
     val sql = "/sqlSaci/ativaDataHoraImpressao.sql"
     script(sql) {

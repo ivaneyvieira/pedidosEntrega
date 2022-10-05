@@ -123,6 +123,12 @@ class UserSaci {
       bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_SEPARAR
       else bitAcesso and BIT_ENTRADA_IMPRESSO_SEPARAR.inv()
     }
+  var entrega_separado
+    get() = (bitAcesso and BIT_ENTRADA_IMPRESSO_SEPARADO) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_SEPARADO
+      else bitAcesso and BIT_ENTRADA_IMPRESSO_SEPARADO.inv()
+    }
 
   val admin
     get() = login == "ADM"
@@ -146,6 +152,7 @@ class UserSaci {
     private val BIT_ECOMMERCER_IMPRESSO_COM_NOTA = 2.pow(15)
     private val BIT_ECOMMERCER_IMPRESSO_SEM_NOTA = 2.pow(16)
     private val BIT_ENTRADA_IMPRESSO_SEPARAR = 2.pow(17)
+    private val BIT_ENTRADA_IMPRESSO_SEPARADO = 2.pow(18)
 
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser().filter { it.ativo }

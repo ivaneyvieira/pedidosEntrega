@@ -107,7 +107,6 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     pedidoDataEnt()
     pedidoHoraEnt()
 
-    pedidoUsername()
     shiftSelect()
 
     this.setClassNameGenerator {

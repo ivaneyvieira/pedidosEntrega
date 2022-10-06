@@ -82,6 +82,7 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
     pedidoDataEnt()
     pedidoHoraEnt()
 
+    pedidoUsername()
     shiftSelect()
   }
 }

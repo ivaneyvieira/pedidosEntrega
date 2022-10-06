@@ -29,11 +29,13 @@ class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewMod
 
   fun desmarcaSeparado() = exec(viewModel.view) {
     val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
-    pedidos.forEach { pedido ->
-      pedido.marcaSeparado(" ")
-    }
+    subView.confirmaVolta {
+      pedidos.forEach { pedido ->
+        pedido.marcaSeparado(" ")
+      }
 
-    updateGridImpressoSeparado()
+      updateGridImpressoSeparado()
+    }
   }
 
   fun imprimirPedidos(itensSelecionado: List<Pedido>) {
@@ -45,4 +47,5 @@ interface IPedidoEntregaImpressoSeparado {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoPesquisa: String
+  fun confirmaVolta(exec : () -> Unit)
 }

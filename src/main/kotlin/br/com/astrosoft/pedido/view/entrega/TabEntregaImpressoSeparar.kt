@@ -15,6 +15,8 @@ import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
+import org.claspina.confirmdialog.ButtonOption
+import org.claspina.confirmdialog.ConfirmDialog
 
 class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewModel) : TabPanelGrid<Pedido>(),
         IPedidoEntregaImpressoSeparar {
@@ -27,6 +29,19 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
 
   override val pedidoPesquisa: String
     get() = edtPedidoPesquisa.value ?: ""
+
+  override fun confirmaSeparado(exec: () -> Unit) {
+    ConfirmDialog
+      .createQuestion()
+      .withCaption("Confirmação")
+      .withMessage("Marca como separado?")
+      .withYesButton({
+                       exec()
+                     },
+                     ButtonOption.caption("Sim"))
+      .withNoButton({ }, ButtonOption.caption("Não"))
+      .open()
+  }
 
   override fun classPanel() = Pedido::class
 
@@ -66,6 +81,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     pedidoDataHoraPrint()
     pedidoArea()
     pedidoRota()
+    pedidoCarga()
 
     pedidoNfFat()
     pedidoDataFat()

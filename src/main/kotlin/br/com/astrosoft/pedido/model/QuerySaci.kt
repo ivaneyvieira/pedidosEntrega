@@ -6,6 +6,7 @@ import br.com.astrosoft.framework.util.DB
 import br.com.astrosoft.framework.util.parserDate
 import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedido.model.beans.*
+import br.com.astrosoft.pedido.viewmodel.entrega.EZonaCarga
 import java.time.LocalDate
 import java.time.LocalTime
 import java.util.*
@@ -135,6 +136,15 @@ class QuerySaci : QueryDB(driver, url, username, password) {
       addOptionalParameter("dateF", dateF.toSaciDate())
       addOptionalParameter("empno", empno)
       addOptionalParameter("ecommerce", ec)
+    }
+  }
+
+  fun marcaCarga(storeno: Int, ordno: Int, carga: EZonaCarga) {
+    val sql = "/sqlSaci/marcaCarga.sql"
+    script(sql) {
+      addOptionalParameter("storeno", storeno)
+      addOptionalParameter("ordno", ordno)
+      addOptionalParameter("marca", carga.codigo.toString())
     }
   }
 

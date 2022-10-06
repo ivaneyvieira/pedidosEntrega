@@ -43,6 +43,10 @@ fun Grid<Pedido>.pedidoRota() = addColumnString(Pedido::rota) {
   this.setHeader("Rota")
 }
 
+fun Grid<Pedido>.pedidoCarga() = addColumnString(Pedido::descricaoZonaCarga) {
+  this.setHeader("Carga")
+}
+
 fun Grid<Pedido>.pedidoNfFat() = addColumnString(Pedido::nfFat) {
   this.setHeader("NF Fat")
 }

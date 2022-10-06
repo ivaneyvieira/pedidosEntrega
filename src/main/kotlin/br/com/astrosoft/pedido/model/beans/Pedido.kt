@@ -2,6 +2,7 @@ package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.pedido.model.saci
+import br.com.astrosoft.pedido.viewmodel.entrega.EZonaCarga
 import java.sql.Time
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -14,6 +15,7 @@ class Pedido(
   val pedido: Int,
   val marca: String,
   val separado: String,
+  val zonaCarga: String,
   val data: LocalDate?,
   val dataEntrega: LocalDate?,
   val pdvno: Int,
@@ -75,6 +77,11 @@ class Pedido(
   val tipoStr
     get() = if (tipo == "E") "Entrega" else "Retira"
 
+  val descricaoZonaCarga: String?
+    get() = EZonaCarga.values().firstOrNull {
+      it.codigo.toString() == zonaCarga
+    }?.descricao
+
   val rotaArea
     get() = when {
       area.startsWith("NORTE")    -> "Norte"
@@ -113,7 +120,6 @@ class Pedido(
     saci.marcaSeparado(loja, pedido, marca)
   }
 
-
   fun marcaDataHora(dataHora: LocalDateTime) {
     saci.ativaDataHoraImpressao(loja, pedido, dataHora.toLocalDate(), dataHora.toLocalTime())
   }
@@ -125,6 +131,9 @@ class Pedido(
   fun canPrint(): Boolean = dataHoraPrint == null || (AppConfig.isAdmin)
 
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
+  fun marcaCarga(carga: EZonaCarga) {
+    saci.marcaCarga(loja, pedido, carga)
+  }
 
   companion object {
     fun listaPedido(filtro: FiltroPedido): List<Pedido> {
@@ -140,6 +149,7 @@ class Pedido(
       listaPedido(filtro).filter { it.impressoSemNota }
 
     fun listaPedidoImpressoSeparar(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
+    fun listaPedidoImpressoCarga(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
 
     fun listaPedidoImpressoSeparado(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
 

@@ -11,7 +11,8 @@ import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSepararVie
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
+import com.vaadin.flow.component.icon.VaadinIcon
+import com.vaadin.flow.component.icon.VaadinIcon.*
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
@@ -54,7 +55,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     }
 
     button("Separado") {
-      icon = CLOSE.create()
+      icon = ARROW_RIGHT.create()
       addClickListener {
         viewModel.marcaSeparado()
       }

@@ -111,7 +111,7 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     shiftSelect()
 
     this.setClassNameGenerator {
-      if (it.separado == "S") "destaque1"
+      if (it.separado == "S") "fonteAzul"
       else ""
     }
   }

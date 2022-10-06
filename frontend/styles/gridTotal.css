@@ -18,6 +18,11 @@
     font-weight: bold;
 }
 
+[part~="cell"].fonteAzul {
+    color: hsla(214, 90%, 52%);
+}
+
+
 
 [part~="footer-cell"] {
     font-size: 120%;

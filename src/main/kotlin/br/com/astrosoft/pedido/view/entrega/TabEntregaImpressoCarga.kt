@@ -12,7 +12,7 @@ import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoCargaViewM
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
+import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
@@ -58,14 +58,14 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
 
   override fun HorizontalLayout.toolBarConfig() {
     if (AppConfig.isAdmin) button("Desmarcar") {
-      icon = CLOSE.create()
+      icon = VaadinIcon.CLOSE.create()
       addClickListener {
         viewModel.desmarcaCarga()
       }
     }
 
     button("Carga") {
-      icon = CLOSE.create()
+      icon = VaadinIcon.TRUCK.create()
       addClickListener {
         viewModel.marcaCarga()
       }

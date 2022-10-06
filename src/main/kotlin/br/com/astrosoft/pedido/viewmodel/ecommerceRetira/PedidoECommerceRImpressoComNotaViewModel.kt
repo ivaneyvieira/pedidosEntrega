@@ -12,12 +12,11 @@ class PedidoECommerceRImpressoComNotaViewModel(val viewModel: PedidoECommerceRVi
 
   private fun listPedidosECommerceImpressoComNota(): List<Pedido> {
     val numPedido = subView.pedidoImpressoComNota
-    return Pedido.listaPedidoImpressoComNota(FiltroPedido(tipo = RETIRA,
-                                                          ecommerce = true,
-                                                          dataInicial = null,
-                                                          dataFinal = null)).filter { pedido ->
-      pedido.pedido == numPedido || numPedido == 0
-    }
+    return Pedido
+      .listaPedidoImpressoComNota(FiltroPedido(tipo = RETIRA, ecommerce = true, dataInicial = null, dataFinal = null))
+      .filter { pedido ->
+        pedido.pedido == numPedido || numPedido == 0
+      }
   }
 
   fun updateGridImpressoComNota() {

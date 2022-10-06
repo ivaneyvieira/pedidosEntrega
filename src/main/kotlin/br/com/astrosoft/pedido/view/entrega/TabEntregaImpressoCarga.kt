@@ -11,7 +11,6 @@ import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoCarga
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoCargaViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
-import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
@@ -46,11 +45,12 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
       .withCaption("Selecione a zona da carga")
       .withMessage(combo)
       .withOkButton({
-                       val value = combo.value
-                       if (value != null) exec(value)
-                     },
-                     ButtonOption.caption("Ok"))
-      .withCancelButton({  }, ButtonOption.caption("Cancelar"))
+                      val value =
+                        combo.value
+                      if (value != null) exec(value)
+                    },
+                    ButtonOption.caption("Ok"))
+      .withCancelButton({ }, ButtonOption.caption("Cancelar"))
       .open()
   }
 

@@ -17,56 +17,46 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
 
-class RelatorioEntregador(
-  val entregadores: List<Entregador>,
-  val dataInicial: LocalDate,
-  val dataFinal: LocalDate
-                         ) {
-  val entregadorFuncaoName =
-    col.column("Função", Entregador::funcaoName.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(100)
-      }
+class RelatorioEntregador(val entregadores: List<Entregador>, val dataInicial: LocalDate, val dataFinal: LocalDate) {
+  val entregadorFuncaoName = col.column("Função", Entregador::funcaoName.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(LEFT)
+    this.setFixedWidth(100)
+  }
   val entregadorEmpno = col.column("Código", Entregador::empno.name, type.integerType()).apply {
-      this.setHorizontalTextAlignment(RIGHT)
-      this.setPattern("0")
-      this.setFixedWidth(40)
-    }
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("0")
+    this.setFixedWidth(40)
+  }
   val entregadorNome = col.column("Entregador", Entregador::nome.name, type.stringType()).apply {
-      this.setHorizontalTextAlignment(LEFT)
-    }
+    this.setHorizontalTextAlignment(LEFT)
+  }
   val entregadorQtdEnt = col.column("Qtd Ent", Entregador::qtdEnt.name, type.integerType()).apply {
-      this.setHorizontalTextAlignment(RIGHT)
-      this.setFixedWidth(40)
-    }
-  val entregadorPisoCxs =
-    col.column("Piso Cxs", Entregador::pisoCxs.name, type.integerType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setFixedWidth(40)
-      }
-  val entregadorPisoPeso =
-    col.column("Piso Peso", Entregador::pisoPeso.name, type.doubleType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(80)
-      }
-  val entregadorValorNota =
-    col.column("Valor Nota", Entregador::valorNota.name, type.doubleType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(80)
-      }
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setFixedWidth(40)
+  }
+  val entregadorPisoCxs = col.column("Piso Cxs", Entregador::pisoCxs.name, type.integerType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setFixedWidth(40)
+  }
+  val entregadorPisoPeso = col.column("Piso Peso", Entregador::pisoPeso.name, type.doubleType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("#,##0.00")
+    this.setFixedWidth(80)
+  }
+  val entregadorValorNota = col.column("Valor Nota", Entregador::valorNota.name, type.doubleType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("#,##0.00")
+    this.setFixedWidth(80)
+  }
 
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
-    return listOf(
-      entregadorFuncaoName,
-      entregadorEmpno,
-      entregadorNome,
-      entregadorQtdEnt,
-      entregadorPisoCxs,
-      entregadorPisoPeso,
-      entregadorValorNota
-                 )
+    return listOf(entregadorFuncaoName,
+                  entregadorEmpno,
+                  entregadorNome,
+                  entregadorQtdEnt,
+                  entregadorPisoCxs,
+                  entregadorPisoPeso,
+                  entregadorValorNota)
   }
 
   private fun titleBuider(): ComponentBuilder<*, *>? {
@@ -74,13 +64,11 @@ class RelatorioEntregador(
       horizontalFlowList {
         text("ENGECOPI", LEFT)
         text("DESEMPENHO DE ENTREGADA - ENTREGADORES", CENTER, 300)
-        text(
-          "${
-            LocalDate.now().format()
-          }-${
-            LocalTime.now().format()
-          }", RIGHT
-            )
+        text("${
+          LocalDate.now().format()
+        }-${
+          LocalTime.now().format()
+        }", RIGHT)
       }
       horizontalFlowList {
         text("Perído: ${dataInicial.format()} - ${dataFinal.format()}")
@@ -94,17 +82,16 @@ class RelatorioEntregador(
 
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {
     val style = stl.style(columnStyle).setTopBorder(stl.pen1Point())
-    return listOf(
-      sbt.sum(entregadorQtdEnt),
-      sbt.sum(entregadorPisoCxs),
-      sbt.sum(entregadorPisoPeso),
-      sbt.sum(entregadorValorNota)
-                 )
+    return listOf(sbt.sum(entregadorQtdEnt),
+                  sbt.sum(entregadorPisoCxs),
+                  sbt.sum(entregadorPisoPeso),
+                  sbt.sum(entregadorValorNota))
   }
 
   fun makeReport(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()
-    return DynamicReports.report()
+    return DynamicReports
+      .report()
       .title(titleBuider())
       .setTemplate(Templates.reportTemplate)
       .columns(* colunms)
@@ -112,22 +99,15 @@ class RelatorioEntregador(
       .setDataSource(entregadores)
       .summary(pageFooterBuilder())
       .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
-      .setSubtotalStyle(
-        stl.style().setPadding(2).setTopBorder(stl.pen1Point())
-                       )
-      .pageFooter(
-        DynamicReports.cmp.pageNumber().setHorizontalTextAlignment(RIGHT).setStyle(
-            stl.style().setFontSize(8)
-                                                                                  )
-                 )
+      .setSubtotalStyle(stl.style().setPadding(2).setTopBorder(stl.pen1Point()))
+      .pageFooter(DynamicReports.cmp
+                    .pageNumber()
+                    .setHorizontalTextAlignment(RIGHT)
+                    .setStyle(stl.style().setFontSize(8)))
   }
 
   companion object {
-    fun processaEntregadores(
-      list: List<Entregador>,
-      dataInicial: LocalDate,
-      dataFinal: LocalDate
-                            ): ByteArray {
+    fun processaEntregadores(list: List<Entregador>, dataInicial: LocalDate, dataFinal: LocalDate): ByteArray {
       val report = RelatorioEntregador(list, dataInicial, dataFinal).makeReport()
       val jasperPrint = report?.toJasperPrint()
       val exporter = JRPdfExporter()

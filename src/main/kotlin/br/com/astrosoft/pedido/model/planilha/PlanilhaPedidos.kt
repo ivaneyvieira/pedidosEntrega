@@ -11,17 +11,17 @@ import java.io.ByteArrayOutputStream
 class PlanilhaPedidos {
   private val campos: List<Campo<*, EntregadorNotas>> =
     listOf(CampoInt("Carga") { ent -> ent.carganoCol ?: 0 },
-      CampoInt("Loja") { ent -> ent.lojaCol ?: 0 },
-      CampoInt("Pedido") { ent -> ent.numPedidoCol ?: 0 },
-      CampoString("Data Pedido") { ent -> ent.datePedidoCol.format() },
-      CampoString("Nota Fat") { ent -> ent.notaFatCol ?: "" },
-      CampoString("Data Fat") { ent -> ent.dateFatCol.format() },
-      CampoString("Nota Ent") { ent -> ent.notaEntCol ?: "" },
-      CampoString("Data Ent") { ent -> ent.dateEntCol.format() },
-      CampoString("Entrega") { ent -> ent.entregaCol.format() },
-      CampoInt("Piso Cxs") { ent -> ent.pisoCxs ?: 0 },
-      CampoNumber("Piso Peso") { ent -> ent.pisoPeso ?: 0.00 },
-      CampoNumber("Valor") { ent -> ent.valor ?: 0.00 })
+           CampoInt("Loja") { ent -> ent.lojaCol ?: 0 },
+           CampoInt("Pedido") { ent -> ent.numPedidoCol ?: 0 },
+           CampoString("Data Pedido") { ent -> ent.datePedidoCol.format() },
+           CampoString("Nota Fat") { ent -> ent.notaFatCol ?: "" },
+           CampoString("Data Fat") { ent -> ent.dateFatCol.format() },
+           CampoString("Nota Ent") { ent -> ent.notaEntCol ?: "" },
+           CampoString("Data Ent") { ent -> ent.dateEntCol.format() },
+           CampoString("Entrega") { ent -> ent.entregaCol.format() },
+           CampoInt("Piso Cxs") { ent -> ent.pisoCxs ?: 0 },
+           CampoNumber("Piso Peso") { ent -> ent.pisoPeso ?: 0.00 },
+           CampoNumber("Valor") { ent -> ent.valor ?: 0.00 })
 
   fun grava(listaBean: List<EntregadorNotas>): ByteArray {
     val wb = workbook {

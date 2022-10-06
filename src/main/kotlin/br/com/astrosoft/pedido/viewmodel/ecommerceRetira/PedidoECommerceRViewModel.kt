@@ -4,8 +4,7 @@ import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.pedido.model.beans.Pedido
 
-class PedidoECommerceRViewModel(view: IPedidoECommerceRView) : ViewModel<IPedidoECommerceRView>
-                                                              (view) {
+class PedidoECommerceRViewModel(view: IPedidoECommerceRView) : ViewModel<IPedidoECommerceRView>(view) {
   val tabECommerceRImprimirViewModel = PedidoECommerceRImprimirViewModel(this)
   val tabECommerceRImpressoSemNotaViewModel = PedidoECommerceRImpressoSemNotaViewModel(this)
 

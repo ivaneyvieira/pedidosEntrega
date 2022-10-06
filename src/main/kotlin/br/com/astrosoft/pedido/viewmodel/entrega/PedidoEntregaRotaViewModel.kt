@@ -18,14 +18,11 @@ class PedidoEntregaRotaViewModel(val viewModel: PedidoEntregaViewModel) {
 
   fun relatorioSimplificado() {
     val filtro = subView.filtro()
-    val rotaAberta =  subView.rotaAberta()
-    val listRotasLoja =
-            Pedido.listaPedidoImpressoComNota(filtro)
-              .groupRotaLoja().filter {
-                rotaAberta ?: return@filter true
-                it.nomeRota == rotaAberta.nomeRota
-              }
-              .sortedBy { it.nomeRota + it.loja.toString().lpad(2, "0") }
+    val rotaAberta = subView.rotaAberta()
+    val listRotasLoja = Pedido.listaPedidoImpressoComNota(filtro).groupRotaLoja().filter {
+        rotaAberta ?: return@filter true
+        it.nomeRota == rotaAberta.nomeRota
+      }.sortedBy { it.nomeRota + it.loja.toString().lpad(2, "0") }
 
     subView.showRotaLoja(listRotasLoja)
   }

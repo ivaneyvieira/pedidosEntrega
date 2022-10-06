@@ -123,7 +123,7 @@ fun Grid<Entregador>.entregadorQtdEnt() = addColumnInt(Entregador::qtdEnt) {
   this.grid.dataProvider.addDataProviderListener {
     val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
-    }.sumBy { it.qtdEnt }
+    }.sumOf { it.qtdEnt }
     this.setFooter(total.format())
   }
 }
@@ -133,7 +133,7 @@ fun Grid<Entregador>.entregadorPisoCxs() = addColumnInt(Entregador::pisoCxs) {
   this.grid.dataProvider.addDataProviderListener {
     val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
-    }.sumBy { it.pisoCxs }
+    }.sumOf { it.pisoCxs }
     this.setFooter(total.format())
   }
 }
@@ -143,7 +143,7 @@ fun Grid<Entregador>.entregadorPisoPeso() = addColumnDouble(Entregador::pisoPeso
   this.grid.dataProvider.addDataProviderListener {
     val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
-    }.sumByDouble { it.pisoPeso }
+    }.sumOf { it.pisoPeso }
     this.setFooter(total.format())
 
   }
@@ -154,7 +154,7 @@ fun Grid<Entregador>.entregadorValorNota() = addColumnDouble(Entregador::valorNo
   this.grid.dataProvider.addDataProviderListener {
     val total = this.grid.dataProvider.fetchAll().mapNotNull {
       it as? Entregador
-    }.sumByDouble { it.valorNota }
+    }.sumOf { it.valorNota }
     this.setFooter(total.format())
   }
 }
@@ -243,7 +243,7 @@ fun TreeGrid<Rota>.rotaNome() = addColumnString(Rota::nomeRota) {
   this.width = "50px"
 }
 
-fun TreeGrid<Rota>.rotaLojaNumero()= addHierarchyColumn { it.loja?.toString() ?: "" }.apply {
+fun TreeGrid<Rota>.rotaLojaNumero() = addHierarchyColumn { it.loja?.toString() ?: "" }.apply {
   setHeader("Loja")
   this.isAutoWidth = false
   this.width = "20px"

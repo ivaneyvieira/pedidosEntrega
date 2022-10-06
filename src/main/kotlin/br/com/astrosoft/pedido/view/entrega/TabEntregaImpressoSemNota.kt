@@ -2,7 +2,6 @@ package br.com.astrosoft.pedido.view.entrega
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
-import br.com.astrosoft.framework.view.addColumnButton
 import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
@@ -19,7 +18,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
 
 class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewModel) : TabPanelGrid<Pedido>(),
-                                                                                        IPedidoEntregaImpressoSemNota {
+        IPedidoEntregaImpressoSemNota {
   private lateinit var edtPedidoPesquisa: TextField
   override val label = "Impresso sem Nota"
 

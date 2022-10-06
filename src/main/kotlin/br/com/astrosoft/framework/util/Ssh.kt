@@ -6,12 +6,7 @@ import com.jcraft.jsch.JSch
 import com.jcraft.jsch.Session
 import java.util.*
 
-class Ssh(
-  private val host: String,
-  val user: String,
-  private val password: String,
-  private val port: Int = 22
-         ) {
+class Ssh(private val host: String, val user: String, private val password: String, private val port: Int = 22) {
   private val config = Properties()
 
   fun shell(exec: Session.() -> Unit) {
@@ -24,12 +19,12 @@ class Ssh(
     config["StrictHostKeyChecking"] = "no"
     val jsch = JSch()
     jsch.getSession(user, host, port)?.let { session ->
-        session.setPassword(password)
-        session.setConfig(config)
-        session.connect()
-        exec(session)
-        session.disconnect()
-      }
+      session.setPassword(password)
+      session.setConfig(config)
+      session.connect()
+      exec(session)
+      session.disconnect()
+    }
   }
 }
 

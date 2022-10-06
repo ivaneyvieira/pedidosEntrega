@@ -7,8 +7,7 @@ import javax.servlet.http.HttpServletRequest
 
 object SecurityUtils {
   fun isFrameworkInternalRequest(request: HttpServletRequest?): Boolean {
-    val parameterValue =
-      request?.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER) ?: return false
+    val parameterValue = request?.getParameter(ApplicationConstants.REQUEST_TYPE_PARAMETER) ?: return false
     return RequestType.values().any { it.identifier == parameterValue }
   }
 

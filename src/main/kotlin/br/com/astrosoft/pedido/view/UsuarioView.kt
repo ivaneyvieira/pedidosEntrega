@@ -45,12 +45,7 @@ class UsuarioView : ViewLayout<UsuarioViewModel>(), IUsuarioView {
 
   private fun gridCrud(): GridCrud<UserSaci> {
     val crud: GridCrud<UserSaci> = GridCrud<UserSaci>(UserSaci::class.java)
-    crud.grid.setColumns(
-        UserSaci::no.name,
-        UserSaci::login.name,
-        UserSaci::name.name,
-        UserSaci::impressora.name
-                        )
+    crud.grid.setColumns(UserSaci::no.name, UserSaci::login.name, UserSaci::name.name, UserSaci::impressora.name)
 
     crud.grid.addThemeVariants(LUMO_COMPACT)
 
@@ -61,9 +56,9 @@ class UsuarioView : ViewLayout<UsuarioViewModel>(), IUsuarioView {
 
   private fun setOperationd(crud: GridCrud<UserSaci>) {
     crud.setOperations({ viewModel.findAll() },
-      { user: UserSaci -> viewModel.add(user) },
-      { user: UserSaci? -> viewModel.update(user) },
-      { user: UserSaci? -> viewModel.delete(user) })
+                       { user: UserSaci -> viewModel.add(user) },
+                       { user: UserSaci? -> viewModel.update(user) },
+                       { user: UserSaci? -> viewModel.delete(user) })
   }
 
   private fun Grid<UserSaci>.addColumnBool(caption: String, value: UserSaci.() -> Boolean) {
@@ -74,19 +69,16 @@ class UsuarioView : ViewLayout<UsuarioViewModel>(), IUsuarioView {
     column.setHeader(caption)
     column.textAlign = ColumnTextAlign.CENTER
   }
-
 }
 
 class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCrudFormFactory<UserSaci>() {
   private lateinit var comboAbreviacao: MultiselectComboBox<String>
 
-  override fun buildNewForm(
-    operation: CrudOperation?,
-    domainObject: UserSaci?,
-    readOnly: Boolean,
-    cancelButtonClickListener: ComponentEventListener<ClickEvent<Button>>?,
-    operationButtonClickListener: ComponentEventListener<ClickEvent<Button>>?
-                           ): Component {
+  override fun buildNewForm(operation: CrudOperation?,
+                            domainObject: UserSaci?,
+                            readOnly: Boolean,
+                            cancelButtonClickListener: ComponentEventListener<ClickEvent<Button>>?,
+                            operationButtonClickListener: ComponentEventListener<ClickEvent<Button>>?): Component {
     val binder = Binder<UserSaci>(UserSaci::class.java)
     return VerticalLayout().apply {
       isSpacing = false
@@ -197,8 +189,8 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
   override fun buildCaption(operation: CrudOperation?, domainObject: UserSaci?): String {
     return operation?.let { crudOperation ->
       when (crudOperation) {
-        READ -> "Consulta"
-        ADD -> "Adiciona"
+        READ   -> "Consulta"
+        ADD    -> "Adiciona"
         UPDATE -> "Atualiza"
         DELETE -> "Remove"
       }
@@ -206,9 +198,6 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
   }
 
   override fun showError(operation: CrudOperation?, e: Exception?) {
-    ConfirmDialog.createError()
-      .withCaption("Erro do aplicativo")
-      .withMessage(e?.message ?: "Erro desconhecido")
-      .open()
+    ConfirmDialog.createError().withCaption("Erro do aplicativo").withMessage(e?.message ?: "Erro desconhecido").open()
   }
 }

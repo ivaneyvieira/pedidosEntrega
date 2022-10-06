@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 
 class TabRetiraImpressoComNota(val viewModel: PedidoRetiraImpressoComNotaViewModel) : TabPanelGrid<Pedido>(),
-                                                                                      IPedidoRetiraImpressoComNota {
+        IPedidoRetiraImpressoComNota {
   private lateinit var edtPedidoImpressoComNota: TextField
   override val label = "Editor de nota"
 

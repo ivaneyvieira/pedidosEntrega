@@ -10,12 +10,12 @@ import java.io.ByteArrayOutputStream
 class PlanilhaEntregador {
   private val campos: List<Campo<*, Entregador>> =
     listOf(CampoString("Função") { ent -> ent.funcaoName },
-      CampoInt("Número") { ent -> ent.empno },
-      CampoString("Nome") { ent -> ent.nome },
-      CampoInt("Qtd Ent") { ent -> ent.qtdEnt },
-      CampoInt("Piso Cxs") { ent -> ent.pisoCxs },
-      CampoNumber("Piso Peso") { ent -> ent.pisoPeso },
-      CampoNumber("Valor") { ent -> ent.valorNota })
+           CampoInt("Número") { ent -> ent.empno },
+           CampoString("Nome") { ent -> ent.nome },
+           CampoInt("Qtd Ent") { ent -> ent.qtdEnt },
+           CampoInt("Piso Cxs") { ent -> ent.pisoCxs },
+           CampoNumber("Piso Peso") { ent -> ent.pisoPeso },
+           CampoNumber("Valor") { ent -> ent.valorNota })
 
   fun grava(listaBean: List<Entregador>): ByteArray {
     val wb = workbook {

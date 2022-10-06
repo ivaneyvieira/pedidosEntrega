@@ -66,7 +66,8 @@ abstract class ViewLayout<VM : ViewModel<*>> : VerticalLayout(), IView, BeforeLe
   }
 
   private fun showQuestion(msg: String, execYes: () -> Unit, execNo: () -> Unit) {
-    ConfirmDialog.createQuestion()
+    ConfirmDialog
+      .createQuestion()
       .withCaption("Confirmação")
       .withMessage(msg)
       .withYesButton({
@@ -314,26 +315,27 @@ class TabClick(s: String?) : Tab(s) {
 fun DatePicker.localePtBr() {
   this.locale = Locale("pt-br")
   this.i18n =
-          DatePickerI18n().setWeek("semana")
-            .setCalendar("calendário")
-            .setClear("apagar")
-            .setToday("hoje")
-            .setCancel("cancelar")
-            .setFirstDayOfWeek(1)
-            .setMonthNames(listOf("janeiro",
-                                  "fevereiro",
-                                  "março",
-                                  "abril",
-                                  "maio",
-                                  "junho",
-                                  "julho",
-                                  "agosto",
-                                  "setembro",
-                                  "outubro",
-                                  "novembro",
-                                  "dezembro"))
-            .setWeekdays(listOf("domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"))
-            .setWeekdaysShort(listOf("dom", "seg", "ter", "qua", "qui", "sex", "sab"))
+    DatePickerI18n()
+      .setWeek("semana")
+      .setCalendar("calendário")
+      .setClear("apagar")
+      .setToday("hoje")
+      .setCancel("cancelar")
+      .setFirstDayOfWeek(1)
+      .setMonthNames(listOf("janeiro",
+                            "fevereiro",
+                            "março",
+                            "abril",
+                            "maio",
+                            "junho",
+                            "julho",
+                            "agosto",
+                            "setembro",
+                            "outubro",
+                            "novembro",
+                            "dezembro"))
+      .setWeekdays(listOf("domingo", "segunda", "terça", "quarta", "quinta", "sexta", "sábado"))
+      .setWeekdaysShort(listOf("dom", "seg", "ter", "qua", "qui", "sex", "sab"))
 }
 
 fun <T> ListDataProvider<T>.updateItens(itens: List<T>) {

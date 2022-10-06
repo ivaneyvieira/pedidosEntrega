@@ -32,8 +32,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 @CssImport(value = "./styles/gridTotal.css", themeFor = "vaadin-grid")
-class TabEntregador(val viewModel: PedidoEntregadorViewModel) : TabPanelGrid<Entregador>(),
-                                                                IPedidoEntregador {
+class TabEntregador(val viewModel: PedidoEntregadorViewModel) : TabPanelGrid<Entregador>(), IPedidoEntregador {
   private lateinit var edtEntregadorDateI: DatePicker
   private lateinit var edtEntregadorDateF: DatePicker
 
@@ -50,9 +49,8 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel) : TabPanelGrid<Ent
 
   private fun showDialogDetailPedido(entregador: Entregador?) {
     entregador ?: return
-    val entregadorList = entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false)
-      .groupByPedido()
-      .classificaLinhas()
+    val entregadorList =
+      entregador.findEntregadoresNotas(dateI, dateF, ecommerce = false).groupByPedido().classificaLinhas()
     val form = SubWindowForm("${entregador.funcaoName} ${entregador.nome}", {
       buttonDownloadPedidos(entregadorList)
       buttonPdfPedido(entregadorList.filter { it.funcaoName != "" })
@@ -204,12 +202,11 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel) : TabPanelGrid<Ent
   }
 
   private fun HasComponents.buttonDownloadPedidos(lista: List<EntregadorNotas>) {
-    val button =
-      LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Pedidos", "xlsx") }, {
-        val planilha = PlanilhaPedidos()
-        val bytes = planilha.grava(lista)
-        ByteArrayInputStream(bytes)
-      })
+    val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Pedidos", "xlsx") }, {
+      val planilha = PlanilhaPedidos()
+      val bytes = planilha.grava(lista)
+      ByteArrayInputStream(bytes)
+    })
     button.addThemeVariants(LUMO_SMALL)
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"
@@ -230,14 +227,11 @@ class TabEntregador(val viewModel: PedidoEntregadorViewModel) : TabPanelGrid<Ent
   }
 
   private fun HasComponents.buttonDownloadProdutos(lista: List<EntregadorNotas>) {
-    val button =
-      LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Produtos", "xlsx") }, {
-        val planilha = PlanilhaProduto()
-        val bytes = planilha.grava(
-          lista.groupByNota().classificaLinhas()
-                                  )
-        ByteArrayInputStream(bytes)
-      })
+    val button = LazyDownloadButton(FontAwesome.Solid.FILE_EXCEL.create(), { filename("Produtos", "xlsx") }, {
+      val planilha = PlanilhaProduto()
+      val bytes = planilha.grava(lista.groupByNota().classificaLinhas())
+      ByteArrayInputStream(bytes)
+    })
     button.addThemeVariants(LUMO_SMALL)
     button.text = "Planilha"
     button.tooltip = "Salva a planilha"

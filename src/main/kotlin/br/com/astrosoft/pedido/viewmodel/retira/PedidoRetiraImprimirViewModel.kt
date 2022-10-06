@@ -17,13 +17,12 @@ class PedidoRetiraImprimirViewModel(val viewModel: PedidoRetiraViewModel) {
     val data = subView.dataImprimir
     val area = subView.areaImprimir.trim()
     val rota = subView.rotaImprimir.trim()
-    return Pedido.listaPedidoImprimir(FiltroPedido(tipo = RETIRA,
-                                                   ecommerce = false,
-                                                   dataInicial = null,
-                                                   dataFinal = null)).filter { pedido ->
-      (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
-        rota) || rota == "") && (pedido.area.contains(area) || area == "")
-    }
+    return Pedido
+      .listaPedidoImprimir(FiltroPedido(tipo = RETIRA, ecommerce = false, dataInicial = null, dataFinal = null))
+      .filter { pedido ->
+        (pedido.pedido == numPedido || numPedido == 0) && (pedido.data == data || data == null) && (pedido.rota.contains(
+          rota) || rota == "") && (pedido.area.contains(area) || area == "")
+      }
   }
 
   fun updateGridImprimir() {

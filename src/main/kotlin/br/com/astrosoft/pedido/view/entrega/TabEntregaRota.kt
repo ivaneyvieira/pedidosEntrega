@@ -4,7 +4,9 @@ import br.com.astrosoft.framework.util.format
 import br.com.astrosoft.framework.view.SubWindowForm
 import br.com.astrosoft.framework.view.TabPanelTree
 import br.com.astrosoft.framework.view.localePtBr
-import br.com.astrosoft.pedido.model.beans.*
+import br.com.astrosoft.pedido.model.beans.ETipoPedido
+import br.com.astrosoft.pedido.model.beans.FiltroPedido
+import br.com.astrosoft.pedido.model.beans.Rota
 import br.com.astrosoft.pedido.view.*
 import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaRota
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaRotaViewModel
@@ -45,9 +47,10 @@ class TabEntregaRota(val viewModel: PedidoEntregaRotaViewModel) : TabPanelTree<R
     form.open()
   }
 
-  override fun rotaAberta(): Rota? = gridPanel.dataProvider.fetchChildren(HierarchicalQuery(null, null)).toList().firstOrNull {
-    gridPanel.isExpanded(it)
-  }
+  override fun rotaAberta(): Rota? =
+    gridPanel.dataProvider.fetchChildren(HierarchicalQuery(null, null)).toList().firstOrNull {
+      gridPanel.isExpanded(it)
+    }
 
   private fun createGridDetailRotaLoja(entregadorList: List<Rota>): Grid<Rota> {
     val gridDetail = TreeGrid<Rota>()

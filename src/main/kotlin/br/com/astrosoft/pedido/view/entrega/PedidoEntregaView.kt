@@ -18,15 +18,12 @@ import com.vaadin.flow.router.Route
 class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaView {
   override val viewModel: PedidoEntregaViewModel = PedidoEntregaViewModel(this)
   override val tabEntregaImprimir = TabEntregaImprimir(viewModel.tabEntregaImprimirViewModel)
-  override val tabEntregaImpressoSemNota =
-    TabEntregaImpressoSemNota(viewModel.tabEntregaImpressoSemNotaViewModel)
+  override val tabEntregaImpressoSemNota = TabEntregaImpressoSemNota(viewModel.tabEntregaImpressoSemNotaViewModel)
   override val tabEntregaPendente = TabEntregaPendente(viewModel.tabEntregaPendenteViewModel)
-  override val tabEntregaImpressoComNota =
-    TabEntregaImpressoComNota(viewModel.tabEntregaImpressoComNotaViewModel)
-  override val tabEntregaImpressoSeparar =
-    TabEntregaImpressoSeparar(viewModel.tabEntregaImpressoSepararViewModel)
-  override val tabEntregaImpressoSeparado =
-    TabEntregaImpressoSeparado(viewModel.tabEntregaImpressoSeparadoViewModel)
+  override val tabEntregaImpressoComNota = TabEntregaImpressoComNota(viewModel.tabEntregaImpressoComNotaViewModel)
+  override val tabEntregaImpressoSeparar = TabEntregaImpressoSeparar(viewModel.tabEntregaImpressoSepararViewModel)
+  override val tabEntregaImpressoCarga = TabEntregaImpressoCarga(viewModel.tabEntregaImpressoCargaViewModel)
+  override val tabEntregaImpressoSeparado = TabEntregaImpressoSeparado(viewModel.tabEntregaImpressoSeparadoViewModel)
   override val tabEntregador = TabEntregador(viewModel.tabEntregadorViewModel)
   override val tabEntregaRota = TabEntregaRota(viewModel.tabRotaViewModel)
 
@@ -57,6 +54,10 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
       }
       tabPanel(tabEntregaRota, update)
       update = false
+
+      if (user?.entrega_carga == true) {
+        tabPanel(tabEntregaImpressoCarga, update)
+      }
 
       if (user?.entrega_separar == true) {
         tabPanel(tabEntregaImpressoSeparar, update)

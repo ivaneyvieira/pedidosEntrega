@@ -6,35 +6,68 @@ import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
-import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoSeparado
-import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSeparadoViewModel
+import br.com.astrosoft.pedido.viewmodel.entrega.EZonaCarga
+import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoCarga
+import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoCargaViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
+import com.vaadin.flow.component.combobox.ComboBox
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.VaadinIcon.CLOSE
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
+import org.claspina.confirmdialog.ButtonOption
+import org.claspina.confirmdialog.ConfirmDialog
 
-class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoViewModel) : TabPanelGrid<Pedido>(),
-                                                                                        IPedidoEntregaImpressoSeparado {
+class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel) : TabPanelGrid<Pedido>(),
+        IPedidoEntregaImpressoCarga {
   private lateinit var edtPedidoPesquisa: TextField
-  override val label = "Separado"
+  override val label = "Carga"
 
   override fun updateComponent() {
-    viewModel.updateGridImpressoSeparado()
+    viewModel.updateGridImpressoCarga()
   }
 
   override val pedidoPesquisa: String
     get() = edtPedidoPesquisa.value ?: ""
 
+  override fun selecionaCarga(exec: (EZonaCarga) -> Unit) {
+    val combo = Select<EZonaCarga>().apply {
+      this.label = "Zona"
+      this.setItems(EZonaCarga.values().toList())
+      this.setItemLabelGenerator {
+        it.descricao
+      }
+    }
+    ConfirmDialog
+      .createQuestion()
+      .withCaption("Selecione a zona da carga")
+      .withMessage(combo)
+      .withOkButton({
+                       val value = combo.value
+                       if (value != null) exec(value)
+                     },
+                     ButtonOption.caption("Ok"))
+      .withCancelButton({  }, ButtonOption.caption("Cancelar"))
+      .open()
+  }
+
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
-    button("Volta") {
+    if (AppConfig.isAdmin) button("Desmarcar") {
       icon = CLOSE.create()
       addClickListener {
-        viewModel.desmarcaSeparado()
+        viewModel.desmarcaCarga()
+      }
+    }
+
+    button("Carga") {
+      icon = CLOSE.create()
+      addClickListener {
+        viewModel.marcaCarga()
       }
     }
 
@@ -59,6 +92,7 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
     pedidoDataHoraPrint()
     pedidoArea()
     pedidoRota()
+    pedidoCarga()
 
     pedidoNfFat()
     pedidoDataFat()
@@ -75,5 +109,10 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
 
     pedidoUsername()
     shiftSelect()
+
+    this.setClassNameGenerator {
+      if (it.separado == "S") "destaque1"
+      else ""
+    }
   }
 }

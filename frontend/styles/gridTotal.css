@@ -22,8 +22,6 @@
     color: hsla(214, 90%, 52%);
 }
 
-
-
 [part~="footer-cell"] {
     font-size: 120%;
     font-weight: bold;

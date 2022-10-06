@@ -135,6 +135,10 @@ class Pedido(
     saci.marcaCarga(loja, pedido, carga)
   }
 
+  fun removeCarga() {
+    saci.marcaCarga(loja, pedido, EZonaCarga.SemZona)
+  }
+
   companion object {
     fun listaPedido(filtro: FiltroPedido): List<Pedido> {
       val lista = saci.listaPedido(filtro)

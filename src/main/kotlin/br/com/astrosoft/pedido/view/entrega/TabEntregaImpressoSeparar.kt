@@ -44,6 +44,19 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       .open()
   }
 
+  override fun confirmaRemoveCarga(exec: () -> Unit) {
+    ConfirmDialog
+      .createQuestion()
+      .withCaption("Confirmação")
+      .withMessage("Remove a carga?")
+      .withYesButton({
+                       exec()
+                     },
+                     ButtonOption.caption("Sim"))
+      .withNoButton({ }, ButtonOption.caption("Não"))
+      .open()
+  }
+
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
@@ -53,6 +66,14 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
         viewModel.desmarcaSeparar()
       }
     }
+
+    button("Remove Carga") {
+      icon = ARROW_LEFT.create()
+      addClickListener {
+        viewModel.removeCarga()
+      }
+    }
+
 
     button("Separado") {
       icon = ARROW_RIGHT.create()

@@ -50,6 +50,17 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
   fun imprimirPedidos(itensSelecionado: List<Pedido>) {
     viewModel.tabEntregaImprimirViewModel.imprimirPedidos(itensSelecionado)
   }
+
+  fun removeCarga() {
+    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    subView.confirmaRemoveCarga {
+      pedidos.forEach { pedido ->
+        pedido.removeCarga()
+      }
+
+      updateGridImpressoSeparar()
+    }
+  }
 }
 
 interface IPedidoEntregaImpressoSeparar {
@@ -58,4 +69,5 @@ interface IPedidoEntregaImpressoSeparar {
   val pedidoPesquisa: String
 
   fun confirmaSeparado(exec : () -> Unit)
+  fun confirmaRemoveCarga(exec : () -> Unit)
 }

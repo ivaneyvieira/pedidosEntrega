@@ -12,11 +12,15 @@ class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel)
 
   private fun listPedidosEntregaImpressoCarga(): List<Pedido> {
     val pesquisa = subView.pedidoPesquisa
-    return Pedido.listaPedidoImpressoCarga(FiltroPedido(tipo = ENTREGA,
-                                                        pesquisa = pesquisa,
-                                                        ecommerce = false,
-                                                        dataInicial = null,
-                                                        dataFinal = null))
+    return Pedido
+      .listaPedidoImpressoCarga(FiltroPedido(tipo = ENTREGA,
+                                             pesquisa = pesquisa,
+                                             ecommerce = false,
+                                             dataInicial = null,
+                                             dataFinal = null))
+      .filter {
+        it.zonaCarga == ""
+      }
   }
 
   fun updateGridImpressoCarga() {
@@ -71,5 +75,6 @@ enum class EZonaCarga(val codigo: Char, val descricao: String) {
   Sul1('E', "Sul 1"),
   Sul2('F', "Sul 2"),
   Sul3('G', "Sul 3"),
-  Timon('H', "Timon")
+  Timon('H', "Timon"),
+  SemZona(' ', "")
 }

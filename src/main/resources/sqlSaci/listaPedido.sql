@@ -437,10 +437,10 @@ SELECT P.storeno                                                      AS loja,
        MID(MAX(CONCAT(IF(L.localizacao LIKE 'CD%', 2, 1), LPAD(MID(L.localizacao, 1, 3), 3, ' '),
 		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
 		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS loc
-FROM sqldados.eoprd          AS P
-  INNER JOIN PEDIDOS         AS E
+FROM sqldados.eoprd  AS P
+  INNER JOIN PEDIDOS AS E
 	       ON P.storeno = E.loja AND P.ordno = E.pedido
-  LEFT JOIN  T_LOC AS L
+  LEFT JOIN  T_LOC   AS L
 	       ON P.prdno = L.prdno
 WHERE localizacao LIKE CONCAT(:filtroCD, '%')
    OR :filtroCD = ''
@@ -513,3 +513,4 @@ WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
   AND (loc LIKE CONCAT(:filtroCD, '%') OR :filtroCD = '')
   AND (piso = :filtroPiso OR :filtroPiso = 0 OR vendno = :filtroVend OR :filtroVend = 0 OR
        pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0)
+  AND (dataEnt > 20221006 OR dataEnt IS NULL)

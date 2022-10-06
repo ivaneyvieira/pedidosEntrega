@@ -89,7 +89,6 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
     pedidoDataEnt()
     pedidoHoraEnt()
 
-    pedidoUsername()
     shiftSelect()
   }
 }

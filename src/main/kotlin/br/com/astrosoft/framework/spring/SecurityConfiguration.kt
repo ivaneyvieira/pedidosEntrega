@@ -15,7 +15,8 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   @Throws(Exception::class)
   override fun configure(http: HttpSecurity) {
-    http.csrf()
+    http
+      .csrf()
       .disable()
       .requestCache()
       .requestCache(CustomRequestCache())
@@ -49,18 +50,18 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
   }
 
   override fun configure(web: WebSecurity) {
-    web.ignoring().antMatchers(
-        "/VAADIN/**",
-        "/favicon.ico",
-        "/robots.txt",
-        "/manifest.webmanifest",
-        "/sw.js",
-        "/offline.html",
-        "/icons/**",
-        "/images/**",
-        "/styles/**",
-        "/h2-console/**"
-                              )
+    web
+      .ignoring()
+      .antMatchers("/VAADIN/**",
+                   "/favicon.ico",
+                   "/robots.txt",
+                   "/manifest.webmanifest",
+                   "/sw.js",
+                   "/offline.html",
+                   "/icons/**",
+                   "/images/**",
+                   "/styles/**",
+                   "/h2-console/**")
   }
 
   companion object {
@@ -74,6 +75,5 @@ open class SecurityConfiguration : WebSecurityConfigurerAdapter() {
 
 class PasswordNoEncoder : PasswordEncoder {
   override fun encode(rawPassword: CharSequence?) = rawPassword?.toString()
-  override fun matches(rawPassword: CharSequence?, encodedPassword: String?) =
-    rawPassword.toString() == encodedPassword
+  override fun matches(rawPassword: CharSequence?, encodedPassword: String?) = rawPassword.toString() == encodedPassword
 }

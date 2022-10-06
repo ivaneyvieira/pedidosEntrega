@@ -21,8 +21,7 @@ class LoginView : VerticalLayout(), BeforeEnterObserver {
   }
 
   private fun isError(beforeEnterEvent: BeforeEnterEvent): Boolean {
-    return beforeEnterEvent.location.queryParameters.parameters.getOrDefault("error", emptyList())
-      .isNotEmpty()
+    return beforeEnterEvent.location.queryParameters.parameters.getOrDefault("error", emptyList()).isNotEmpty()
   }
 
   init {

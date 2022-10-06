@@ -1,6 +1,5 @@
 package br.com.astrosoft.pedido.view.entrega
 
-import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.addColumnSeq
 import br.com.astrosoft.framework.view.shiftSelect
@@ -17,7 +16,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
 
 class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoViewModel) : TabPanelGrid<Pedido>(),
-                                                                                        IPedidoEntregaImpressoSeparado {
+        IPedidoEntregaImpressoSeparado {
   private lateinit var edtPedidoPesquisa: TextField
   override val label = "Separado"
 

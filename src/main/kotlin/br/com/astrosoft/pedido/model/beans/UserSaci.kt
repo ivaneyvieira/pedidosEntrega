@@ -74,6 +74,7 @@ class UserSaci {
       bitAcesso = if (value) bitAcesso or BIT_RETIRA_IMPRESSO_SEM_NOTA
       else bitAcesso and BIT_RETIRA_IMPRESSO_SEM_NOTA.inv()
     }
+
   //
   var ecommerceE_imprimir
     get() = (bitAcesso and BIT_ECOMMERCEE_IMPRIMIR) != 0 || admin

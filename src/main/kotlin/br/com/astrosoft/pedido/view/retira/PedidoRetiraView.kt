@@ -5,7 +5,6 @@ import br.com.astrosoft.framework.view.SubWindowPDF
 import br.com.astrosoft.framework.view.ViewLayout
 import br.com.astrosoft.framework.view.tabPanel
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.UserSaci
 import br.com.astrosoft.pedido.view.PedidoEntregaLayout
 import br.com.astrosoft.pedido.view.reports.RelatorioPedido
 import br.com.astrosoft.pedido.viewmodel.retira.IPedidoRetiraView
@@ -19,11 +18,9 @@ import com.vaadin.flow.router.Route
 class PedidoRetiraView : ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView {
   override val viewModel: PedidoRetiraViewModel = PedidoRetiraViewModel(this)
   override val tabRetiraImprimir = TabRetiraImprimir(viewModel.tabRetiraImprimirViewModel)
-  override val tabRetiraImpressoSemNota =
-    TabRetiraImpressoSemNota(viewModel.tabRetiraImpressoSemNotaViewModel)
+  override val tabRetiraImpressoSemNota = TabRetiraImpressoSemNota(viewModel.tabRetiraImpressoSemNotaViewModel)
   override val tabRetiraPendente = TabRetiraPendente(viewModel.tabRetiraPendenteViewModel)
-  override val tabRetiraImpressoComNota =
-    TabRetiraImpressoComNota(viewModel.tabRetiraImpressoComNotaViewModel)
+  override val tabRetiraImpressoComNota = TabRetiraImpressoComNota(viewModel.tabRetiraImpressoComNotaViewModel)
 
   init {
     tabSheet {
@@ -46,7 +43,6 @@ class PedidoRetiraView : ViewLayout<PedidoRetiraViewModel>(), IPedidoRetiraView 
         tabPanel(tabRetiraImpressoComNota, update)
       }
     }
-
   }
 
   override fun showRelatorioPedidoMinuta(pedidos: List<Pedido>) {

@@ -15,14 +15,14 @@ class LoginFormApp : LoginForm() {
   }
 
   private fun loginI18n() = LoginI18n.createDefault().apply {
-      this.form.username = "Usuário"
-      this.form.title = AppConfig.title
-      this.form.submit = "Entrar"
-      this.form.password = "Senha"
-      this.form.forgotPassword = ""
-      this.errorMessage.title = "Usuário/senha inválidos"
-      this.errorMessage.message = "Confira seu usuário e senha e tente novamente."
-      this.additionalInformation = "Versão ${AppConfig.version}"
-    }
+    this.form.username = "Usuário"
+    this.form.title = AppConfig.title
+    this.form.submit = "Entrar"
+    this.form.password = "Senha"
+    this.form.forgotPassword = ""
+    this.errorMessage.title = "Usuário/senha inválidos"
+    this.errorMessage.message = "Confira seu usuário e senha e tente novamente."
+    this.additionalInformation = "Versão ${AppConfig.version}"
+  }
 }
 

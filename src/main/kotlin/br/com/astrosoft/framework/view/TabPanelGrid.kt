@@ -17,7 +17,6 @@ abstract class TabPanelGrid<T : Any> : TabPanel<VerticalLayout> {
   protected abstract fun HorizontalLayout.toolBarConfig()
   protected abstract fun Grid<T>.gridPanel()
 
-
   override val createComponent = VerticalLayout().apply {
     this.setSizeFull()
     isMargin = false

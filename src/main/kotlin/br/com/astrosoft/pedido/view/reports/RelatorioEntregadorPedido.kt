@@ -17,92 +17,77 @@ import java.io.ByteArrayOutputStream
 import java.time.LocalDate
 import java.time.LocalTime
 
-class RelatorioEntregadorPedido(
-  val entregadores: List<EntregadorNotas>,
-  val dataInicial: LocalDate,
-  val dataFinal: LocalDate
-                               ) {
-  val entregadorNotasCarganoCol =
-    col.column("Carga", EntregadorNotas::carganoCol.name, type.integerType()).apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setPattern("0")
-        this.setFixedWidth(50)
-      }
-  val entregadorNotasLojaCol =
-    col.column("Loja", EntregadorNotas::lojaCol.name, type.integerType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("0")
-        this.setFixedWidth(30)
-      }
-  val entregadorNotasNumPedidoCol =
-    col.column("Pedido", EntregadorNotas::numPedidoCol.name, type.integerType()).apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setPattern("0")
-        this.setFixedWidth(50)
-      }
+class RelatorioEntregadorPedido(val entregadores: List<EntregadorNotas>,
+                                val dataInicial: LocalDate,
+                                val dataFinal: LocalDate) {
+  val entregadorNotasCarganoCol = col.column("Carga", EntregadorNotas::carganoCol.name, type.integerType()).apply {
+    this.setHorizontalTextAlignment(LEFT)
+    this.setPattern("0")
+    this.setFixedWidth(50)
+  }
+  val entregadorNotasLojaCol = col.column("Loja", EntregadorNotas::lojaCol.name, type.integerType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("0")
+    this.setFixedWidth(30)
+  }
+  val entregadorNotasNumPedidoCol = col.column("Pedido", EntregadorNotas::numPedidoCol.name, type.integerType()).apply {
+    this.setHorizontalTextAlignment(LEFT)
+    this.setPattern("0")
+    this.setFixedWidth(50)
+  }
   val entregadorNotasDatePedidoCol =
     col.column("Data Ped", EntregadorNotas::datePedidoStr.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setFixedWidth(50)
-      }
-  val entregadorNotasNotaFatCol =
-    col.column("Nota Fat", EntregadorNotas::notaFatCol.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(50)
-      }
-  val entregadorNotasDateFatCol =
-    col.column("Data Fat", EntregadorNotas::dateFatStr.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setFixedWidth(40)
-      }
-  val entregadorNotasNotaEntCol =
-    col.column("Nota Ent", EntregadorNotas::notaEntCol.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(LEFT)
-        this.setFixedWidth(50)
-      }
-  val entregadorNotasEntregaCol =
-    col.column("Entrega", EntregadorNotas::entregaStr.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setFixedWidth(40)
-      }
-  val entregadorNotasDateEntCol =
-    col.column("Data Ent", EntregadorNotas::dateEntStr.name, type.stringType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setFixedWidth(40)
-      }
-  val entregadorNotasPisoCxs =
-    col.column("Piso Cxs", EntregadorNotas::pisoCxs.name, type.integerType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("#,##0")
-      }
-  val entregadorNotasPisoPeso =
-    col.column("Piso Peso", EntregadorNotas::pisoPeso.name, type.doubleType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(60)
-      }
-  val entregadorNotasValor =
-    col.column("Valor", EntregadorNotas::valor.name, type.doubleType()).apply {
-        this.setHorizontalTextAlignment(RIGHT)
-        this.setPattern("#,##0.00")
-        this.setFixedWidth(60)
-      }
+      this.setHorizontalTextAlignment(RIGHT)
+      this.setFixedWidth(50)
+    }
+  val entregadorNotasNotaFatCol = col.column("Nota Fat", EntregadorNotas::notaFatCol.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(LEFT)
+    this.setFixedWidth(50)
+  }
+  val entregadorNotasDateFatCol = col.column("Data Fat", EntregadorNotas::dateFatStr.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setFixedWidth(40)
+  }
+  val entregadorNotasNotaEntCol = col.column("Nota Ent", EntregadorNotas::notaEntCol.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(LEFT)
+    this.setFixedWidth(50)
+  }
+  val entregadorNotasEntregaCol = col.column("Entrega", EntregadorNotas::entregaStr.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setFixedWidth(40)
+  }
+  val entregadorNotasDateEntCol = col.column("Data Ent", EntregadorNotas::dateEntStr.name, type.stringType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setFixedWidth(40)
+  }
+  val entregadorNotasPisoCxs = col.column("Piso Cxs", EntregadorNotas::pisoCxs.name, type.integerType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("#,##0")
+  }
+  val entregadorNotasPisoPeso = col.column("Piso Peso", EntregadorNotas::pisoPeso.name, type.doubleType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("#,##0.00")
+    this.setFixedWidth(60)
+  }
+  val entregadorNotasValor = col.column("Valor", EntregadorNotas::valor.name, type.doubleType()).apply {
+    this.setHorizontalTextAlignment(RIGHT)
+    this.setPattern("#,##0.00")
+    this.setFixedWidth(60)
+  }
 
   private fun columnBuilder(): List<ColumnBuilder<*, *>> {
-    return listOf(
-      entregadorNotasCarganoCol,
-      entregadorNotasLojaCol,
-      entregadorNotasNumPedidoCol,
-      entregadorNotasDatePedidoCol,
-      entregadorNotasNotaFatCol,
-      entregadorNotasDateFatCol,
-      entregadorNotasNotaEntCol,
-      entregadorNotasDateEntCol,
-      entregadorNotasEntregaCol,
-      entregadorNotasPisoCxs,
-      entregadorNotasPisoPeso,
-      entregadorNotasValor
-                 )
+    return listOf(entregadorNotasCarganoCol,
+                  entregadorNotasLojaCol,
+                  entregadorNotasNumPedidoCol,
+                  entregadorNotasDatePedidoCol,
+                  entregadorNotasNotaFatCol,
+                  entregadorNotasDateFatCol,
+                  entregadorNotasNotaEntCol,
+                  entregadorNotasDateEntCol,
+                  entregadorNotasEntregaCol,
+                  entregadorNotasPisoCxs,
+                  entregadorNotasPisoPeso,
+                  entregadorNotasValor)
   }
 
   private fun titleBuider(): ComponentBuilder<*, *>? {
@@ -111,13 +96,11 @@ class RelatorioEntregadorPedido(
       horizontalFlowList {
         text("ENGECOPI", LEFT)
         text("DESEMPENHO DE ENTREGADA - PEDIDOS", CENTER, 300)
-        text(
-          "${
-            LocalDate.now().format()
-          }-${
-            LocalTime.now().format()
-          }", RIGHT
-            )
+        text("${
+          LocalDate.now().format()
+        }-${
+          LocalTime.now().format()
+        }", RIGHT)
       }
       horizontalFlowList {
         text("Perído: ${dataInicial.format()} - ${dataFinal.format()}")
@@ -132,16 +115,13 @@ class RelatorioEntregadorPedido(
 
   private fun subtotalBuilder(): List<SubtotalBuilder<*, *>> {
     val style = stl.style(columnStyle).setTopBorder(stl.pen1Point())
-    return listOf(
-      sbt.sum(entregadorNotasPisoCxs),
-      sbt.sum(entregadorNotasPisoPeso),
-      sbt.sum(entregadorNotasValor)
-                 )
+    return listOf(sbt.sum(entregadorNotasPisoCxs), sbt.sum(entregadorNotasPisoPeso), sbt.sum(entregadorNotasValor))
   }
 
   fun makeReport(): JasperReportBuilder? {
     val colunms = columnBuilder().toTypedArray()
-    return DynamicReports.report()
+    return DynamicReports
+      .report()
       .title(titleBuider())
       .setTemplate(Templates.reportTemplate)
       .columns(* colunms)
@@ -149,22 +129,15 @@ class RelatorioEntregadorPedido(
       .setDataSource(entregadores)
       .summary(pageFooterBuilder())
       .subtotalsAtSummary(* subtotalBuilder().toTypedArray())
-      .setSubtotalStyle(
-        stl.style().setPadding(2).setTopBorder(stl.pen1Point())
-                       )
-      .pageFooter(
-        DynamicReports.cmp.pageNumber().setHorizontalTextAlignment(RIGHT).setStyle(
-            stl.style().setFontSize(8)
-                                                                                  )
-                 )
+      .setSubtotalStyle(stl.style().setPadding(2).setTopBorder(stl.pen1Point()))
+      .pageFooter(DynamicReports.cmp
+                    .pageNumber()
+                    .setHorizontalTextAlignment(RIGHT)
+                    .setStyle(stl.style().setFontSize(8)))
   }
 
   companion object {
-    fun processaRelatorio(
-      list: List<EntregadorNotas>,
-      dataInicial: LocalDate,
-      dataFinal: LocalDate
-                         ): ByteArray {
+    fun processaRelatorio(list: List<EntregadorNotas>, dataInicial: LocalDate, dataFinal: LocalDate): ByteArray {
       val report = RelatorioEntregadorPedido(list, dataInicial, dataFinal).makeReport()
       val jasperPrint = report?.toJasperPrint()
       val exporter = JRPdfExporter()

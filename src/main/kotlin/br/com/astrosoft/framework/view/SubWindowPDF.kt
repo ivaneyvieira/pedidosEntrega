@@ -17,10 +17,9 @@ class SubWindowPDF(chave: String, bytesBoletos: ByteArray) : Dialog() {
     width = "100%"
     height = "100%"
     val timeNumber = System.currentTimeMillis()
-    val resourcePDF = StreamResource(
-      "${chave}_${timeNumber}.pdf",
-      ConverteByte(bytesBoletos)
-                                    ) //val buttonWrapper = FileDownloadWrapper(resourcePDF)
+    val resourcePDF =
+      StreamResource("${chave}_${timeNumber}.pdf",
+                     ConverteByte(bytesBoletos)) //val buttonWrapper = FileDownloadWrapper(resourcePDF)
     verticalLayout {
       isPadding = false
       horizontalLayout {

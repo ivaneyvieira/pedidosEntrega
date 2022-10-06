@@ -17,8 +17,8 @@ import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 
-class TabECommerceRImpressoSemNota(val viewModel: PedidoECommerceRImpressoSemNotaViewModel) :
-  TabPanelGrid<Pedido>(), IPedidoECommerceRImpressoSemNota {
+class TabECommerceRImpressoSemNota(val viewModel: PedidoECommerceRImpressoSemNotaViewModel) : TabPanelGrid<Pedido>(),
+        IPedidoECommerceRImpressoSemNota {
   private lateinit var edtPedidoImpressoSemNota: TextField
   override val label = "Impresso sem Nota"
 

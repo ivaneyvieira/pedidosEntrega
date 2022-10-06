@@ -24,8 +24,7 @@ abstract class TabPanelTree<T : Any>(classGrid: KClass<T>) : TabPanel<VerticalLa
       toolBarConfig()
     }
 
-    gridPanel.apply {
-      // this.dataProvider = dataProviderPanel
+    gridPanel.apply { // this.dataProvider = dataProviderPanel
       isExpand = true
       isMultiSort = true
       addThemeVariants(LUMO_COMPACT)

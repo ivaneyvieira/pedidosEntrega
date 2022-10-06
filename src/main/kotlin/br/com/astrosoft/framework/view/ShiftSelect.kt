@@ -51,11 +51,11 @@ inline fun <reified T> list(grade: Grid<T>): List<T> {
   val filter = dataProvider.filter
   val queryOrdem = comparator(grade)
   return dataProvider.items.toList().filter {
-      filter?.test(it) ?: true
-    }.let { list ->
-      if (queryOrdem == null) list
-      else list.sortedWith<T>(queryOrdem)
-    }
+    filter?.test(it) ?: true
+  }.let { list ->
+    if (queryOrdem == null) list
+    else list.sortedWith<T>(queryOrdem)
+  }
 }
 
 inline fun <reified T> comparator(grade: Grid<T>): Comparator<T>? {
@@ -82,8 +82,8 @@ inline fun <reified T> comparator(sortOrder: List<GridSortOrder<T>>): Comparator
       }
     }
   }.reduce { acc, comparator ->
-      acc.thenComparing(comparator)
-    }
+    acc.thenComparing(comparator)
+  }
 }
 
 inline fun <reified T> (@VaadinDsl Grid<T>).addColumnSeq(label: String) {

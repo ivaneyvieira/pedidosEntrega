@@ -17,7 +17,7 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
 
 class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewModel) : TabPanelGrid<Pedido>(),
-                                                                                        IPedidoEntregaImpressoSeparar {
+        IPedidoEntregaImpressoSeparar {
   private lateinit var edtPedidoPesquisa: TextField
   override val label = "Separar"
 

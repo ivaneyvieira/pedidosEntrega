@@ -23,10 +23,10 @@ import com.vaadin.flow.data.provider.SortDirection.ASCENDING
 import com.vaadin.flow.data.provider.SortDirection.DESCENDING
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
+import java.util.*
 
-class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) :
-  TabPanelGrid<Pedido>(),
-                                                                               IPedidoECommerceEImprimir {
+class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) : TabPanelGrid<Pedido>(),
+        IPedidoECommerceEImprimir {
   private lateinit var edtPedidoImprimir: TextField
   private lateinit var edtRotaImprimir: TextField
   private lateinit var edtAreaImprimir: TextField
@@ -42,9 +42,9 @@ class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) :
   override val dataImprimir: LocalDate?
     get() = edtDataImprimir.value
   override val areaImprimir: String
-    get() = edtAreaImprimir.value?.toUpperCase() ?: ""
+    get() = edtAreaImprimir.value.uppercase(Locale.getDefault())
   override val rotaImprimir: String
-    get() = edtRotaImprimir.value?.toUpperCase() ?: ""
+    get() = edtRotaImprimir.value.uppercase(Locale.getDefault())
 
   override fun classPanel() = Pedido::class
 
@@ -122,11 +122,7 @@ class TabECommerceEImprimir(val viewModel: PedidoECommerceEImprimirViewModel) :
     pedidoObs()
     pedidoUsername()
     this.shiftSelect()
-    this.sort(
-      listOf(
-        GridSortOrder(getColumnBy(Pedido::loja), ASCENDING),
-        GridSortOrder(getColumnBy(Pedido::pedido), DESCENDING)
-            )
-             )
+    this.sort(listOf(GridSortOrder(getColumnBy(Pedido::loja), ASCENDING),
+                     GridSortOrder(getColumnBy(Pedido::pedido), DESCENDING)))
   }
 }

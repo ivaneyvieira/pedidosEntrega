@@ -10,9 +10,7 @@ import java.text.DecimalFormat
 abstract class PrintText<T> {
   private val columns = mutableListOf<Column<T, *>>()
 
-  fun columText(
-    header: String, size: Int, lineBreak: Boolean = false, process: T.() -> String
-               ): PrintText<T> {
+  fun columText(header: String, size: Int, lineBreak: Boolean = false, process: T.() -> String): PrintText<T> {
     val column = Column(header, size, lineBreak, process) { str ->
       str.rpad(size, " ")
     }
@@ -24,13 +22,11 @@ abstract class PrintText<T> {
     return emptyList()
   }
 
-  fun columNumber(
-    header: String,
-    size: Int,
-    format: String = "0",
-    lineBreak: Boolean = false,
-    process: T.() -> Double
-                 ): PrintText<T> {
+  fun columNumber(header: String,
+                  size: Int,
+                  format: String = "0",
+                  lineBreak: Boolean = false,
+                  process: T.() -> Double): PrintText<T> {
     val decimalFormat = DecimalFormat(format)
     val column = Column(header, size, lineBreak, process) { number ->
       decimalFormat.format(number.toInt()).lpad(size, " ")
@@ -49,22 +45,22 @@ abstract class PrintText<T> {
 
   fun print(impressora: String, dados: List<T>) {
     dados.firstOrNull()?.let { bean ->
-        val text = StringBuilder()
-        inicialize(text)
-        printTitle(text, bean)
+      val text = StringBuilder()
+      inicialize(text)
+      printTitle(text, bean)
 
-        printHeader(text)
-        dados.forEach { beanDetail ->
-          printDetail(text, beanDetail)
-        }
-        sumary(text)
-        finalize(text)
-        if (!QuerySaci.test) CupsUtils.printCups(impressora, text.toString())
-        else {
-          println(text.toString())
-          File("/tmp/relatorio.txt").writeText(text.toString())
-        }
+      printHeader(text)
+      dados.forEach { beanDetail ->
+        printDetail(text, beanDetail)
       }
+      sumary(text)
+      finalize(text)
+      if (!QuerySaci.test) CupsUtils.printCups(impressora, text.toString())
+      else {
+        println(text.toString())
+        File("/tmp/relatorio.txt").writeText(text.toString())
+      }
+    }
   }
 
   private fun sumary(text: StringBuilder) {
@@ -79,7 +75,8 @@ abstract class PrintText<T> {
 
   protected fun String.barras(): String {
     val stringBuffer = StringBuilder()
-    stringBuffer.append(0x1d.toChar())
+    stringBuffer
+      .append(0x1d.toChar())
       .append(0x68.toChar())
       .append(0x50.toChar())
       .append(0x1d.toChar())
@@ -95,16 +92,13 @@ abstract class PrintText<T> {
 
   protected fun String.negrito(): String {
     val stringBuffer = StringBuilder()
-    stringBuffer.append(0x1b.toChar())
-      .append(0x45.toChar())
-      .append(this)
-      .append(0x1b.toChar())
-      .append(0x46.toChar())
+    stringBuffer.append(0x1b.toChar()).append(0x45.toChar()).append(this).append(0x1b.toChar()).append(0x46.toChar())
     return this
   }
 
   private fun finalize(text: StringBuilder) {
-    text.append(0x0a.toChar())
+    text
+      .append(0x0a.toChar())
       .append(0x0a.toChar())
       .append(0x0a.toChar())
       .append(0x1b.toChar())
@@ -130,7 +124,8 @@ abstract class PrintText<T> {
 
   private fun String.expandLine(): String {
     val stringBuffer = StringBuilder()
-    stringBuffer.append(0x1b.toChar())
+    stringBuffer
+      .append(0x1b.toChar())
       .append(0x45.toChar())
       .append(0x01.toChar())
       .append(this)
@@ -155,13 +150,11 @@ abstract class PrintText<T> {
   }
 }
 
-data class Column<T, V>(
-  val header: String,
-  val size: Int,
-  val lineBreak: Boolean,
-  val process: T.() -> V,
-  val posProcess: (V) -> String
-                       ) {
+data class Column<T, V>(val header: String,
+                        val size: Int,
+                        val lineBreak: Boolean,
+                        val process: T.() -> V,
+                        val posProcess: (V) -> String) {
   val columnText
     get() = header.rpad(size, "_")
 

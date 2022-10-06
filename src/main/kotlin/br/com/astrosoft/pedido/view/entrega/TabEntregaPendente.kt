@@ -16,9 +16,10 @@ import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.provider.ListDataProvider
 import com.vaadin.flow.data.value.ValueChangeMode.TIMEOUT
 import java.time.LocalDate
+import java.util.*
 
 class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel) : TabPanelGrid<Pedido>(),
-                                                                          IPedidoEntregaPendente {
+        IPedidoEntregaPendente {
   private lateinit var edtPedidoPendente: TextField
   private lateinit var edtRotaPendente: TextField
   private lateinit var edtAreaPendente: TextField
@@ -36,9 +37,9 @@ class TabEntregaPendente(val viewModel: PedidoEntregaPendenteViewModel) : TabPan
   override val dataPendente: LocalDate?
     get() = edtDataPendente.value
   override val areaPendente: String
-    get() = edtAreaPendente.value?.toUpperCase() ?: ""
+    get() = edtAreaPendente.value.uppercase(Locale.getDefault())
   override val rotaPendente: String
-    get() = edtRotaPendente.value?.toUpperCase() ?: ""
+    get() = edtRotaPendente.value.uppercase(Locale.getDefault())
 
   override fun classPanel() = Pedido::class
 

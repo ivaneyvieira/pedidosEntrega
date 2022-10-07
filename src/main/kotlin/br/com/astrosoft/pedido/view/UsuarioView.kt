@@ -119,6 +119,9 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           checkBox("Desempenho Entrega") {
             binder.bind(this, UserSaci::entrega_entregador.name)
           }
+          checkBox("Desempenho Rota") {
+            binder.bind(this, UserSaci::entrega_rota.name)
+          }
           checkBox("Carga") {
             binder.bind(this, UserSaci::entrega_carga.name)
           }

@@ -512,4 +512,4 @@ WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
   AND (loc LIKE CONCAT(:filtroCD, '%') OR :filtroCD = '')
   AND (piso = :filtroPiso OR :filtroPiso = 0 OR vendno = :filtroVend OR :filtroVend = 0 OR
        pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0 OR
-       nfnoFat = :filtroFat OR :filtroFat = '')
+       nfnoFat = :filtroFat OR :filtroFat = 0)

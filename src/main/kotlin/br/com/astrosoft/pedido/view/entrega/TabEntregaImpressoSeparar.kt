@@ -84,7 +84,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
 
     edtPedidoPesquisa = textField("Pesquisa") {
       this.valueChangeMode = ValueChangeMode.LAZY
-      this.valueChangeTimeout = 1500
+      this.valueChangeTimeout = 1000
       this.isAutofocus = true
       addValueChangeListener {
         updateComponent()
@@ -102,7 +102,6 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     pedidoPedido()
     pedidoDataHoraPrint()
     pedidoArea()
-    pedidoRota()
     pedidoCarga()
 
     pedidoNfFat()

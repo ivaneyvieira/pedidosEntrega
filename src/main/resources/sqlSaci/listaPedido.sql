@@ -507,10 +507,10 @@ FROM PEDIDOS
   LEFT JOIN PEDIDO_CD
 	      USING (loja, pedido)
 WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
-       rota LIKE CONCAT('%', :filtroRota, '%') OR :filtroRota = '' OR nfnoFat = :filtroFat OR
-       :filtroFat = '')
+       rota LIKE CONCAT('%', :filtroRota, '%') OR :filtroRota = '')
   AND (dataFat = :filtroData OR :filtroData = 0)
   AND (loc LIKE CONCAT(:filtroCD, '%') OR :filtroCD = '')
   AND (piso = :filtroPiso OR :filtroPiso = 0 OR vendno = :filtroVend OR :filtroVend = 0 OR
-       pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0)
-  AND (IFNULL(dataEnt, 20221007)  >= 20221007)
+       pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0 OR
+       nfnoFat = :filtroFat OR :filtroFat = '')
+  AND (IFNULL(dataEnt, 20221007) >= 20221007)

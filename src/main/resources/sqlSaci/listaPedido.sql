@@ -5,8 +5,8 @@ DO @TIPO := :tipo;
 DO @EC := :ecommerce;
 DO @DATA1 := IF(@TIPO = 'R', 20170601, 20200101);
 DO @DATA2 := IF(@TIPO = 'R', 20170601, 20200518);
-DO @DATA1 := 20221001;
-DO @DATA2 := 20221001;
+DO @DATA1 := 20221007;
+DO @DATA2 := 20221007;
 
 DROP TEMPORARY TABLE IF EXISTS T_TIPO;
 CREATE TEMPORARY TABLE T_TIPO (
@@ -513,4 +513,3 @@ WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
   AND (piso = :filtroPiso OR :filtroPiso = 0 OR vendno = :filtroVend OR :filtroVend = 0 OR
        pedido = :filtroPedido OR :filtroPedido = 0 OR loja = :filtroLoja OR :filtroLoja = 0 OR
        nfnoFat = :filtroFat OR :filtroFat = '')
-  AND (IFNULL(dataEnt, 20221007) >= 20221007)

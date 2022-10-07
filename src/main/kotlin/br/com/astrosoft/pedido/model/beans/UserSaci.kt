@@ -136,6 +136,24 @@ class UserSaci {
       bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_SEPARADO
       else bitAcesso and BIT_ENTRADA_IMPRESSO_SEPARADO.inv()
     }
+  var entrega_removerCarga
+    get() = (bitAcesso and BIT_ENTRADA_IMPRESSO_REMOVER_CARGA) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_REMOVER_CARGA
+      else bitAcesso and BIT_ENTRADA_IMPRESSO_REMOVER_CARGA.inv()
+    }
+  var entrega_enviarSeparado
+    get() = (bitAcesso and BIT_ENTRADA_IMPRESSO_ENVIA_SEPARADO) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_ENVIA_SEPARADO
+      else bitAcesso and BIT_ENTRADA_IMPRESSO_ENVIA_SEPARADO.inv()
+    }
+  var entrega_voltaSeparar
+    get() = (bitAcesso and BIT_ENTRADA_IMPRESSO_VOLTA_SEPARAR) != 0 || admin
+    set(value) {
+      bitAcesso = if (value) bitAcesso or BIT_ENTRADA_IMPRESSO_VOLTA_SEPARAR
+      else bitAcesso and BIT_ENTRADA_IMPRESSO_VOLTA_SEPARAR.inv()
+    }
 
   val admin
     get() = login == "ADM"
@@ -161,6 +179,9 @@ class UserSaci {
     private val BIT_ENTRADA_IMPRESSO_SEPARAR = 2.pow(17)
     private val BIT_ENTRADA_IMPRESSO_SEPARADO = 2.pow(18)
     private val BIT_ENTRADA_IMPRESSO_CARGA = 2.pow(19)
+    private val BIT_ENTRADA_IMPRESSO_REMOVER_CARGA = 2.pow(20)
+    private val BIT_ENTRADA_IMPRESSO_ENVIA_SEPARADO = 2.pow(21)
+    private val BIT_ENTRADA_IMPRESSO_VOLTA_SEPARAR = 2.pow(22)
 
     fun findAll(): List<UserSaci>? {
       return saci.findAllUser().filter { it.ativo }

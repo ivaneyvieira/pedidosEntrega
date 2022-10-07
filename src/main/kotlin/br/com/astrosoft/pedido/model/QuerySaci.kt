@@ -59,7 +59,7 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     val filtroPedido = filtroInt
     val filtroArea = filtroStr
     val filtroRota = filtroStr
-    val filtroFat = filtroStr
+    val filtroFat = filtroInt
     val filtroPiso = filtroInt
     val filtroVend = filtroInt
 

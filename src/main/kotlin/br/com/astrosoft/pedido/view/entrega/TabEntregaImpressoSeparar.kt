@@ -11,7 +11,6 @@ import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoSepararVie
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
 import com.vaadin.flow.component.grid.Grid
-import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.icon.VaadinIcon.*
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
 import com.vaadin.flow.component.textfield.TextField
@@ -67,18 +66,21 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       }
     }
 
-    button("Remove Carga") {
-      icon = ARROW_LEFT.create()
-      addClickListener {
-        viewModel.removeCarga()
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_removerCarga == true)) {
+      button("Remove Carga") {
+        icon = ARROW_LEFT.create()
+        addClickListener {
+          viewModel.removeCarga()
+        }
       }
     }
 
-
-    button("Separado") {
-      icon = ARROW_RIGHT.create()
-      addClickListener {
-        viewModel.marcaSeparado()
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_enviarSeparado == true)) {
+      button("Separado") {
+        icon = ARROW_RIGHT.create()
+        addClickListener {
+          viewModel.marcaSeparado()
+        }
       }
     }
 

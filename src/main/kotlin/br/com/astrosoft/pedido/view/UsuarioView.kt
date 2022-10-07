@@ -128,6 +128,15 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           checkBox("Separado") {
             binder.bind(this, UserSaci::entrega_separado.name)
           }
+          checkBox("Remove carga") {
+            binder.bind(this, UserSaci::entrega_removerCarga.name)
+          }
+          checkBox("Envia para separado") {
+            binder.bind(this, UserSaci::entrega_enviarSeparado.name)
+          }
+          checkBox("Volta para separar") {
+            binder.bind(this, UserSaci::entrega_voltaSeparar.name)
+          }
 
           checkBox("Retira Imprimir") {
             binder.bind(this, UserSaci::retira_imprimir.name)

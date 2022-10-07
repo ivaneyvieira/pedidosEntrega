@@ -64,6 +64,13 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
       }
     }
 
+    if (AppConfig.isAdmin) button("Visualizar") {
+      icon = VaadinIcon.EYE.create()
+      addClickListener {
+        viewModel.imprimirPedidos(itensSelecionado())
+      }
+    }
+
     button("Carga") {
       icon = VaadinIcon.TRUCK.create()
       addClickListener {

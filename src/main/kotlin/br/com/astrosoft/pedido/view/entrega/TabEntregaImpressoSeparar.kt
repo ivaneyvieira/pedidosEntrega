@@ -66,6 +66,13 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       }
     }
 
+    if (AppConfig.isAdmin) button("Visualizar") {
+      icon = EYE.create()
+      addClickListener {
+        viewModel.imprimirPedidos(itensSelecionado())
+      }
+    }
+
     if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_removerCarga == true)) {
       button("Remove Carga") {
         icon = ARROW_LEFT.create()

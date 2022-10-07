@@ -46,6 +46,13 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
+    if (AppConfig.isAdmin) button("Visualizar") {
+      icon = VaadinIcon.EYE.create()
+      addClickListener {
+        viewModel.imprimirPedidos(itensSelecionado())
+      }
+    }
+
     if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_voltaSeparar == true)) {
       button("Volta") {
         icon = VaadinIcon.ARROW_LEFT.create()

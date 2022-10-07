@@ -5,6 +5,7 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
+import java.time.LocalDate
 
 class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
@@ -19,7 +20,7 @@ class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel)
                                              dataInicial = null,
                                              dataFinal = null))
       .filter {
-        it.zonaCarga == ""
+        it.zonaCarga == "" && it.data?.isAfter(LocalDate.of(2022, 10, 6)) == true
       }
   }
 

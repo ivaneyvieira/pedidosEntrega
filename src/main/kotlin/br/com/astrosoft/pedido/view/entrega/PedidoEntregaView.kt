@@ -52,15 +52,20 @@ class PedidoEntregaView : ViewLayout<PedidoEntregaViewModel>(), IPedidoEntregaVi
         tabPanel(tabEntregador, update)
         update = false
       }
-      tabPanel(tabEntregaRota, update)
-      update = false
+
+      if (user?.entrega_rota == true) {
+        tabPanel(tabEntregaRota, update)
+        update = false
+      }
 
       if (user?.entrega_carga == true) {
         tabPanel(tabEntregaImpressoCarga, update)
+        update = false
       }
 
       if (user?.entrega_separar == true) {
         tabPanel(tabEntregaImpressoSeparar, update)
+        update = false
       }
 
       if (user?.entrega_separado == true) {

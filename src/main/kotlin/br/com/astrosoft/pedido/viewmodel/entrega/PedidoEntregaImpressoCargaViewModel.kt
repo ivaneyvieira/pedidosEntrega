@@ -79,5 +79,6 @@ enum class EZonaCarga(val codigo: Char, val descricao: String) {
   Sul2('F', "Sul 2"),
   Sul3('G', "Sul 3"),
   Timon('H', "Timon"),
+  Motoboy('K', "Motoboy"),
   SemZona(' ', "")
 }

@@ -66,7 +66,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       }
     }
 
-    if (AppConfig.isAdmin) button("Visualizar") {
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_visualizar == true)) button("Visualizar") {
       icon = EYE.create()
       addClickListener {
         viewModel.imprimirPedidos(itensSelecionado())

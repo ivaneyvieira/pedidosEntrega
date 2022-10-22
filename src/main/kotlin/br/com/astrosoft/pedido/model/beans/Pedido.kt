@@ -1,6 +1,8 @@
 package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.util.format
+import br.com.astrosoft.framework.util.mid
 import br.com.astrosoft.pedido.model.saci
 import br.com.astrosoft.pedido.viewmodel.entrega.EZonaCarga
 import java.sql.Time
@@ -137,6 +139,27 @@ class Pedido(
 
   fun removeCarga() {
     saci.marcaCarga(loja, pedido, EZonaCarga.SemZona)
+  }
+
+  fun listaRelatorio(): List<Relatorio> {
+    val produtos = produtos()
+    return produtos.map { produto ->
+      Relatorio(
+        loja = siglaLoja,
+        pedido = pedido.toString(),
+        notaFiscal = nfFat,
+        dataHoraNota = "${dataFat.format()}-${horaFat.format()}",
+        rotaArea = "$rota - $area",
+        vendedor = vendedor,
+        cliente = cliente,
+        endereco = endereco,
+        codigo = produto.codigo,
+        descricao = produto.descricao,
+        grade = produto.grade,
+        localizacao = produto.localizacao.mid(0, 4),
+        quantidade = produto.qtd,
+               )
+    }
   }
 
   companion object {

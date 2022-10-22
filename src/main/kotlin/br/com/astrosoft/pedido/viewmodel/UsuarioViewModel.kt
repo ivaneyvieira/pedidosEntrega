@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.viewmodel
 import br.com.astrosoft.framework.viewmodel.IView
 import br.com.astrosoft.framework.viewmodel.ViewModel
 import br.com.astrosoft.framework.viewmodel.fail
+import br.com.astrosoft.pedido.model.beans.Impressora
 import br.com.astrosoft.pedido.model.beans.UserSaci
 
 class UsuarioViewModel(view: IUsuarioView) : ViewModel<IUsuarioView>(view) {
@@ -38,6 +39,8 @@ class UsuarioViewModel(view: IUsuarioView) : ViewModel<IUsuarioView>(view) {
       UserSaci.updateUser(userValid)
     }
   }
+
+  fun findImpressoras() = Impressora.findAll()
 }
 
 interface IUsuarioView : IView

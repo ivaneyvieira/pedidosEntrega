@@ -145,12 +145,13 @@ class QuerySaci : QueryDB(driver, url, username, password) {
     }
   }
 
-  fun marcaCarga(storeno: Int, ordno: Int, carga: EZonaCarga) {
+  fun marcaCarga(storeno: Int, ordno: Int, carga: EZonaCarga, entrega: LocalDate?) {
     val sql = "/sqlSaci/marcaCarga.sql"
     script(sql) {
       addOptionalParameter("storeno", storeno)
       addOptionalParameter("ordno", ordno)
       addOptionalParameter("marca", carga.codigo.toString())
+      addOptionalParameter("entrega", entrega.toSaciDate())
     }
   }
 

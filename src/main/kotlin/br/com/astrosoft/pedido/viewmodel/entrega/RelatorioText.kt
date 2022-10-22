@@ -17,15 +17,15 @@ class RelatorioText : PrintText<Relatorio>() {
   }
 
   override fun sumaryLine(): List<String> {
+    val dataHora = "${LocalDate.now().format()}-${LocalTime.now().format()}"
     return listOf(""""
     
-DOCUMENTO NAO FISCAL
+DOCUMENTO NAO FISCAL                               $dataHora
  
     """.trimIndent().negrito())
   }
 
   override fun titleLines(bean: Relatorio): List<String> {
-    val dataHora = "${LocalDate.now().format()}-${LocalTime.now().format()}"
     return listOf(
       "ENGECOPI ${bean.loja}       ROMANEIO DE SEPARACAO ROTA: ${bean.rota}".negrito(),
       "PEDIDO DE ENTREGA: ${bean.pedido} ${bean.dataPedido} ${bean.notaFiscal} ${bean.dataHoraNota}".negrito(),

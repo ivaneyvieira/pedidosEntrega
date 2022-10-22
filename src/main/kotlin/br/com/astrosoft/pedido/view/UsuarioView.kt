@@ -45,7 +45,13 @@ class UsuarioView : ViewLayout<UsuarioViewModel>(), IUsuarioView {
 
   private fun gridCrud(): GridCrud<UserSaci> {
     val crud: GridCrud<UserSaci> = GridCrud<UserSaci>(UserSaci::class.java)
-    crud.grid.setColumns(UserSaci::no.name, UserSaci::login.name, UserSaci::name.name, UserSaci::impressora.name)
+    crud.grid.setColumns(
+      UserSaci::no.name,
+      UserSaci::login.name,
+      UserSaci::name.name,
+      UserSaci::impressora.name,
+      UserSaci::impressoraTermica.name,
+                        )
 
     crud.grid.addThemeVariants(LUMO_COMPACT)
 

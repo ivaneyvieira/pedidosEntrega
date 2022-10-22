@@ -124,6 +124,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
     pedidoDataHoraPrint()
     pedidoArea()
     pedidoCarga()
+    pedidoEntrega()
 
     pedidoNfFat()
     pedidoDataFat()

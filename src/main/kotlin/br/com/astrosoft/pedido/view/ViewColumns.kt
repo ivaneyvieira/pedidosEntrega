@@ -47,6 +47,10 @@ fun Grid<Pedido>.pedidoCarga() = addColumnString(Pedido::descricaoZonaCarga) {
   this.setHeader("Carga")
 }
 
+fun Grid<Pedido>.pedidoEntrega() = addColumnLocalDate(Pedido::entrega) {
+  this.setHeader("Entrega")
+}
+
 fun Grid<Pedido>.pedidoNfFat() = addColumnString(Pedido::nfFat) {
   this.setHeader("NF Fat")
 }

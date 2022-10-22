@@ -106,6 +106,7 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     pedidoDataHoraPrint()
     pedidoArea()
     pedidoCarga()
+    pedidoEntrega()
 
     pedidoNfFat()
     pedidoDataFat()

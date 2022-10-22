@@ -456,7 +456,7 @@ SELECT loja,
        pedido,
        separado,
        zonaCarga,
-       DATE(entrega)      AS entrega,
+       DATE(IF(entrega = 0, NULL, entrega)) AS entrega,
        marca,
        data,
        dataEntrega,
@@ -504,8 +504,8 @@ SELECT loja,
        obs7,
        tipo,
        metodo,
-       IFNULL(piso, 0.00) AS piso,
-       IFNULL(loc, '')    AS loc
+       IFNULL(piso, 0.00)                   AS piso,
+       IFNULL(loc, '')                      AS loc
 FROM PEDIDOS
   LEFT JOIN PEDIDO_PISO
 	      USING (loja, pedido)

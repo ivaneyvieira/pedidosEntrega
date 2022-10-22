@@ -84,6 +84,7 @@ class TabEntregaImpressoSeparado(val viewModel: PedidoEntregaImpressoSeparadoVie
     pedidoArea()
     pedidoRota()
     pedidoCarga()
+    pedidoEntrega()
 
     pedidoNfFat()
     pedidoDataFat()

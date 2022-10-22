@@ -27,13 +27,11 @@ DOCUMENTO NAO FISCAL
   override fun titleLines(bean: Relatorio): List<String> {
     val dataHora = "${LocalDate.now().format()}-${LocalTime.now().format()}"
     return listOf(
-      "ENGECOPI ${bean.loja}       $dataHora".negrito(),
-      "ROMANEIRO DE SEPARACAO".negrito(),
-      "PEDIDO DE ENTREGA: ${bean.pedido}".negrito(),
-      "NF: ${bean.notaFiscal}  ${bean.rotaArea}".negrito(),
+      "ENGECOPI ${bean.loja}       ROMANEIO DE SEPARACAO ROTA: ${bean.rota}".negrito(),
+      "PEDIDO DE ENTREGA: ${bean.pedido} ${bean.dataPedido} ${bean.notaFiscal} ${bean.dataHoraNota}".negrito(),
       "VENDEDOR: ${bean.vendedor}".negrito(),
       "CLIENTE: ${bean.cliente}".negrito(),
-      "         ${bean.endereco}".negrito(),
+      ""
                  )
   }
 }

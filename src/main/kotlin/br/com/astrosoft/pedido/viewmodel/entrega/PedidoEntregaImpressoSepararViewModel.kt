@@ -1,5 +1,7 @@
 package br.com.astrosoft.pedido.viewmodel.entrega
 
+import br.com.astrosoft.AppConfig
+import br.com.astrosoft.framework.util.ECupsPrinter
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
@@ -62,6 +64,32 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
       updateGridImpressoSeparar()
     }
   }
+
+  fun printRelatorio(pedido: Pedido) = viewModel.exec {
+    val listaRelatorio = pedido.listaRelatorio().filter {relatorio ->
+      relatorio.localizacao == pedido.loc
+    }
+    if(listaRelatorio.isEmpty()){
+      fail("Não produtos para imprimir com a localização ${pedido.loc}")
+    }
+    val impressora = AppConfig.userSaci?.impressora ?: fail("Impressora não configurada")
+    try {
+      RelatorioText().print(impressora, listaRelatorio)
+    } catch (e: ECupsPrinter) {
+      fail(e.message ?: "Erro de impressão")
+    }
+  }
+
+  fun printRelatorio(itensSelecionado: List<Pedido>) = viewModel.exec {
+    if (itensSelecionado.isEmpty()) {
+      fail("Nenhum pedido selecionado")
+    }
+    viewModel.view.showConfirmation("Imprime os pedidos?") {
+      itensSelecionado.forEach { pedido ->
+        printRelatorio(pedido)
+      }
+    }
+  }
 }
 
 interface IPedidoEntregaImpressoSeparar {
@@ -69,6 +97,6 @@ interface IPedidoEntregaImpressoSeparar {
   fun itensSelecionado(): List<Pedido>
   val pedidoPesquisa: String
 
-  fun confirmaSeparado(exec : () -> Unit)
-  fun confirmaRemoveCarga(exec : () -> Unit)
+  fun confirmaSeparado(exec: () -> Unit)
+  fun confirmaRemoveCarga(exec: () -> Unit)
 }

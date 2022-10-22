@@ -66,17 +66,22 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
   }
 
   fun printRelatorio(pedido: Pedido) = viewModel.exec {
-    val listaRelatorio = pedido.listaRelatorio().filter {relatorio ->
+    val listaRelatorio = pedido.listaRelatorio().filter { relatorio ->
       relatorio.localizacao == pedido.loc
     }
-    if(listaRelatorio.isEmpty()){
+    if (listaRelatorio.isEmpty()) {
       fail("Não produtos para imprimir com a localização ${pedido.loc}")
     }
-    val impressora = AppConfig.userSaci?.impressora ?: fail("Impressora não configurada")
-    try {
-      RelatorioText().print(impressora, listaRelatorio)
-    } catch (e: ECupsPrinter) {
-      fail(e.message ?: "Erro de impressão")
+    val impressora = AppConfig.userSaci?.impressoraTermica
+    if (impressora == "" || impressora == null) {
+      fail("Impressora termica não configurada")
+    }
+    else {
+      try {
+        RelatorioText().print(impressora, listaRelatorio)
+      } catch (e: ECupsPrinter) {
+        fail(e.message ?: "Erro de impressão")
+      }
     }
   }
 

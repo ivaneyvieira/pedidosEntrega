@@ -103,6 +103,10 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           isReadOnly = false
           binder.bind(this, UserSaci::storeno.name)
         }
+        if (operation in listOf(READ, DELETE, UPDATE)) textField("Impressora Termica") {
+          isReadOnly = false
+          binder.bind(this, UserSaci::impressoraTermica.name)
+        }
         if (operation in listOf(ADD, READ, DELETE, UPDATE)) {
           checkBox("Entrega Imprimir") {
             binder.bind(this, UserSaci::entrega_imprimir.name)

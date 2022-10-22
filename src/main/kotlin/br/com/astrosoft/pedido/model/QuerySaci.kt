@@ -33,6 +33,7 @@ class QuerySaci : QueryDB(driver, url, username, password) {
       addOptionalParameter("login", user.login)
       addOptionalParameter("bitAcesso", user.bitAcesso)
       addOptionalParameter("loja", user.storeno)
+      addOptionalParameter("impressoraTermica", user.impressoraTermica)
     }
   }
 

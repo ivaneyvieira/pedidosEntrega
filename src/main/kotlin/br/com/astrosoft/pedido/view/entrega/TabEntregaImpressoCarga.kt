@@ -3,6 +3,7 @@ package br.com.astrosoft.pedido.view.entrega
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.view.TabPanelGrid
 import br.com.astrosoft.framework.view.addColumnSeq
+import br.com.astrosoft.framework.view.localePtBr
 import br.com.astrosoft.framework.view.shiftSelect
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.view.*
@@ -11,14 +12,17 @@ import br.com.astrosoft.pedido.viewmodel.entrega.IPedidoEntregaImpressoCarga
 import br.com.astrosoft.pedido.viewmodel.entrega.PedidoEntregaImpressoCargaViewModel
 import com.github.mvysny.karibudsl.v10.button
 import com.github.mvysny.karibudsl.v10.textField
+import com.vaadin.flow.component.datepicker.DatePicker
 import com.vaadin.flow.component.grid.Grid
 import com.vaadin.flow.component.icon.VaadinIcon
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout
+import com.vaadin.flow.component.orderedlayout.VerticalLayout
 import com.vaadin.flow.component.select.Select
 import com.vaadin.flow.component.textfield.TextField
 import com.vaadin.flow.data.value.ValueChangeMode
 import org.claspina.confirmdialog.ButtonOption
 import org.claspina.confirmdialog.ConfirmDialog
+import java.time.LocalDate
 
 class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel) : TabPanelGrid<Pedido>(),
         IPedidoEntregaImpressoCarga {
@@ -32,7 +36,7 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
   override val pedidoPesquisa: String
     get() = edtPedidoPesquisa.value ?: ""
 
-  override fun selecionaCarga(exec: (EZonaCarga) -> Unit) {
+  override fun selecionaCarga(exec: (EZonaCarga, LocalDate?) -> Unit) {
     val combo = Select<EZonaCarga>().apply {
       this.label = "Zona"
       this.setItems(EZonaCarga.values().toList())
@@ -40,16 +44,19 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
         it.descricao
       }
     }
+    val pick = DatePicker("Entrada").apply {
+      this.localePtBr()
+      this.value = LocalDate.now()
+    }
     ConfirmDialog
       .createQuestion()
       .withCaption("Selecione a zona da carga")
-      .withMessage(combo)
+      .withMessage(VerticalLayout(combo, pick))
       .withOkButton({
-                      val value =
-                        combo.value
-                      if (value != null) exec(value)
-                    },
-                    ButtonOption.caption("Ok"))
+                      val carga = combo.value
+                      val entrada = pick.value
+                      if (carga != null) exec(carga, entrada)
+                    }, ButtonOption.caption("Ok"))
       .withCancelButton({ }, ButtonOption.caption("Cancelar"))
       .open()
   }

@@ -39,9 +39,9 @@ class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel)
 
   fun marcaCarga() = exec(viewModel.view) {
     val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
-    subView.selecionaCarga { carga ->
+    subView.selecionaCarga { carga, entrega ->
       pedidos.forEach { pedido ->
-        pedido.marcaCarga(carga)
+        pedido.marcaCarga(carga, entrega)
       }
       updateGridImpressoCarga()
     }
@@ -65,7 +65,7 @@ interface IPedidoEntregaImpressoCarga {
   fun updateGrid(itens: List<Pedido>)
   fun itensSelecionado(): List<Pedido>
   val pedidoPesquisa: String
-  fun selecionaCarga(exec: (EZonaCarga) -> Unit)
+  fun selecionaCarga(exec: (EZonaCarga, LocalDate?) -> Unit)
 }
 
 enum class EZonaCarga(val codigo: Char, val descricao: String) {

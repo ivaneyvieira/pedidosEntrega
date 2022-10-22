@@ -18,6 +18,7 @@ class Pedido(
   val marca: String,
   val separado: String,
   val zonaCarga: String,
+  val entrega: LocalDate?,
   val data: LocalDate?,
   val dataEntrega: LocalDate?,
   val pdvno: Int,
@@ -133,12 +134,12 @@ class Pedido(
   fun canPrint(): Boolean = dataHoraPrint == null || (AppConfig.isAdmin)
 
   fun produtos(): List<ProdutoPedido> = saci.produtoPedido(loja, pedido, tipo)
-  fun marcaCarga(carga: EZonaCarga) {
-    saci.marcaCarga(loja, pedido, carga)
+  fun marcaCarga(carga: EZonaCarga, entrega: LocalDate?) {
+    saci.marcaCarga(loja, pedido, carga, entrega)
   }
 
   fun removeCarga() {
-    saci.marcaCarga(loja, pedido, EZonaCarga.SemZona)
+    saci.marcaCarga(loja, pedido, EZonaCarga.SemZona, entrega = null)
   }
 
   fun listaRelatorio(): List<Relatorio> {

@@ -27,7 +27,7 @@ DOCUMENTO NAO FISCAL                            $dataHora
   }
 
   override fun titleLines(bean: Relatorio): List<String> {
-    val rota = "ROTA: ${bean.rota}".lpad(25, " ")
+    val rota = "ROTA: ${bean.rota}".lpad(24, " ")
     return listOf(
       "ENGECOPI ${bean.loja}       ROMANEIO DE SEPARACAO $rota".negrito(),
       "PEDIDO ENTREGA: ${bean.pedido} ${bean.dataPedido}  NF ${bean.notaFiscal} ${bean.dataHoraNota}".negrito(),

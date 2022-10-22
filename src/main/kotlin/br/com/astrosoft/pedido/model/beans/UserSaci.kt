@@ -12,6 +12,7 @@ class UserSaci {
   var bitAcesso: Int = 0
   var prntno: Int = 0
   var impressora: String = ""
+  var impressoraTermica: String = ""
 
   //Otiros campos
   var ativo

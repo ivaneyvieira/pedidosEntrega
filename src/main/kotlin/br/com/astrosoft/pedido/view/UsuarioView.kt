@@ -109,7 +109,8 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           isReadOnly = false
           binder.bind(this, UserSaci::storeno.name)
         }
-        if (operation in listOf(READ, DELETE, UPDATE)) textField("Impressora Termica") {
+        if (operation in listOf(READ, DELETE, UPDATE)) select<String>("Impressora Termica") {
+          setItems(viewModel.findImpressoras().map { it.name }.sorted())
           isReadOnly = false
           binder.bind(this, UserSaci::impressoraTermica.name)
         }

@@ -12,6 +12,11 @@ import java.time.LocalTime
 import java.util.*
 
 class QuerySaci : QueryDB(driver, url, username, password) {
+  fun findImpressoras() : List<Impressora>{
+    val sql = "/sqlSaci/listImpressoas.sql"
+    return query(sql, Impressora::class)
+  }
+
   fun findUser(login: String?): UserSaci? {
     login ?: return null
     val sql = "/sqlSaci/userSenha.sql"

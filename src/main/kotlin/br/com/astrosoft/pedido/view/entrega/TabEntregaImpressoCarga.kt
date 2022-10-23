@@ -103,23 +103,17 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
-    pedidoDataHoraPrint()
-    pedidoArea()
     pedidoCarga()
-    pedidoEntrega()
 
     pedidoNfFat()
     pedidoDataFat()
-    pedidoHoraFat()
     pedidoLoc()
     pedidoPiso()
 
-    pedidoVendno()
     pedidoValor()
-    pedidoObs()
     pedidoNfEnt()
     pedidoDataEnt()
-    pedidoHoraEnt()
+    pedidoObs()
 
     shiftSelect()
 

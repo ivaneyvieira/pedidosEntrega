@@ -65,7 +65,7 @@ class Pedido(
   val obs7: String,
   val tipo: String,
   val metodo: String,
-  val piso: Double,
+  val piso: Int,
   val loc: String,
             ) {
   var seq: Int = 0

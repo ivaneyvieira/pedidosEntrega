@@ -68,7 +68,7 @@ fun Grid<Pedido>.pedidoLoc() = addColumnString(Pedido::loc) {
   this.setHeader("CD")
 }
 
-fun Grid<Pedido>.pedidoPiso() = addColumnDouble(Pedido::piso) {
+fun Grid<Pedido>.pedidoPiso() = addColumnInt(Pedido::piso) {
   this.setHeader("Piso")
 }
 

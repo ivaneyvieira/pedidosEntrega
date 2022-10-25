@@ -4,6 +4,7 @@ import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.util.ECupsPrinter
 import br.com.astrosoft.framework.viewmodel.exec
 import br.com.astrosoft.framework.viewmodel.fail
+import br.com.astrosoft.pedido.model.QuerySaci
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
@@ -73,12 +74,12 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
       fail("Não produtos para imprimir com a localização ${pedido.loc}")
     }
     val impressora = AppConfig.userSaci?.impressoraTermica
-    if (impressora == "" || impressora == null) {
+    if ((impressora == "" || impressora == null) && !QuerySaci.test) {
       fail("Impressora termica não configurada")
     }
     else {
       try {
-        RelatorioText().print(impressora, listaRelatorio)
+        RelatorioText().print(impressora ?: "teste", listaRelatorio)
       } catch (e: ECupsPrinter) {
         fail(e.message ?: "Erro de impressão")
       }

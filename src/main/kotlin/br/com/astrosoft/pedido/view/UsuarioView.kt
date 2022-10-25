@@ -136,6 +136,9 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           checkBox("Visualizar") {
             binder.bind(this, UserSaci::entrega_visualizar.name)
           }
+          checkBox("Impressão Termica") {
+            binder.bind(this, UserSaci::entrega_imprimir_termica.name)
+          }
           checkBox("Carga") {
             binder.bind(this, UserSaci::entrega_carga.name)
           }

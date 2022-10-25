@@ -75,7 +75,7 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       }
     }
 
-    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_visualizar == true)) {
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_imprimir_termica == true)) {
       button("Imprimrir") {
         icon = PRINT.create()
         addClickListener {

@@ -17,13 +17,13 @@ class RelatorioText : PrintText<Relatorio>() {
     columText("Quant", 8) { quantidade.toString().lpad(8, " ") }
   }
 
-  override fun sumaryLine(): List<String> {
+  override fun sumaryLine(): String {
     val dataHora = "${LocalDate.now().format()}-${LocalTime.now().format()}"
-    return listOf(""""
+    return """"
     
 DOCUMENTO NAO FISCAL                            $dataHora
  
-    """.trimIndent().negrito())
+    """.trimIndent().negrito()
   }
 
   override fun titleLines(bean: Relatorio): List<String> {

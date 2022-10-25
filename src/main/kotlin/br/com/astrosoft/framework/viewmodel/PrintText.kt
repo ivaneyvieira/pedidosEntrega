@@ -70,7 +70,9 @@ abstract class PrintText<T> {
   }
 
   private fun inicialize(text: StringBuilder) {
-    text.append(0x1b.toChar()).append(0x0f.toChar())
+    text.append(0x1b.toChar())
+      .append(0x21.toChar())
+      .append(0x01.toChar())
   }
 
   protected fun String.barras(): String {

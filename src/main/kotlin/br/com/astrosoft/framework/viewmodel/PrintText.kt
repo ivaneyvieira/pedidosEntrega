@@ -76,7 +76,7 @@ abstract class PrintText<T> {
      */
     text.append(0x1b.toChar())
       .append(0x21.toChar())
-      .append(0x01.toChar())
+      .append(0x04.toChar())
   }
 
   protected fun String.barras(): String {

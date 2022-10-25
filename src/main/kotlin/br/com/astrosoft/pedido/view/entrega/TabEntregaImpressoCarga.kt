@@ -61,6 +61,16 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
       .open()
   }
 
+  override fun selecionaSemCarga(exec: () -> Unit) {
+    ConfirmDialog
+      .createQuestion()
+      .withCaption("Envia para o painel separado")
+      .withMessage("Confirma o envio?")
+      .withOkButton({exec()}, ButtonOption.caption("Ok"))
+      .withCancelButton({ }, ButtonOption.caption("Cancelar"))
+      .open()
+  }
+
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
@@ -82,6 +92,13 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
       icon = VaadinIcon.TRUCK.create()
       addClickListener {
         viewModel.marcaCarga()
+      }
+    }
+
+    button("Separado") {
+      icon = VaadinIcon.ARROW_RIGHT.create()
+      addClickListener {
+        viewModel.marcaSemcarga()
       }
     }
 

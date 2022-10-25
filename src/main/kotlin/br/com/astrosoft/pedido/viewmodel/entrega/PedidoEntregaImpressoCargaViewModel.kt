@@ -47,6 +47,19 @@ class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel)
     }
   }
 
+  fun marcaSemcarga() = exec(viewModel.view) {
+    val pedidosSelecionado = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = pedidosSelecionado.filter {
+      it.nfEnt != "" && it.separado == "S"
+    }
+    subView.selecionaSemCarga {
+      pedidos.forEach { pedido ->
+        pedido.marcaCarga(EZonaCarga.Separado, null)
+      }
+      updateGridImpressoCarga()
+    }
+  }
+
   fun marcaSeparado() = exec(viewModel.view) {
     val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
     pedidos.forEach { pedido ->
@@ -66,6 +79,7 @@ interface IPedidoEntregaImpressoCarga {
   fun itensSelecionado(): List<Pedido>
   val pedidoPesquisa: String
   fun selecionaCarga(exec: (EZonaCarga, LocalDate?) -> Unit)
+  fun selecionaSemCarga(exec: () -> Unit)
 }
 
 enum class EZonaCarga(val codigo: Char, val descricao: String) {
@@ -80,5 +94,6 @@ enum class EZonaCarga(val codigo: Char, val descricao: String) {
   Sul3('G', "Sul 3"),
   Motoboy('K', "Motoboy"),
   Timon('H', "Timon"),
-  SemZona(' ', "")
+  SemZona(' ', ""),
+  Separado('Z', "Sem carga")
 }

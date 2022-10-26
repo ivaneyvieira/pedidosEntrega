@@ -283,3 +283,35 @@ data class FiltroPedido(val tipo: ETipoPedido,
                         val ecommerce: Boolean,
                         val dataInicial: LocalDate?,
                         val dataFinal: LocalDate?)
+
+data class PedidoChave(
+  val carga: String?,
+  val data: LocalDate?,
+  val loc: String,
+                      )
+
+data class PedidoGroup(
+  val carga: String?,
+  val data: LocalDate?,
+  val loc: String,
+  val piso: Int,
+  val total: Double,
+  val quant: Int,
+  val list: List<Pedido>,
+                      )
+
+fun List<Pedido>.groupBy(): List<PedidoGroup> {
+  return this.groupBy {
+    PedidoChave(carga = it.descricaoZonaCarga, data = it.data, loc = it.loc)
+  }.map { entry ->
+    PedidoGroup(
+      carga = entry.key.carga,
+      data = entry.key.data,
+      loc = entry.key.loc,
+      piso = entry.value.sumOf { it.piso },
+      total = entry.value.sumOf { it.valorComFrete },
+      quant = entry.value.size,
+      list = entry.value,
+               )
+  }
+}

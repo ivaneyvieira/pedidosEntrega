@@ -4,7 +4,6 @@ import br.com.astrosoft.framework.view.addColumnDouble
 import br.com.astrosoft.framework.view.addColumnInt
 import br.com.astrosoft.framework.view.addColumnLocalDate
 import br.com.astrosoft.framework.view.addColumnString
-import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.PedidoGroup
 import com.vaadin.flow.component.grid.Grid
 

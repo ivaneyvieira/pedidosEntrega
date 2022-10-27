@@ -67,8 +67,8 @@ class TabEntregaImpressoSeparar(val viewModel: PedidoEntregaImpressoSepararViewM
       dialog = DlgPedidoSeparar(viewModel, grupo)
       dialog?.showDialog()
     }
-    pedidoCarga()
     pedidoData()
+    pedidoCarga()
     pedidoLoc()
     pedidoPiso()
     pedidoTotal()

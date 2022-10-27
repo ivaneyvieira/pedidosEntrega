@@ -302,7 +302,7 @@ data class PedidoGroup(
 
 fun List<Pedido>.groupBy(): List<PedidoGroup> {
   return this.groupBy {
-    PedidoChave(carga = it.descricaoZonaCarga, data = it.data, loc = it.loc)
+    PedidoChave(carga = it.descricaoZonaCarga, data = it.entrega ?: it.data, loc = it.loc)
   }.map { entry ->
     PedidoGroup(
       carga = entry.key.carga,

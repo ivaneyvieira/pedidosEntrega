@@ -45,22 +45,22 @@ abstract class PrintText<T> {
 
   fun print(impressora: String, dados: List<T>) {
     dados.firstOrNull()?.let { bean ->
-        val text = StringBuilder()
-        inicialize(text)
-        printTitle(text, bean)
+      val text = StringBuilder()
+      inicialize(text)
+      printTitle(text, bean)
 
-        printHeader(text)
-        dados.forEach { beanDetail ->
-          printDetail(text, beanDetail)
-        }
-        sumary(text)
-        finalize(text)
-        if (!QuerySaci.test) CupsUtils.printCups(impressora, text.toString())
-        else {
-          println(text.toString())
-          File("/tmp/relatorio.txt").writeText(text.toString())
-        }
+      printHeader(text)
+      dados.forEach { beanDetail ->
+        printDetail(text, beanDetail)
       }
+      sumary(text)
+      finalize(text)
+      if (!QuerySaci.test) CupsUtils.printCups(impressora, text.toString())
+      else {
+        println(text.toString())
+        File("/tmp/relatorio.txt").writeText(text.toString())
+      }
+    }
   }
 
   private fun sumary(text: StringBuilder) {
@@ -68,7 +68,7 @@ abstract class PrintText<T> {
   }
 
   private fun inicialize(text: StringBuilder) {
-    text.append(0x1b.toChar()).append(0x0f.toChar())
+    text.append(0x1b.toChar()).append(0x21.toChar()).append(0x01.toChar())
   }
 
   protected fun String.barras(): String {
@@ -124,12 +124,13 @@ abstract class PrintText<T> {
       .append(0x1b.toChar())
       .append(0x45.toChar())
       .append(0x00.toChar())
-      .appendln()
+      .appendLine()
     return stringBuffer.toString()
   }
 
   private fun StringBuilder.line(line: String): StringBuilder {
-    this.append(line).appendln()
+    this.append(0x1b.toChar()).append(0x21.toChar()).append(0x01.toChar())
+    this.append(line).appendLine()
     return this
   }
 

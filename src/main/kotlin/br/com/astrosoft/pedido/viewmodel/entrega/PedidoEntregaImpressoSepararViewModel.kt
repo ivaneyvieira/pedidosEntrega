@@ -8,14 +8,16 @@ import br.com.astrosoft.pedido.model.QuerySaci
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
+import br.com.astrosoft.pedido.model.beans.PedidoGroup
+import br.com.astrosoft.pedido.model.beans.groupBy
 import java.time.LocalDate
 
 class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
     get() = viewModel.view.tabEntregaImpressoSeparar
 
-  private fun listPedidosEntregaImpressoSeparar(): List<Pedido> {
-    val pesquisa = subView.pedidoPesquisa
+  private fun listPedidosEntregaImpressoSeparar(): List<PedidoGroup> {
+    val pesquisa = ""
     return Pedido
       .listaPedidoImpressoSeparar(FiltroPedido(tipo = ENTREGA,
                                                pesquisa = pesquisa,
@@ -24,7 +26,7 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
                                                dataFinal = null))
       .filter {
         it.separado != "S" && it.data?.isAfter(LocalDate.of(2022, 10, 6)) == true && it.loc.startsWith("CD5A")
-      }
+      }.groupBy()
   }
 
   fun updateGridImpressoSeparar() {
@@ -32,7 +34,7 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
   }
 
   fun desmarcaSeparar() = exec(viewModel.view) {
-    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = subView.itensSelecionadoPedido().ifEmpty { fail("Não há pedido selecionado") }
     pedidos.forEach { pedido ->
       pedido.desmarcaImpresso()
     }
@@ -41,7 +43,7 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
   }
 
   fun marcaSeparado() = exec(viewModel.view) {
-    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = subView.itensSelecionadoPedido().ifEmpty { fail("Não há pedido selecionado") }
     subView.confirmaSeparado {
       pedidos.forEach { pedido ->
         pedido.marcaSeparado("S")
@@ -56,7 +58,7 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
   }
 
   fun removeCarga() {
-    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = subView.itensSelecionadoPedido().ifEmpty { fail("Não há pedido selecionado") }
     subView.confirmaRemoveCarga {
       pedidos.forEach { pedido ->
         pedido.removeCarga()
@@ -93,15 +95,15 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
     viewModel.view.showConfirmation("Imprime os pedidos?") {
       itensSelecionado.forEach { pedido ->
         printRelatorio(pedido)
+        marcaSeparado()
       }
     }
   }
 }
 
 interface IPedidoEntregaImpressoSeparar {
-  fun updateGrid(itens: List<Pedido>)
-  fun itensSelecionado(): List<Pedido>
-  val pedidoPesquisa: String
+  fun updateGrid(itens: List<PedidoGroup>)
+  fun itensSelecionadoPedido(): List<Pedido>
 
   fun confirmaSeparado(exec: () -> Unit)
   fun confirmaRemoveCarga(exec: () -> Unit)

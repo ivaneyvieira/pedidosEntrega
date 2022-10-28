@@ -115,83 +115,111 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
           binder.bind(this, UserSaci::impressoraTermica.name)
         }
         if (operation in listOf(ADD, READ, DELETE, UPDATE)) {
-          checkBox("Entrega Imprimir") {
-            binder.bind(this, UserSaci::entrega_imprimir.name)
-          }
-          checkBox("Entrega Impresso sem nota") {
-            binder.bind(this, UserSaci::entrega_impressoSemNota.name)
-          }
-          checkBox("Entrega Pendente") {
-            binder.bind(this, UserSaci::entrega_pendente.name)
-          }
-          checkBox("Entrega Editor de Nota") {
-            binder.bind(this, UserSaci::entrega_impressoComNota.name)
-          }
-          checkBox("Desempenho Entrega") {
-            binder.bind(this, UserSaci::entrega_entregador.name)
-          }
-          checkBox("Desempenho Rota") {
-            binder.bind(this, UserSaci::entrega_rota.name)
-          }
-          checkBox("Visualizar") {
-            binder.bind(this, UserSaci::entrega_visualizar.name)
-          }
-          checkBox("Impressão Termica") {
-            binder.bind(this, UserSaci::entrega_imprimir_termica.name)
-          }
-          checkBox("Carga") {
-            binder.bind(this, UserSaci::entrega_carga.name)
-          }
-          checkBox("Separar") {
-            binder.bind(this, UserSaci::entrega_separar.name)
-          }
-          checkBox("Separado") {
-            binder.bind(this, UserSaci::entrega_separado.name)
-          }
-          checkBox("Remove carga") {
-            binder.bind(this, UserSaci::entrega_removerCarga.name)
-          }
-          checkBox("Envia para separado") {
-            binder.bind(this, UserSaci::entrega_enviarSeparado.name)
-          }
-          checkBox("Volta para separar") {
-            binder.bind(this, UserSaci::entrega_voltaSeparar.name)
-          }
-
-          checkBox("Retira Imprimir") {
-            binder.bind(this, UserSaci::retira_imprimir.name)
-          }
-          checkBox("Retira Impresso sem nota") {
-            binder.bind(this, UserSaci::retira_impressoSemNota.name)
-          }
-          checkBox("Retira Pendente") {
-            binder.bind(this, UserSaci::retira_pendente.name)
-          }
-          checkBox("Retira Editor de Nota") {
-            binder.bind(this, UserSaci::retira_impressoComNota.name)
-          }
-
-          checkBox("E-Commerce Entrega Imprimir") {
-            binder.bind(this, UserSaci::ecommerceE_imprimir.name)
-          }
-          checkBox("E-Commerce Entrega Impresso sem nota") {
-            binder.bind(this, UserSaci::ecommerceE_impressoSemNota.name)
-          }
-          checkBox("E-Commerce Entrega Editor de Nota") {
-            binder.bind(this, UserSaci::ecommerceE_impressoComNota.name)
-          }
-          checkBox("E-Commerce Desempenho Entrega") {
-            binder.bind(this, UserSaci::ecommerceE_entregador.name)
+          formLayout {
+            h4("Pedido Entrega") {
+              colspan = 2
+            }
+            checkBox("Imprimir") {
+              binder.bind(this, UserSaci::entrega_imprimir.name)
+            }
+            checkBox("Impresso sem nota") {
+              binder.bind(this, UserSaci::entrega_impressoSemNota.name)
+            }
+            checkBox("Pendente") {
+              binder.bind(this, UserSaci::entrega_pendente.name)
+            }
+            checkBox("Editor de Nota") {
+              binder.bind(this, UserSaci::entrega_impressoComNota.name)
+            }
+            checkBox("Entrega") {
+              binder.bind(this, UserSaci::entrega_entregador.name)
+            }
+            checkBox("Desempenho Rota") {
+              binder.bind(this, UserSaci::entrega_rota.name)
+            }
+            checkBox("Carga") {
+              binder.bind(this, UserSaci::entrega_carga.name)
+            }
+            horizontalLayout {
+              checkBox("Separar") {
+                binder.bind(this, UserSaci::entrega_separar.name)
+              }
+              formLayout {
+                checkBox("Visualizar") {
+                  binder.bind(this, UserSaci::entrega_visualizar.name)
+                }
+                checkBox("Impressão Termica") {
+                  binder.bind(this, UserSaci::entrega_imprimir_termica.name)
+                }
+                checkBox("Remove carga") {
+                  binder.bind(this, UserSaci::entrega_removerCarga.name)
+                }
+                checkBox("Envia para separado") {
+                  binder.bind(this, UserSaci::entrega_enviarSeparado.name)
+                }
+              }
+            }
+            horizontalLayout {
+              checkBox("Separado") {
+                binder.bind(this, UserSaci::entrega_separado.name)
+              }
+              formLayout {
+                checkBox("Volta para separar") {
+                  binder.bind(this, UserSaci::entrega_voltaSeparar.name)
+                }
+              }
+            }
           }
 
-          checkBox("E-Commerce Retira Imprimir") {
-            binder.bind(this, UserSaci::ecommerceR_imprimir.name)
+          formLayout {
+            h4("Pedido Retira") {
+              colspan = 2
+            }
+            checkBox("Imprimir") {
+              binder.bind(this, UserSaci::retira_imprimir.name)
+            }
+            checkBox("Impresso sem nota") {
+              binder.bind(this, UserSaci::retira_impressoSemNota.name)
+            }
+            checkBox("Pendente") {
+              binder.bind(this, UserSaci::retira_pendente.name)
+            }
+            checkBox("Editor de Nota") {
+              binder.bind(this, UserSaci::retira_impressoComNota.name)
+            }
           }
-          checkBox("E-Commerce Retira Impresso sem nota") {
-            binder.bind(this, UserSaci::ecommerceR_impressoSemNota.name)
+
+          formLayout {
+            h4("E-commece Entrega") {
+              colspan = 2
+            }
+            checkBox("Imprimir") {
+              binder.bind(this, UserSaci::ecommerceE_imprimir.name)
+            }
+            checkBox("Impresso sem nota") {
+              binder.bind(this, UserSaci::ecommerceE_impressoSemNota.name)
+            }
+            checkBox("Editor de Nota") {
+              binder.bind(this, UserSaci::ecommerceE_impressoComNota.name)
+            }
+            checkBox("Desempenho Entrega") {
+              binder.bind(this, UserSaci::ecommerceE_entregador.name)
+            }
           }
-          checkBox("E-Commerce Retira Editor de Nota") {
-            binder.bind(this, UserSaci::ecommerceR_impressoComNota.name)
+
+          formLayout {
+            h4("E-commece Retira") {
+              colspan = 2
+            }
+            checkBox("Imprimir") {
+              binder.bind(this, UserSaci::ecommerceR_imprimir.name)
+            }
+            checkBox("Impresso sem nota") {
+              binder.bind(this, UserSaci::ecommerceR_impressoSemNota.name)
+            }
+            checkBox("Editor de Nota") {
+              binder.bind(this, UserSaci::ecommerceR_impressoComNota.name)
+            }
           }
         }
       }

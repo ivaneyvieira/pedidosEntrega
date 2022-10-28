@@ -50,7 +50,7 @@ class DlgPedidoSeparar(val viewModel: PedidoEntregaImpressoSepararViewModel, val
       }
     }
 
-    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_visualizar == true)) {
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_separar_visualizar == true)) {
       button("Visualizar") {
         icon = VaadinIcon.EYE.create()
         addClickListener {

@@ -66,7 +66,7 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
       .createQuestion()
       .withCaption("Envia para o painel separado")
       .withMessage("Confirma o envio?")
-      .withOkButton({exec()}, ButtonOption.caption("Ok"))
+      .withOkButton({ exec() }, ButtonOption.caption("Ok"))
       .withCancelButton({ }, ButtonOption.caption("Cancelar"))
       .open()
   }
@@ -74,31 +74,39 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
   override fun classPanel() = Pedido::class
 
   override fun HorizontalLayout.toolBarConfig() {
-    if (AppConfig.isAdmin) button("Desmarcar") {
-      icon = VaadinIcon.CLOSE.create()
-      addClickListener {
-        viewModel.desmarcaCarga()
+    if (AppConfig.isAdmin) {
+      button("Desmarcar") {
+        icon = VaadinIcon.CLOSE.create()
+        addClickListener {
+          viewModel.desmarcaCarga()
+        }
       }
     }
 
-    if (AppConfig.isAdmin) button("Visualizar") {
-      icon = VaadinIcon.EYE.create()
-      addClickListener {
-        viewModel.imprimirPedidos(itensSelecionado())
+    if (AppConfig.isAdmin || AppConfig.userSaci?.entrega_carga_visualizar == true) {
+      button("Visualizar") {
+        icon = VaadinIcon.EYE.create()
+        addClickListener {
+          viewModel.imprimirPedidos(itensSelecionado())
+        }
       }
     }
 
-    button("Carga") {
-      icon = VaadinIcon.TRUCK.create()
-      addClickListener {
-        viewModel.marcaCarga()
+    if (AppConfig.isAdmin || AppConfig.userSaci?.entrega_carga_criacarga == true) {
+      button("Carga") {
+        icon = VaadinIcon.TRUCK.create()
+        addClickListener {
+          viewModel.marcaCarga()
+        }
       }
     }
 
-    button("Separado") {
-      icon = VaadinIcon.ARROW_RIGHT.create()
-      addClickListener {
-        viewModel.marcaSemcarga()
+    if (AppConfig.isAdmin || AppConfig.userSaci?.entrega_carga_separado == true) {
+      button("Envia para Separado") {
+        icon = VaadinIcon.ARROW_RIGHT.create()
+        addClickListener {
+          viewModel.marcaSemcarga()
+        }
       }
     }
 

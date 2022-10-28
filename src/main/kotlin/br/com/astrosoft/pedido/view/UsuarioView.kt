@@ -137,8 +137,21 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
             checkBox("Desempenho Rota") {
               binder.bind(this, UserSaci::entrega_rota.name)
             }
-            checkBox("Carga") {
-              binder.bind(this, UserSaci::entrega_carga.name)
+            horizontalLayout {
+              checkBox("Carga") {
+                binder.bind(this, UserSaci::entrega_carga.name)
+              }
+              formLayout {
+                checkBox("Visualizar") {
+                  binder.bind(this, UserSaci::entrega_carga_visualizar.name)
+                }
+                checkBox("Cria Carga") {
+                  binder.bind(this, UserSaci::entrega_carga_criacarga.name)
+                }
+                checkBox("Separado") {
+                  binder.bind(this, UserSaci::entrega_carga_separado.name)
+                }
+              }
             }
             horizontalLayout {
               checkBox("Separar") {
@@ -146,7 +159,7 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
               }
               formLayout {
                 checkBox("Visualizar") {
-                  binder.bind(this, UserSaci::entrega_visualizar.name)
+                  binder.bind(this, UserSaci::entrega_separar_visualizar.name)
                 }
                 checkBox("Impressão Termica") {
                   binder.bind(this, UserSaci::entrega_imprimir_termica.name)
@@ -164,6 +177,9 @@ class UserCrudFormFactory(private val viewModel: UsuarioViewModel) : AbstractCru
                 binder.bind(this, UserSaci::entrega_separado.name)
               }
               formLayout {
+                checkBox("Visualizar") {
+                  binder.bind(this, UserSaci::entrega_carga_separado_visualizar.name)
+                }
                 checkBox("Volta para separar") {
                   binder.bind(this, UserSaci::entrega_voltaSeparar.name)
                 }

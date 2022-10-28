@@ -2,7 +2,9 @@ package br.com.astrosoft.pedido.model.beans
 
 import br.com.astrosoft.AppConfig
 import br.com.astrosoft.framework.util.format
+import br.com.astrosoft.framework.util.localDate
 import br.com.astrosoft.framework.util.mid
+import br.com.astrosoft.framework.util.toSaciDate
 import br.com.astrosoft.pedido.model.saci
 import br.com.astrosoft.pedido.viewmodel.entrega.EZonaCarga
 import java.sql.Time
@@ -286,7 +288,7 @@ data class FiltroPedido(val tipo: ETipoPedido,
 
 data class PedidoChave(
   val carga: String?,
-  val data: LocalDate?,
+  val data: Int?,
   val loc: String,
                       )
 
@@ -302,12 +304,13 @@ data class PedidoGroup(
 
 fun List<Pedido>.groupBy(): List<PedidoGroup> {
   return this.groupBy {
-    PedidoChave(carga = it.descricaoZonaCarga, data = if(it.descricaoZonaCarga.isNullOrBlank())  it.data else it.entrega, loc = it
-      .loc)
+    PedidoChave(carga = it.descricaoZonaCarga,
+                data = if (it.descricaoZonaCarga.isNullOrBlank()) it.data.toSaciDate() else it.entrega.toSaciDate(),
+                loc = it.loc)
   }.map { entry ->
     PedidoGroup(
       carga = entry.key.carga,
-      data = entry.key.data,
+      data = entry.key.data?.localDate(),
       loc = entry.key.loc,
       piso = entry.value.sumOf { it.piso },
       total = entry.value.sumOf { it.valorComFrete },

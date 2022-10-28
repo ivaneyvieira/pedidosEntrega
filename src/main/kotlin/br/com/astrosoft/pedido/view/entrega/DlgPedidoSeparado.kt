@@ -45,10 +45,12 @@ class DlgPedidoSeparado(val viewModel: PedidoEntregaImpressoSeparadoViewModel, v
     get() = edtPedidoPesquisa.value ?: ""
 
   fun HasComponents.toolBarConfig() {
-    if (AppConfig.isAdmin) button("Visualizar") {
-      icon = VaadinIcon.EYE.create()
-      addClickListener {
-        viewModel.imprimirPedidos(gridDetail.selectedItems.orEmpty().toList())
+    if (AppConfig.isAdmin || (AppConfig.userSaci?.entrega_carga_separado_visualizar == true)){
+      button("Visualizar") {
+        icon = VaadinIcon.EYE.create()
+        addClickListener {
+          viewModel.imprimirPedidos(gridDetail.selectedItems.orEmpty().toList())
+        }
       }
     }
 

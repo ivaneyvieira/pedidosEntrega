@@ -105,6 +105,8 @@ class Pedido(
     get() = (marca != "S") && (nfnoEnt == "")
   val impressoSemNota: Boolean
     get() = (marca == "S") && (nfnoEnt == "")
+  val impresso: Boolean
+    get() = (marca == "S")
   val impressoComNota: Boolean
     get() = (nfnoEnt != "")
   val pedidoPendente: Boolean
@@ -178,10 +180,9 @@ class Pedido(
     fun listaPedidoImpressoSemNota(filtro: FiltroPedido): List<Pedido> =
       listaPedido(filtro).filter { it.impressoSemNota }
 
-    fun listaPedidoImpressoSeparar(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
-    fun listaPedidoImpressoCarga(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
-
-    fun listaPedidoImpressoSeparado(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro)
+    fun listaPedidoImpressoSeparar(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro).filter { it.impressoSemNota }
+    fun listaPedidoImpressoCarga(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro).filter { it.impressoSemNota }
+    fun listaPedidoImpressoSeparado(filtro: FiltroPedido): List<Pedido> = listaPedido(filtro).filter { it.impressoSemNota }
 
     fun listaPedidoImpressoComNota(filtro: FiltroPedido): List<Pedido> =
       listaPedido(filtro).filter { it.impressoComNota }

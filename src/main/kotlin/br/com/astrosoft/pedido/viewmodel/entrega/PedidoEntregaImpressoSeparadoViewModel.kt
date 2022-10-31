@@ -20,7 +20,7 @@ class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewMod
                                                 dataInicial = null,
                                                 dataFinal = null))
       .filter {
-        it.separado == "S" && it.dataFat?.isAfter(LocalDate.of(2022, 10, 6)) == true  && it.loc.startsWith("CD5A")
+        it.separado == "S" && it.dataFat?.isAfter(LocalDate.of(2022, 10, 6)) == true
       }
   }
 

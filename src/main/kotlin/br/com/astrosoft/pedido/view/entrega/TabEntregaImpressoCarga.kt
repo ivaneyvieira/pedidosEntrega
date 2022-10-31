@@ -128,7 +128,11 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
-    pedidoCarga()
+    pedidoCarga().apply {
+      this.setClassNameGenerator {
+        if(it.loc != "CD5A") "fonteAzul" else null
+      }
+    }
 
     pedidoNfFat()
     pedidoDataFat()

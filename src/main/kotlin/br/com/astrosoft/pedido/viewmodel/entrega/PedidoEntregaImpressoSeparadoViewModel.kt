@@ -5,16 +5,14 @@ import br.com.astrosoft.framework.viewmodel.fail
 import br.com.astrosoft.pedido.model.beans.ETipoPedido.ENTREGA
 import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
-import br.com.astrosoft.pedido.model.beans.PedidoGroup
-import br.com.astrosoft.pedido.model.beans.groupBy
 import java.time.LocalDate
 
 class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
     get() = viewModel.view.tabEntregaImpressoSeparado
 
-  private fun listPedidosEntregaImpressoSeparado(): List<PedidoGroup> {
-    val pesquisa = ""
+  private fun listPedidosEntregaImpressoSeparado(): List<Pedido> {
+    val pesquisa = subView.pedidoPesquisa
     return Pedido
       .listaPedidoImpressoSeparado(FiltroPedido(tipo = ENTREGA,
                                                 pesquisa = pesquisa,
@@ -23,7 +21,7 @@ class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewMod
                                                 dataFinal = null))
       .filter {
         it.separado == "S" && it.data?.isAfter(LocalDate.of(2022, 10, 6)) == true
-      }.groupBy()
+      }
   }
 
   fun updateGridImpressoSeparado() {
@@ -31,7 +29,7 @@ class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewMod
   }
 
   fun desmarcaSeparado() = exec(viewModel.view) {
-    val pedidos = subView.itensSelecionadoPedido().ifEmpty { fail("Não há pedido selecionado") }
+    val pedidos = subView.itensSelecionado().ifEmpty { fail("Não há pedido selecionado") }
     subView.confirmaVolta {
       pedidos.forEach { pedido ->
         pedido.marcaSeparado(" ")
@@ -47,7 +45,8 @@ class PedidoEntregaImpressoSeparadoViewModel(val viewModel: PedidoEntregaViewMod
 }
 
 interface IPedidoEntregaImpressoSeparado {
-  fun updateGrid(itens: List<PedidoGroup>)
-  fun itensSelecionadoPedido(): List<Pedido>
+  fun updateGrid(itens: List<Pedido>)
+  fun itensSelecionado(): List<Pedido>
+  val pedidoPesquisa: String
   fun confirmaVolta(exec : () -> Unit)
 }

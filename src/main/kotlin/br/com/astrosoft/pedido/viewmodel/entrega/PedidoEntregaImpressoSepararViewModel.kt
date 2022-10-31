@@ -10,7 +10,6 @@ import br.com.astrosoft.pedido.model.beans.FiltroPedido
 import br.com.astrosoft.pedido.model.beans.Pedido
 import br.com.astrosoft.pedido.model.beans.PedidoGroup
 import br.com.astrosoft.pedido.model.beans.groupBy
-import java.time.LocalDate
 
 class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewModel) {
   private val subView
@@ -25,8 +24,9 @@ class PedidoEntregaImpressoSepararViewModel(val viewModel: PedidoEntregaViewMode
                                                dataInicial = null,
                                                dataFinal = null))
       .filter {
-        it.separado != "S" && it.dataFat?.isAfter(LocalDate.of(2022, 10, 6)) == true && it.loc.startsWith("CD5A")
-      }.groupBy()
+        it.entrega != null && (it.loc.startsWith("CD5A") && it.separado != "S")
+      }
+      .groupBy()
   }
 
   fun updateGridImpressoSeparar() {

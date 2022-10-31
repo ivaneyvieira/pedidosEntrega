@@ -130,13 +130,17 @@ class TabEntregaImpressoCarga(val viewModel: PedidoEntregaImpressoCargaViewModel
     pedidoPedido()
     pedidoCarga().apply {
       this.setClassNameGenerator {
-        if(it.loc != "CD5A") "fonteAzul" else null
+        if(it.loc != "CD5A" && it.zonaCarga.trim() != "") "fonteAmarelo" else null
       }
     }
 
     pedidoNfFat()
     pedidoDataFat()
-    pedidoLoc()
+    pedidoLoc().apply {
+      this.setClassNameGenerator {
+        if(it.loc != "CD5A" && it.zonaCarga.trim() != "") "fonteAmarelo" else null
+      }
+    }
     pedidoPiso()
 
     pedidoValor()

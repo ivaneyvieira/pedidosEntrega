@@ -20,7 +20,7 @@ class PedidoEntregaImpressoCargaViewModel(val viewModel: PedidoEntregaViewModel)
                                              dataInicial = null,
                                              dataFinal = null))
       .filter {
-        it.zonaCarga == "" && it.data?.isAfter(LocalDate.of(2022, 10, 6)) == true
+        it.zonaCarga.trim() == "" && it.data?.isAfter(LocalDate.of(2022, 10, 6)) == true
       }
   }
 

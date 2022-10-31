@@ -190,7 +190,7 @@ SELECT EO.storeno                                                             AS
        S.sname                                                                AS siglaLoja,
        EO.ordno                                                               AS pedido,
        MID(EO.rmkMontagem, 1, 1)                                              AS marca,
-       MID(EO.rmkMontagem, 3, 1)                                              AS zonaCarga,
+       TRIM(MID(EO.rmkMontagem, 3, 1))                                        AS zonaCarga,
        MID(EO.rmkMontagem, 4, 1)                                              AS separado,
        MID(EO.rmkMontagem, 5, 8) * 1                                          AS entrega,
        CAST(P.date AS DATE)                                                   AS data,

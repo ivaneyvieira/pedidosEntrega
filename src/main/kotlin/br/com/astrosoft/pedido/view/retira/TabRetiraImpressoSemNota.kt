@@ -60,9 +60,9 @@ class TabRetiraImpressoSemNota(val viewModel: PedidoRetiraImpressoSemNotaViewMod
     pedidoPedido()
     pedidoDataHoraPrint()
     pedidoData()
-    pedidoHora()
+    //pedidoHora()
     pedidoArea()
-    pedidoRota()
+    //pedidoRota()
 
     pedidoNfFat()
     pedidoDataFat()

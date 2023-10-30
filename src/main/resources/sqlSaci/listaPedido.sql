@@ -16,7 +16,7 @@ SELECT DISTINCT storeno, ordno
 FROM sqldados.eoprdf
 WHERE (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
        ((@TIPO = 'E') AND (NOT eoprdf.bits & POW(2, 1))))
-  AND (storeno IN (2, 3, 4, 5))
+  AND (storeno IN (2, 3, 4, 5, 8))
   AND (date >= @DATA2);
 
 DROP TEMPORARY TABLE IF EXISTS T2;
@@ -42,7 +42,7 @@ FROM sqlpdv.pxa
   LEFT JOIN  sqlpdv.pxanf
 	       ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND
 		   pxa.pdvno = pxanf.pdvno)
-WHERE (pxa.storeno IN (2, 3, 4, 5))
+WHERE (pxa.storeno IN (2, 3, 4, 5, 8))
   AND (pxa.storeno = :storeno OR :storeno = 0)
   AND (pxa.date >= @DATA2)
   AND pxa.cfo IN (5922, 6922, 5117, 6117)

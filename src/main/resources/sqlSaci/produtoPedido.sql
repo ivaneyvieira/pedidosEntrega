@@ -16,10 +16,10 @@ FROM sqldados.eoprd AS E
                   USING (storeno, ordno)
        INNER JOIN sqldados.prd AS P
                   ON P.no = E.prdno
-       LEFT JOIN sqldados.prdalq AS A
-                 ON A.prdno = P.no
        LEFT JOIN sqldados.prdbar AS B
                  USING (prdno, grade)
+       LEFT JOIN sqldados.prdalq AS A
+                 ON A.prdno = P.no
        LEFT JOIN sqldados.prdloc AS L
                  ON L.prdno = E.prdno AND L.grade = E.grade AND L.storeno = 4
        LEFT JOIN sqldados.eoprdf AS O

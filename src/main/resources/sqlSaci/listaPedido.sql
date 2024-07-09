@@ -186,6 +186,7 @@ WHERE EO.status NOT IN (3, 5)
   AND (P.date <= :dataFinal OR :dataFinal = 0)
 GROUP BY T2.storeno, T2.ordno;
 
+
 DROP TEMPORARY TABLE IF EXISTS VENDA_ECOMERCE;
 CREATE TEMPORARY TABLE VENDA_ECOMERCE
 SELECT EO.storeno                                                             AS loja,

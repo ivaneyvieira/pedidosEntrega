@@ -9,7 +9,8 @@ DO @DATA1 := 20221001;
 DO @DATA2 := 20221001;
 
 DROP TEMPORARY TABLE IF EXISTS T_TIPO;
-CREATE TEMPORARY TABLE T_TIPO (
+CREATE TEMPORARY TABLE T_TIPO
+(
   PRIMARY KEY (storeno, ordno)
 )
 SELECT DISTINCT storeno, ordno
@@ -20,7 +21,8 @@ WHERE (((@TIPO = 'R') AND (eoprdf.bits & POW(2, 1))) OR
   AND (date >= @DATA2);
 
 DROP TEMPORARY TABLE IF EXISTS T2;
-CREATE TEMPORARY TABLE T2 (
+CREATE TEMPORARY TABLE T2
+(
   PRIMARY KEY (storeno, ordno)
 )
 SELECT pxa.storeno,
@@ -37,11 +39,11 @@ SELECT pxa.storeno,
        MAX(IF(pxa.cfo IN (5117, 6117), pxa.nfse, NULL)) AS nfse_entrega,
        MAX(IF(pxa.cfo IN (5117, 6117), pxa.amt, NULL))  AS valor_entrega
 FROM sqlpdv.pxa
-  INNER JOIN T_TIPO AS T
-	       ON T.storeno = pxa.storeno AND pxa.eordno = T.ordno
-  LEFT JOIN  sqlpdv.pxanf
-	       ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND
-		   pxa.pdvno = pxanf.pdvno)
+       INNER JOIN T_TIPO AS T
+                  ON T.storeno = pxa.storeno AND pxa.eordno = T.ordno
+       LEFT JOIN sqlpdv.pxanf
+                 ON (pxa.xano = pxanf.xano AND pxa.storeno = pxanf.storeno AND
+                     pxa.pdvno = pxanf.pdvno)
 WHERE (pxa.storeno IN (2, 3, 4, 5, 8))
   AND (pxa.storeno = :storeno OR :storeno = 0)
   AND (pxa.date >= @DATA2)
@@ -49,7 +51,8 @@ WHERE (pxa.storeno IN (2, 3, 4, 5, 8))
 GROUP BY pxa.storeno, pxa.eordno;
 
 DROP TEMPORARY TABLE IF EXISTS T2_ECOMERCE;
-CREATE TEMPORARY TABLE T2_ECOMERCE (
+CREATE TEMPORARY TABLE T2_ECOMERCE
+(
   PRIMARY KEY (storeno, ordno)
 )
 SELECT E.storeno,
@@ -65,9 +68,9 @@ SELECT E.storeno,
        CAST(IFNULL(P.nfno, '') AS CHAR) AS nfno_entrega,
        IFNULL(P.nfse, '')               AS nfse_entrega,
        IFNULL(P.amt, E.amount)          AS valor_entrega
-FROM sqldados.eord     AS E
-  LEFT JOIN sqlpdv.pxa AS P
-	      ON P.storeno = E.storeno AND E.ordno = P.eordno AND P.nfno != ''
+FROM sqldados.eord AS E
+       LEFT JOIN sqlpdv.pxa AS P
+                 ON P.storeno = E.storeno AND E.ordno = P.eordno AND P.nfno != ''
 WHERE (E.storeno IN (4))
   AND E.status NOT IN (3, 5)
   AND (E.date >= @DATA1)
@@ -109,7 +112,7 @@ SELECT EO.storeno                                                             AS
        IFNULL(C.no, 0)                                                        AS custno,
        CAST(CONCAT(LPAD(C.no * 1, 6, '0'), '-', C.name) AS CHAR)              AS cliente,
        CAST(CONCAT('(', IFNULL(CA.ddd, LEFT(C.ddd, 3)), ')',
-		   IFNULL(CA.tel, LEFT(C.tel, 10))) AS CHAR)                  AS foneCliente,
+                   IFNULL(CA.tel, LEFT(C.tel, 10))) AS CHAR)                  AS foneCliente,
        CAST(RPAD(IFNULL(CA.city, C.city1), 20, ' ') AS CHAR)                  AS cidade,
        CAST(IFNULL(CA.state, C.state1) AS CHAR)                               AS estado,
        C.add1                                                                 AS endereco,
@@ -119,7 +122,7 @@ SELECT EO.storeno                                                             AS
        IFNULL(T2.fre_amt, 0) / 100                                            AS frete,
        EO.amount / 100                                                        AS valor,
        @TIPO                                                                  AS status,
-       IFNULL(A.name, '')                                                     AS area,
+       IFNULL(IF(A.city = 'TIMON', 'TIMON', A.name), '')                      AS area,
        IFNULL(R.name, '')                                                     AS rota,
        IF(LEFT(OBS.remarks__480, 2) = 'EF ', LEFT(OBS.remarks__480, 11), ' ') AS obs,
        A.no                                                                   AS codArea,
@@ -137,43 +140,43 @@ SELECT EO.storeno                                                             AS
        @TIPO                                                                  AS tipo,
        paym.name                                                              AS metodo
 FROM T2
-  LEFT JOIN sqldados.eord   AS EO
-	      ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
-  LEFT JOIN sqldados.store  AS S
-	      ON S.no = EO.storeno
-  LEFT JOIN sqldados.eordrk AS O
-	      ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
-  LEFT JOIN sqldados.ctadd  AS CA
-	      ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
-  LEFT JOIN sqldados.users  AS U
-	      ON U.no = EO.userno
-  LEFT JOIN sqldados.custp  AS C
-	      ON (C.no = EO.custno)
-  LEFT JOIN sqldados.emp    AS E
-	      ON (E.no = EO.empno)
-  LEFT JOIN sqldados.paym
-	      ON (paym.no = EO.paymno)
-  LEFT JOIN sqlpdv.pxa      AS P
-	      ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
-		  EO.nfse_futura = P.nfse)
-  LEFT JOIN sqldados.ctadd  AS AD
-	      ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
-  LEFT JOIN sqldados.route  AS R
-	      ON (AD.routeno = R.no)
-  LEFT JOIN sqldados.area   AS A
-	      ON (A.no = R.areano)
-  LEFT JOIN sqldados.nf     AS nff
-	      ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
-		  T2.storeno = nff.storeno)
-  LEFT JOIN sqldados.nf2    AS nff2
-	      ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
-  LEFT JOIN sqldados.nf     AS nfe
-	      ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
-		  T2.storeno = nfe.storeno)
-  LEFT JOIN sqldados.nf2    AS nfe2
-	      ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
-  LEFT JOIN sqldados.eordrk AS OBS
-	      ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
+       LEFT JOIN sqldados.eord AS EO
+                 ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
+       LEFT JOIN sqldados.store AS S
+                 ON S.no = EO.storeno
+       LEFT JOIN sqldados.eordrk AS O
+                 ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
+       LEFT JOIN sqldados.ctadd AS CA
+                 ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
+       LEFT JOIN sqldados.users AS U
+                 ON U.no = EO.userno
+       LEFT JOIN sqldados.custp AS C
+                 ON (C.no = EO.custno)
+       LEFT JOIN sqldados.emp AS E
+                 ON (E.no = EO.empno)
+       LEFT JOIN sqldados.paym
+                 ON (paym.no = EO.paymno)
+       LEFT JOIN sqlpdv.pxa AS P
+                 ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
+                     EO.nfse_futura = P.nfse)
+       LEFT JOIN sqldados.ctadd AS AD
+                 ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
+       LEFT JOIN sqldados.route AS R
+                 ON (AD.routeno = R.no)
+       LEFT JOIN sqldados.area AS A
+                 ON (A.no = R.areano)
+       LEFT JOIN sqldados.nf AS nff
+                 ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
+                     T2.storeno = nff.storeno)
+       LEFT JOIN sqldados.nf2 AS nff2
+                 ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
+       LEFT JOIN sqldados.nf AS nfe
+                 ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
+                     T2.storeno = nfe.storeno)
+       LEFT JOIN sqldados.nf2 AS nfe2
+                 ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
+       LEFT JOIN sqldados.eordrk AS OBS
+                 ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE EO.status NOT IN (3, 5)
   AND (EO.date >= @DATA1)
   AND (nff.status <> 1 OR nff.status IS NULL)
@@ -217,7 +220,7 @@ SELECT EO.storeno                                                             AS
        IFNULL(C.no, 0)                                                        AS custno,
        CAST(CONCAT(LPAD(C.no * 1, 6, '0'), '-', C.name) AS CHAR)              AS cliente,
        CAST(CONCAT('(', IFNULL(CA.ddd, LEFT(C.ddd, 3)), ')',
-		   IFNULL(CA.tel, LEFT(C.tel, 10))) AS CHAR)                  AS foneCliente,
+                   IFNULL(CA.tel, LEFT(C.tel, 10))) AS CHAR)                  AS foneCliente,
        CAST(RPAD(IFNULL(CA.city, C.city1), 20, ' ') AS CHAR)                  AS cidade,
        CAST(IFNULL(CA.state, C.state1) AS CHAR)                               AS estado,
        C.add1                                                                 AS endereco,
@@ -244,45 +247,45 @@ SELECT EO.storeno                                                             AS
        RPAD(IFNULL(MID(O.remarks__480, 481, 80), ' '), 80, ' ')               AS obs7,
        @TIPO                                                                  AS tipo,
        paym.name                                                              AS metodo
-FROM sqldados.eord           AS EO
-  INNER JOIN T2_ECOMERCE     AS T2
-	       ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
-  LEFT JOIN  sqldados.store  AS S
-	       ON S.no = EO.storeno
-  LEFT JOIN  sqldados.eordrk AS O
-	       ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
+FROM sqldados.eord AS EO
+       INNER JOIN T2_ECOMERCE AS T2
+                  ON (T2.storeno = EO.storeno AND T2.ordno = EO.ordno)
+       LEFT JOIN sqldados.store AS S
+                 ON S.no = EO.storeno
+       LEFT JOIN sqldados.eordrk AS O
+                 ON (O.storeno = EO.storeno AND O.ordno = EO.ordno)
 
-  LEFT JOIN  sqldados.ctadd  AS CA
-	       ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
-  LEFT JOIN  sqldados.users  AS U
-	       ON U.no = EO.userno
-  LEFT JOIN  sqldados.custp  AS C
-	       ON (C.no = EO.custno)
-  LEFT JOIN  sqldados.emp    AS E
-	       ON (E.no = EO.empno)
-  LEFT JOIN  sqldados.paym
-	       ON (paym.no = EO.paymno)
-  LEFT JOIN  sqlpdv.pxa      AS P
-	       ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
-		   EO.nfse_futura = P.nfse)
-  LEFT JOIN  sqldados.ctadd  AS AD
-	       ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
-  LEFT JOIN  sqldados.route  AS R
-	       ON (AD.routeno = R.no)
-  LEFT JOIN  sqldados.area   AS A
-	       ON (A.no = R.areano)
-  LEFT JOIN  sqldados.nf     AS nff
-	       ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
-		   T2.storeno = nff.storeno)
-  LEFT JOIN  sqldados.nf2    AS nff2
-	       ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
-  LEFT JOIN  sqldados.nf     AS nfe
-	       ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
-		   T2.storeno = nfe.storeno)
-  LEFT JOIN  sqldados.nf2    AS nfe2
-	       ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
-  LEFT JOIN  sqldados.eordrk AS OBS
-	       ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
+       LEFT JOIN sqldados.ctadd AS CA
+                 ON (EO.custno = CA.custno AND CA.seqno = EO.custno_addno)
+       LEFT JOIN sqldados.users AS U
+                 ON U.no = EO.userno
+       LEFT JOIN sqldados.custp AS C
+                 ON (C.no = EO.custno)
+       LEFT JOIN sqldados.emp AS E
+                 ON (E.no = EO.empno)
+       LEFT JOIN sqldados.paym
+                 ON (paym.no = EO.paymno)
+       LEFT JOIN sqlpdv.pxa AS P
+                 ON (EO.storeno = P.storeno AND EO.ordno = P.eordno AND EO.nfno_futura = P.nfno AND
+                     EO.nfse_futura = P.nfse)
+       LEFT JOIN sqldados.ctadd AS AD
+                 ON (C.no = AD.custno AND AD.seqno = EO.custno_addno)
+       LEFT JOIN sqldados.route AS R
+                 ON (AD.routeno = R.no)
+       LEFT JOIN sqldados.area AS A
+                 ON (A.no = R.areano)
+       LEFT JOIN sqldados.nf AS nff
+                 ON (T2.nfno_venda = nff.nfno AND T2.nfse_venda = nff.nfse AND
+                     T2.storeno = nff.storeno)
+       LEFT JOIN sqldados.nf2 AS nff2
+                 ON nff.storeno = nff2.storeno AND nff.pdvno = nff2.pdvno AND nff.xano = nff2.xano
+       LEFT JOIN sqldados.nf AS nfe
+                 ON (T2.nfno_entrega = nfe.nfno AND T2.nfse_entrega = nfe.nfse AND
+                     T2.storeno = nfe.storeno)
+       LEFT JOIN sqldados.nf2 AS nfe2
+                 ON nfe.storeno = nfe2.storeno AND nfe.pdvno = nfe2.pdvno AND nfe.xano = nfe2.xano
+       LEFT JOIN sqldados.eordrk AS OBS
+                 ON (OBS.storeno = EO.storeno AND OBS.ordno = EO.ordno)
 WHERE EO.status NOT IN (0, 5)
   AND (nff.status <> 1 OR nff.status IS NULL)
   AND (EO.date >= :dataInicial OR :dataInicial = 0)
@@ -290,7 +293,6 @@ WHERE EO.status NOT IN (0, 5)
 GROUP BY EO.storeno, EO.ordno
 HAVING (enderecoEntrega LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'R')
     OR (enderecoEntrega NOT LIKE '%MAGALHAES FILHO%2001%' AND @TIPO = 'E');
-
 
 DROP TEMPORARY TABLE IF EXISTS PEDIDOS;
 CREATE TEMPORARY TABLE PEDIDOS
@@ -407,45 +409,48 @@ SELECT loja,
 FROM VENDA_ECOMERCE;
 
 DROP TEMPORARY TABLE IF EXISTS PEDIDO_PISO;
-CREATE TEMPORARY TABLE PEDIDO_PISO (
+CREATE TEMPORARY TABLE PEDIDO_PISO
+(
   PRIMARY KEY (loja, pedido)
 )
 SELECT P.storeno        AS loja,
        P.ordno          AS pedido,
        SUM(qtty / 1000) AS piso
-FROM sqldados.eoprd  AS   P
-  INNER JOIN PEDIDOS AS   E
-	       ON P.storeno = E.loja AND P.ordno = E.pedido
-  INNER JOIN sqldados.prd PR
-	       ON PR.no = P.prdno AND PR.groupno = 10000
+FROM sqldados.eoprd AS P
+       INNER JOIN PEDIDOS AS E
+                  ON P.storeno = E.loja AND P.ordno = E.pedido
+       INNER JOIN sqldados.prd PR
+                  ON PR.no = P.prdno AND PR.groupno = 10000
 GROUP BY P.storeno, P.ordno;
 
 DROP TEMPORARY TABLE IF EXISTS T_LOC;
-CREATE TEMPORARY TABLE T_LOC (
+CREATE TEMPORARY TABLE T_LOC
+(
   PRIMARY KEY (prdno)
 )
 SELECT prdno,
        MID(MAX(CONCAT(IF(L.localizacao LIKE 'CD%', 2, 1), LPAD(MID(L.localizacao, 1, 3), 3, ' '),
-		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
-		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS localizacao
+                      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
+                      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS localizacao
 FROM sqldados.prdloc AS L
 WHERE storeno = 4
 GROUP BY prdno;
 
 DROP TEMPORARY TABLE IF EXISTS PEDIDO_CD;
-CREATE TEMPORARY TABLE PEDIDO_CD (
+CREATE TEMPORARY TABLE PEDIDO_CD
+(
   PRIMARY KEY (loja, pedido)
 )
 SELECT P.storeno                                                      AS loja,
        P.ordno                                                        AS pedido,
        MID(MAX(CONCAT(IF(L.localizacao LIKE 'CD%', 2, 1), LPAD(MID(L.localizacao, 1, 3), 3, ' '),
-		      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
-		      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS loc
-FROM sqldados.eoprd  AS P
-  INNER JOIN PEDIDOS AS E
-	       ON P.storeno = E.loja AND P.ordno = E.pedido
-  LEFT JOIN  T_LOC   AS L
-	       ON P.prdno = L.prdno
+                      LPAD(255 - ASCII(MID(L.localizacao, 4, 1)), 4, '0'),
+                      RPAD(MID(L.localizacao, 1, 4), 4, ' '))), 9, 4) AS loc
+FROM sqldados.eoprd AS P
+       INNER JOIN PEDIDOS AS E
+                  ON P.storeno = E.loja AND P.ordno = E.pedido
+       LEFT JOIN T_LOC AS L
+                 ON P.prdno = L.prdno
 WHERE localizacao LIKE CONCAT(:filtroCD, '%')
    OR :filtroCD = ''
 GROUP BY P.storeno, P.ordno;
@@ -507,10 +512,10 @@ SELECT loja,
        IFNULL(piso, 0.00)                   AS piso,
        IFNULL(loc, '')                      AS loc
 FROM PEDIDOS
-  LEFT JOIN PEDIDO_PISO
-	      USING (loja, pedido)
-  LEFT JOIN PEDIDO_CD
-	      USING (loja, pedido)
+       LEFT JOIN PEDIDO_PISO
+                 USING (loja, pedido)
+       LEFT JOIN PEDIDO_CD
+                 USING (loja, pedido)
 WHERE (area LIKE CONCAT(:filtroArea, '%') OR :filtroArea = '' OR
        rota LIKE CONCAT('%', :filtroRota, '%') OR :filtroRota = '')
   AND (dataFat = :filtroData OR :filtroData = 0)

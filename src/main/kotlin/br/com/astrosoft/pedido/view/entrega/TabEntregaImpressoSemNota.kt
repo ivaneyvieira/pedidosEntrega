@@ -62,27 +62,31 @@ class TabEntregaImpressoSemNota(val viewModel: PedidoEntregaImpressoSemNotaViewM
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
+
     pedidoDataHoraPrint()
     pedidoData()
     pedidoHora()
+
     pedidoArea()
     pedidoRota()
-
     pedidoNfFat()
+
     pedidoDataFat()
     pedidoHoraFat()
     pedidoLoc()
-    pedidoPiso()
 
+    pedidoPiso()
     pedidoVendno()
     pedidoFrete()
+
     pedidoValor()
     pedidoObs()
     pedidoNfEnt()
+
     pedidoDataEnt()
     pedidoHoraEnt()
-
     pedidoUsername()
+
     shiftSelect()
   }
 }

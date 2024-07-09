@@ -103,24 +103,29 @@ class TabEntregaImprimir(val viewModel: PedidoEntregaImprimirViewModel) : TabPan
     pedidoTipoECommerce()
     pedidoLoja()
     pedidoPedido()
+
     pedidoDataHoraPrint()
     pedidoData()
     pedidoHora()
+
     pedidoArea()
     pedidoRota()
-
     pedidoNfFat()
+
     pedidoDataFat()
     pedidoHoraFat()
     pedidoNfEnt()
+
     pedidoDataEnt()
     pedidoHoraEnt()
-
     pedidoVendno()
+
     pedidoFrete()
     pedidoValor()
     pedidoObs()
+
     pedidoUsername()
+
     this.shiftSelect()
     this.sort(listOf(GridSortOrder(getColumnBy(Pedido::loja), ASCENDING),
                      GridSortOrder(getColumnBy(Pedido::pedido), DESCENDING)))
